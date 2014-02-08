@@ -1,4 +1,7 @@
 {
+  "globals": {
+    "define": true
+  },
   "node": true,
   "browser": true,
   "esnext": true,
@@ -9,6 +12,8 @@
   "immed": true,
   "indent": 2,
   "latedef": true,
+  "laxbreak": true,
+  "laxcomma": true,
   "newcap": true,
   "noarg": true,
   "quotmark": "single",
