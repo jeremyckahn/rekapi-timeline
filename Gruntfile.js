@@ -43,6 +43,10 @@ module.exports = function (grunt) {
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}',
           '<%= yeoman.app %>/scripts/templates/*.{ejs,mustache,hbs}',
         ]
+      },
+      compass: {
+        files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+        tasks: ['compass']
       }
     },
     connect: {
@@ -202,6 +206,18 @@ module.exports = function (grunt) {
           ]
         }
       }
+    },
+    compass: {
+      options: {
+        sassDir: '<%= yeoman.app %>/styles/sass',
+        cssDir: '.tmp/styles'
+      },
+      server: {
+        options: {
+          debugInfo: true
+        }
+      },
+      dist: {}
     }
   });
 
@@ -217,6 +233,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'compass:server',
       'connect:livereload',
       //'open:server',
       'watch'
@@ -225,6 +242,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'compass:dist',
     'useminPrepare',
     'requirejs',
     'imagemin',
