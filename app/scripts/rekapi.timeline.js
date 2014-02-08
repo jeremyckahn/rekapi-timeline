@@ -1,12 +1,14 @@
 define([
 
-  'jquery'
-  ,'rekapi'
+  'rekapi'
+
+  ,'views/container'
 
 ], function (
 
-  $
-  ,Rekapi
+  Rekapi
+
+  ,ContainerView
 
 ) {
   'use strict';
@@ -16,7 +18,9 @@ define([
    * @constuctor
    */
   function RekapiTimeline (el) {
-    this.$el = $(el);
+    this.containerView = new ContainerView({
+      el: el
+    });
   }
   Rekapi.Timeline = RekapiTimeline;
 

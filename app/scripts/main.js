@@ -17,6 +17,7 @@ require.config({
     jquery: '../bower_components/jquery/jquery'
     ,backbone: '../bower_components/backbone/backbone'
     ,underscore: '../bower_components/underscore/underscore'
+    ,mustache: '../bower_components/mustache/mustache'
     ,text: '../bower_components/requirejs-text/text'
     ,rekapi: '../bower_components/rekapi/dist/rekapi'
     ,shifty: '../bower_components/shifty/dist/shifty'
