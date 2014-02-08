@@ -1,6 +1,7 @@
 {
   "globals": {
-    "define": true
+    "define": true,
+    "require": true
   },
   "node": true,
   "browser": true,
@@ -10,7 +11,6 @@
   "curly": true,
   "eqeqeq": true,
   "immed": true,
-  "indent": 2,
   "latedef": true,
   "laxbreak": true,
   "laxcomma": true,

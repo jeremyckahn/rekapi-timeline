@@ -1,4 +1,3 @@
-/*global require*/
 'use strict';
 
 require.config({
@@ -15,14 +14,33 @@ require.config({
     }
   },
   paths: {
-    jquery: '../bower_components/jquery/jquery',
-    backbone: '../bower_components/backbone/backbone',
-    underscore: '../bower_components/underscore/underscore'
+    jquery: '../bower_components/jquery/jquery'
+    ,backbone: '../bower_components/backbone/backbone'
+    ,underscore: '../bower_components/underscore/underscore'
+    ,text: '../bower_components/requirejs-text/text'
+    ,rekapi: '../bower_components/rekapi/dist/rekapi'
+    ,shifty: '../bower_components/shifty/dist/shifty'
+
+    ,'rekapi.timeline': 'rekapi.timeline'
   }
 });
 
 require([
-  'backbone'
-], function (Backbone) {
-  Backbone.history.start();
+
+  'rekapi'
+
+  // Doesn't return value is not used here, it is attached to the Rekapi
+  // object.
+  ,'rekapi.timeline'
+
+], function (
+
+  Rekapi
+
+) {
+
+  var timelineEl = document.querySelector('#timeline');
+  var timeline = new Rekapi.Timeline(timelineEl);
+  console.log(timeline);
+
 });

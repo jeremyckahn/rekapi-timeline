@@ -20,4 +20,5 @@ define([
   }
   Rekapi.Timeline = RekapiTimeline;
 
+  return RekapiTimeline;
 });
