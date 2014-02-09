@@ -4,7 +4,7 @@ define([
   ,'underscore'
   ,'backbone'
 
-  ,'views/container'
+  ,'/scripts/views/container.js'
 
 ], function (
 
