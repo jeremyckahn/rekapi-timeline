@@ -2,7 +2,7 @@ define([
 
   'rekapi'
 
-  ,'scripts/views/container'
+  ,'views/container'
 
 ], function (
 
