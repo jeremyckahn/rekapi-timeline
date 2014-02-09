@@ -62,7 +62,6 @@
 
       var timelineEl = document.querySelector('#timeline');
       var rekapi = new Rekapi(document.body);
-      var timeline = rekapi.createTimeline(timelineEl);
 
       var actor = rekapi.addActor({
         context: document.querySelector('#actor-1')
@@ -76,6 +75,7 @@
           'transform': 'translateX(150px) translateY(100px)'
         });
 
+      var timeline = rekapi.createTimeline(timelineEl);
       rekapi.play(1)
 
       console.log(rekapi);

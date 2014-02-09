@@ -1,6 +1,7 @@
 define([
 
   'jquery'
+  ,'underscore'
   ,'backbone'
   ,'mustache'
 
@@ -9,6 +10,7 @@ define([
 ], function (
 
   $
+  ,_
   ,Backbone
   ,Mustache
 
@@ -18,8 +20,14 @@ define([
   'use strict';
 
   var ContainerView = Backbone.View.extend({
-    initialize: function () {
-      this.render();
+    /**
+     * @param {Object}
+     *   @param {RekapiTimeline} rekapiTimeline
+     *   @param {HTMLElement} el
+     */
+    initialize: function (opts) {
+      this.rekapiTimeline = opts.rekapiTimeline;
+      this.listenTo(this.rekapiTimeline, 'update', _.bind(this.render, this));
     }
 
     ,render: function () {
