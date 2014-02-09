@@ -1,13 +1,11 @@
-define([
+define('actor-tracks', [
 
   'jquery'
   ,'underscore'
   ,'backbone'
   ,'mustache'
 
-  ,'actor-tracks'
-
-  ,'text!../templates/container.mustache'
+  ,'text!./templates/actor-tracks.mustache'
 
 ], function (
 
@@ -16,14 +14,12 @@ define([
   ,Backbone
   ,Mustache
 
-  ,ActorTracksView
-
-  ,containerTemplate
+  ,actorTracksTemplate
 
 ) {
   'use strict';
 
-  var ContainerView = Backbone.View.extend({
+  var ActorTracksView = Backbone.View.extend({
     /**
      * @param {Object}
      *   @param {RekapiTimeline} rekapiTimeline
@@ -31,20 +27,13 @@ define([
      */
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
-
-      this.render();
-      this.actorTracksView = new ActorTracksView({
-        el: this.$el.find('.rekapi-timeline-actor-tracks-view')[0]
-        ,rekapiTimeline: this.rekapiTimeline
-      });
-
       this.listenTo(this.rekapiTimeline, 'update', _.bind(this.render, this));
     }
 
     ,render: function () {
-      this.$el.html(Mustache.render(containerTemplate));
+      this.$el.html(Mustache.render(actorTracksTemplate));
     }
   });
 
-  return ContainerView;
+  return ActorTracksView;
 });
