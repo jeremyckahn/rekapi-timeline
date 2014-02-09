@@ -6,6 +6,16 @@ var mountFolder = function (connect, dir) {
   return connect.static(require('path').resolve(dir));
 };
 
+var DEPENDENCY_PATHS = {
+  jquery:      '../bower_components/jquery/jquery'
+  ,backbone:   '../bower_components/backbone/backbone'
+  ,underscore: '../bower_components/underscore/underscore'
+  ,mustache:   '../bower_components/mustache/mustache'
+  ,text:       '../bower_components/requirejs-text/text'
+  ,rekapi:     '../bower_components/rekapi/dist/rekapi'
+  ,shifty:     '../bower_components/shifty/dist/shifty'
+};
+
 // # Globbing
 // for performance reasons we're only matching one level down:
 // 'test/spec/{,*/}*.js'
@@ -101,8 +111,23 @@ module.exports = function (grunt) {
         // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
         options: {
           baseUrl: '<%= yeoman.app %>/scripts',
+          name: 'rekapi.timeline',
+          out: '<%= yeoman.dist %>/rekapi.timeline.js',
           optimize: 'none',
-          paths: {},
+          shim: {
+            underscore: {
+              exports: '_'
+            }
+            ,backbone: {
+              deps: [
+                'underscore'
+                ,'jquery'
+              ]
+              ,exports: 'Backbone'
+            }
+          },
+          paths: DEPENDENCY_PATHS,
+          exclude: Object.keys(DEPENDENCY_PATHS),
           // TODO: Figure out how to make sourcemaps work with grunt-usemin
           // https://github.com/yeoman/grunt-usemin/issues/30
           //generateSourceMaps: true,
