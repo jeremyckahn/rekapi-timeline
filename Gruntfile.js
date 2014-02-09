@@ -197,16 +197,8 @@ module.exports = function (grunt) {
     copy: {
       dist: {
         files: [{
-          expand: true,
-          dot: true,
-          cwd: '<%= yeoman.app %>',
-          dest: '<%= yeoman.dist %>',
-          src: [
-            '*.{ico,txt}',
-            '.htaccess',
-            'images/{,*/}*.{webp,gif}',
-            'styles/fonts/{,*/}*.*',
-          ]
+          src: ['.tmp/styles/main.css'],
+          dest: '<%= yeoman.dist %>/styles/main.css'
         }]
       }
     },
@@ -263,16 +255,8 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'compass:dist',
-    'useminPrepare',
     'requirejs',
-    'imagemin',
-    'htmlmin',
-    'concat',
-    'cssmin',
-    'uglify',
     'copy',
-    'rev',
-    'usemin'
   ]);
 
   grunt.registerTask('default', [
