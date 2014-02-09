@@ -14,6 +14,9 @@
   </head>
   <body>
     <div id="timeline"></div>
+    <div id="animation">
+      <div id="actor-1" class="actor"></div>
+    </div>
     <!-- build:js scripts/main.js -->
     <script src="bower_components/requirejs/require.js"></script>
     <!-- endbuild -->
@@ -58,7 +61,24 @@
     ) {
 
       var timelineEl = document.querySelector('#timeline');
-      var timeline = new Rekapi.Timeline(timelineEl);
+      var rekapi = new Rekapi(document.body);
+      var timeline = rekapi.createTimeline(timelineEl);
+
+      var actor = rekapi.addActor({
+        context: document.querySelector('#actor-1')
+      });
+
+      actor
+        .keyframe(0, {
+          'transform': 'translateX(0px) translateY(0px)'
+        })
+        .keyframe(1000, {
+          'transform': 'translateX(150px) translateY(100px)'
+        });
+
+      rekapi.play(1)
+
+      console.log(rekapi);
       console.log(timeline);
 
     });

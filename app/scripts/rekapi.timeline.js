@@ -22,7 +22,13 @@ define([
       el: el
     });
   }
-  Rekapi.Timeline = RekapiTimeline;
+
+  /**
+   * @param {HTMLElement} el The element to contain the widget.
+   */
+  Rekapi.prototype.createTimeline = function (el) {
+    return new RekapiTimeline(el);
+  };
 
   return RekapiTimeline;
 });
