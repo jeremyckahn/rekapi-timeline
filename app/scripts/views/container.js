@@ -1,13 +1,13 @@
-define('/scripts/views/container.js', [
+define([
 
   'jquery'
   ,'underscore'
   ,'backbone'
   ,'mustache'
 
-  ,'/scripts/views/actor-tracks.js'
+  ,'views/actor-tracks'
 
-  ,'text!/scripts/templates/container.mustache'
+  ,'text!../templates/container.mustache'
 
 ], function (
 
