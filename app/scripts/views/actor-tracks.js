@@ -3,18 +3,16 @@ define([
   'jquery'
   ,'underscore'
   ,'backbone'
-  ,'mustache'
 
-  ,'text!../templates/actor-tracks.mustache'
+  ,'views/keyframe-property-track'
 
 ], function (
 
   $
   ,_
   ,Backbone
-  ,Mustache
 
-  ,actorTracksTemplate
+  ,KeyframePropertyTrackView
 
 ) {
   'use strict';
@@ -28,11 +26,28 @@ define([
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.actor = opts.actor;
-      this.$el.addClass('actor-tracks');
+      this._keyframePropertyTrackViews = [];
+      this.$el.addClass('actor-tracks-view');
+      this.createKeyframePropertyTrackViews();
+      this.render();
     }
 
     ,render: function () {
-      this.$el.html(Mustache.render(actorTracksTemplate));
+      this.$el.children().remove();
+      this._keyframePropertyTrackViews.forEach(
+          function (keyframePropertyTrackView) {
+        this.$el.append(keyframePropertyTrackView.$el);
+      }, this);
+    }
+
+    ,createKeyframePropertyTrackViews: function () {
+      this.actor.getTrackNames().forEach(function (trackName) {
+        this._keyframePropertyTrackViews.push(new KeyframePropertyTrackView({
+          rekapiTimeline: this.rekapiTimeline
+          ,actor: this.actor
+          ,trackName: trackName
+        }));
+      }, this);
     }
   });
 
