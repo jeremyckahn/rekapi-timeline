@@ -5,7 +5,7 @@ define([
   ,'backbone'
   ,'mustache'
 
-  ,'views/actor-tracks'
+  ,'views/animation-tracks'
 
   ,'text!../templates/container.mustache'
 
@@ -16,7 +16,7 @@ define([
   ,Backbone
   ,Mustache
 
-  ,ActorTracksView
+  ,AnimationTracksView
 
   ,containerTemplate
 
@@ -33,8 +33,8 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
 
       this.render();
-      this.actorTracksView = new ActorTracksView({
-        el: this.$el.find('.rekapi-timeline-actor-tracks-view')[0]
+      this.animationTracksView = new AnimationTracksView({
+        el: this.$el.find('.rekapi-timeline-animation-tracks-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
       });
 

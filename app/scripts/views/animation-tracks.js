@@ -5,7 +5,7 @@ define([
   ,'backbone'
   ,'mustache'
 
-  ,'text!../templates/actor-tracks.mustache'
+  ,'text!../templates/animation-tracks.mustache'
 
 ], function (
 
@@ -19,7 +19,7 @@ define([
 ) {
   'use strict';
 
-  var ActorTracksView = Backbone.View.extend({
+  var AnimationTracksView = Backbone.View.extend({
     /**
      * @param {Object}
      *   @param {RekapiTimeline} rekapiTimeline
@@ -35,5 +35,5 @@ define([
     }
   });
 
-  return ActorTracksView;
+  return AnimationTracksView;
 });
