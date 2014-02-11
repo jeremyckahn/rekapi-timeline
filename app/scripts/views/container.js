@@ -37,8 +37,6 @@ define([
         el: this.$el.find('.rekapi-timeline-animation-tracks-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
       });
-
-      this.listenTo(this.rekapiTimeline, 'update', _.bind(this.render, this));
     }
 
     ,render: function () {

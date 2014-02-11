@@ -3,18 +3,16 @@ define([
   'jquery'
   ,'underscore'
   ,'backbone'
-  ,'mustache'
 
-  ,'text!../templates/animation-tracks.mustache'
+  ,'views/actor-tracks'
 
 ], function (
 
   $
   ,_
   ,Backbone
-  ,Mustache
 
-  ,actorTracksTemplate
+  ,ActorTracksView
 
 ) {
   'use strict';
@@ -27,11 +25,25 @@ define([
      */
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
+      this._actorViews = [];
+      this.createActorViews();
       this.listenTo(this.rekapiTimeline, 'update', _.bind(this.render, this));
     }
 
     ,render: function () {
-      this.$el.html(Mustache.render(actorTracksTemplate));
+      this.$el.children().remove();
+      this._actorViews.forEach(function (actorView) {
+        this.$el.append(actorView.$el);
+      }, this);
+    }
+
+    ,createActorViews: function () {
+      _.each(this.rekapiTimeline.rekapi.getAllActors(), function (actor) {
+        this._actorViews.push(new ActorTracksView({
+          rekapiTimeline: this.rekapiTimeline
+          ,actor: actor
+        }));
+      }, this);
     }
   });
 
