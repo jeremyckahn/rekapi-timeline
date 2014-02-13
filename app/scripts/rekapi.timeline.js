@@ -6,6 +6,8 @@ define([
 
   ,'views/container'
 
+  ,'jquery-dragon'
+
 ], function (
 
   Rekapi

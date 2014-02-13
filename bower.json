@@ -8,10 +8,12 @@
     "requirejs": "~2.1.5",
     "requirejs-text": "~2.0.5",
     "rekapi": "~1.0.4",
-    "mustache": "~0.8.1"
+    "mustache": "~0.8.1",
+    "jquery-dragon": "~0.3.0"
   },
   "devDependencies": {},
   "resolutions": {
-    "underscore": "1.5.2"
+    "underscore": "1.5.2",
+    "jquery": "~2.0.3"
   }
 }

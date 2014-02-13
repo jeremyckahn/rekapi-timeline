@@ -47,6 +47,7 @@ define([
           function (keyframeProperty) {
         this._keyframePropertyViews.push(new KeyframePropertyView({
           rekapiTimeline: this.rekapiTimeline
+          ,keyframePropertyTrackView: this
           ,keyframeProperty: keyframeProperty
         }));
       }, this);
