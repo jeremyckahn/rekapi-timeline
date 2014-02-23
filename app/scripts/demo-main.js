@@ -19,7 +19,7 @@ require.config({
     }
   }
   ,paths: {
-    jquery:           '../bower_components/jquery/jquery'
+    jquery:           '../bower_components/jquery/dist/jquery'
     ,'jquery-dragon':  '../bower_components/jquery-dragon/src/jquery.dragon'
     ,backbone:        '../bower_components/backbone/backbone'
     ,underscore:      '../bower_components/underscore/underscore'
