@@ -37,14 +37,15 @@ define([
         el: this.$el.find('.rekapi-timeline-animation-tracks-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
       });
+
+      this.animationTracksView.render();
     }
 
     ,initialRender: function () {
-      this.render();
+      this.$el.html(Mustache.render(containerTemplate));
     }
 
     ,render: function () {
-      this.$el.html(Mustache.render(containerTemplate));
     }
   });
 

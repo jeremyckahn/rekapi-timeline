@@ -33,15 +33,21 @@ define([
     }
 
     ,initialRender: function () {
-      this.render();
-    }
-
-    ,render: function () {
-      this.$el.children().remove();
       this._keyframePropertyTrackViews.forEach(
           function (keyframePropertyTrackView) {
         this.$el.append(keyframePropertyTrackView.$el);
       }, this);
+    }
+
+    ,render: function () {
+      this.renderKeyframePropertyTracks();
+    }
+
+    ,renderKeyframePropertyTracks: function () {
+      this._keyframePropertyTrackViews.forEach(
+          function (keyframePropertyTrackView) {
+        keyframePropertyTrackView.render();
+      });
     }
 
     ,createKeyframePropertyTrackViews: function () {

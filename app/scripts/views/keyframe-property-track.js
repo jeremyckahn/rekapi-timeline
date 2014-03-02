@@ -41,14 +41,19 @@ define([
     }
 
     ,initialRender: function () {
-      this.render();
-    }
-
-    ,render: function () {
-      this.$el.children().remove();
       this._keyframePropertyViews.forEach(function (keyframePropertyView) {
         this.$el.append(keyframePropertyView.$el);
       }, this);
+    }
+
+    ,render: function () {
+      this.renderKeyframeProperties();
+    }
+
+    ,renderKeyframeProperties: function () {
+      this._keyframePropertyViews.forEach(function (keyframePropertyView) {
+        keyframePropertyView.render();
+      });
     }
 
     ,onRekapiTimelineUpdate: function () {
@@ -80,11 +85,11 @@ define([
       var elOffset = $el.offset();
 
       var minimumLeft = elOffset.left
-          - parseInt($el.css('border-left-width'), 10)
-          - parseInt($el.css('padding-left'), 10);
+          + parseInt($el.css('border-left-width'), 10)
+          + parseInt($el.css('padding-left'), 10);
       var minimumTop = elOffset.top
-          - parseInt($el.css('border-top-width'), 10)
-          - parseInt($el.css('padding-top'), 10);
+          + parseInt($el.css('border-top-width'), 10)
+          + parseInt($el.css('padding-top'), 10);
 
       return {
         left: minimumLeft

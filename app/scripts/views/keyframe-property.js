@@ -36,6 +36,7 @@ define([
       this.keyframeProperty = opts.keyframeProperty;
       this.$el.addClass('keyframe-property-view');
       this.initialRender();
+
       this.$el.dragon({
         within: this.keyframePropertyTrackView.$el
         ,drag: _.bind(this.onDrag, this)
@@ -43,16 +44,12 @@ define([
     }
 
     ,initialRender: function () {
-      this.render();
+      this.$el.html(
+          Mustache.render(KeyframePropertyTemplate, this.keyframeProperty));
     }
 
     ,render: function () {
-      this.$el.html(
-          Mustache.render(KeyframePropertyTemplate, this.keyframeProperty));
       var minimumBounds = this.keyframePropertyTrackView.getMinimumBounds();
-      // FIXME: At this point, there are no minimum bounds because nothing has
-      // been injected into the DOM.  The positioning of this View element
-      // needs to come after the initial DOM render.
       this.$el.css({
         top: minimumBounds.top
         ,left: minimumBounds.left
