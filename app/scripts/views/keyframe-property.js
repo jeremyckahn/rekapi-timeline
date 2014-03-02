@@ -52,7 +52,9 @@ define([
       var minimumBounds = this.keyframePropertyTrackView.getMinimumBounds();
       this.$el.css({
         top: minimumBounds.top
-        ,left: minimumBounds.left
+        ,left: (
+            rekapiTimelineConstants.PIXELS_PER_SECOND
+            * this.keyframeProperty.millisecond) / 1000
       });
     }
 
