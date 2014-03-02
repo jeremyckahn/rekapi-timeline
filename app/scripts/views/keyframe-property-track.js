@@ -4,8 +4,6 @@ define([
   ,'underscore'
   ,'backbone'
 
-  ,'rekapi.timeline.constants'
-
   ,'views/keyframe-property'
 
 ], function (
@@ -13,8 +11,6 @@ define([
   $
   ,_
   ,Backbone
-
-  ,rekapiTimelineConstants
 
   ,KeyframePropertyView
 
@@ -36,8 +32,6 @@ define([
       this.$el.addClass('keyframe-property-track-view');
       this.createKeyframePropertyViews();
       this.initialRender();
-      this.listenTo(this.rekapiTimeline, 'update',
-          _.bind(this.onRekapiTimelineUpdate, this));
     }
 
     ,initialRender: function () {
@@ -54,14 +48,6 @@ define([
       this._keyframePropertyViews.forEach(function (keyframePropertyView) {
         keyframePropertyView.render();
       });
-    }
-
-    ,onRekapiTimelineUpdate: function () {
-      var animationLength =
-          this.rekapiTimeline.rekapi.getAnimationLength();
-      var animationSeconds = (animationLength / 1000);
-      this.$el.css('width',
-          rekapiTimelineConstants.PIXELS_PER_SECOND * animationSeconds);
     }
 
     ,createKeyframePropertyViews: function () {

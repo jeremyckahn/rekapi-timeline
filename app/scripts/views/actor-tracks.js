@@ -4,6 +4,8 @@ define([
   ,'underscore'
   ,'backbone'
 
+  ,'rekapi.timeline.constants'
+
   ,'views/keyframe-property-track'
 
 ], function (
@@ -11,6 +13,8 @@ define([
   $
   ,_
   ,Backbone
+
+  ,rekapiTimelineConstants
 
   ,KeyframePropertyTrackView
 
@@ -30,6 +34,8 @@ define([
       this.$el.addClass('actor-tracks-view');
       this.createKeyframePropertyTrackViews();
       this.initialRender();
+      this.listenTo(this.rekapiTimeline, 'update',
+          _.bind(this.onRekapiTimelineUpdate, this));
     }
 
     ,initialRender: function () {
@@ -58,6 +64,14 @@ define([
           ,trackName: trackName
         }));
       }, this);
+    }
+
+    ,onRekapiTimelineUpdate: function () {
+      var animationLength =
+          this.rekapiTimeline.rekapi.getAnimationLength();
+      var animationSeconds = (animationLength / 1000);
+      this.$el.css('width',
+          rekapiTimelineConstants.PIXELS_PER_SECOND * animationSeconds);
     }
   });
 
