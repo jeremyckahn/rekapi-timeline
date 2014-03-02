@@ -67,11 +67,23 @@ define([
     }
 
     ,onRekapiTimelineUpdate: function () {
+      this.$el.css('width', this.getPixelWidthForTracks());
+    }
+
+    /**
+     * Determines how wide this View's element should be, in pixels.
+     * @return {number}
+     */
+    ,getPixelWidthForTracks: function () {
       var animationLength =
           this.rekapiTimeline.rekapi.getAnimationLength();
       var animationSeconds = (animationLength / 1000);
-      this.$el.css('width',
-          rekapiTimelineConstants.PIXELS_PER_SECOND * animationSeconds);
+
+      // This calculation accounts for the width of a KeyframePropertyView's
+      // element.  If there are no KeyframePropertyViews, this gracefully falls
+      // back to a value of 0.
+      return (rekapiTimelineConstants.PIXELS_PER_SECOND * animationSeconds)
+          + this.$el.find('.keyframe-property-view:first').width();
     }
   });
 
