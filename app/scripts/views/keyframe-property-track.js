@@ -35,9 +35,13 @@ define([
       this._keyframePropertyViews = [];
       this.$el.addClass('keyframe-property-track-view');
       this.createKeyframePropertyViews();
-      this.render();
+      this.initialRender();
       this.listenTo(this.rekapiTimeline, 'update',
           _.bind(this.onRekapiTimelineUpdate, this));
+    }
+
+    ,initialRender: function () {
+      this.render();
     }
 
     ,render: function () {

@@ -29,6 +29,10 @@ define([
       this._keyframePropertyTrackViews = [];
       this.$el.addClass('actor-tracks-view');
       this.createKeyframePropertyTrackViews();
+      this.initialRender();
+    }
+
+    ,initialRender: function () {
       this.render();
     }
 

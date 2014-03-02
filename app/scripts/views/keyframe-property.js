@@ -35,11 +35,15 @@ define([
       this.keyframePropertyTrackView = opts.keyframePropertyTrackView;
       this.keyframeProperty = opts.keyframeProperty;
       this.$el.addClass('keyframe-property-view');
-      this.render();
+      this.initialRender();
       this.$el.dragon({
         within: this.keyframePropertyTrackView.$el
         ,drag: _.bind(this.onDrag, this)
       });
+    }
+
+    ,initialRender: function () {
+      this.render();
     }
 
     ,render: function () {

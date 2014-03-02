@@ -32,11 +32,15 @@ define([
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
 
-      this.render();
+      this.initialRender();
       this.animationTracksView = new AnimationTracksView({
         el: this.$el.find('.rekapi-timeline-animation-tracks-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
       });
+    }
+
+    ,initialRender: function () {
+      this.render();
     }
 
     ,render: function () {
