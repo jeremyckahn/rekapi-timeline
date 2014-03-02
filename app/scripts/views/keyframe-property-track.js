@@ -42,8 +42,7 @@ define([
 
     ,render: function () {
       this.$el.children().remove();
-      this._keyframePropertyViews.forEach(
-          function (keyframePropertyView) {
+      this._keyframePropertyViews.forEach(function (keyframePropertyView) {
         this.$el.append(keyframePropertyView.$el);
       }, this);
     }
@@ -65,6 +64,28 @@ define([
           ,keyframeProperty: keyframeProperty
         }));
       }, this);
+    }
+
+    /**
+     * Gets the minimum $.fn.offset()-friendly coordinates for which containing
+     * elements should stay within.
+     * @return {{left: number, top: number}}
+     */
+    ,getMinimumBounds: function () {
+      var $el = this.$el;
+      var elOffset = $el.offset();
+
+      var minimumLeft = elOffset.left
+          - parseInt($el.css('border-left-width'), 10)
+          - parseInt($el.css('padding-left'), 10);
+      var minimumTop = elOffset.top
+          - parseInt($el.css('border-top-width'), 10)
+          - parseInt($el.css('padding-top'), 10);
+
+      return {
+        left: minimumLeft
+        ,top: minimumTop
+      };
     }
   });
 

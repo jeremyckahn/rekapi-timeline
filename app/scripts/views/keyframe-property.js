@@ -36,8 +36,7 @@ define([
       this.keyframeProperty = opts.keyframeProperty;
       this.$el.addClass('keyframe-property-view');
       this.render();
-      this._$keyframeProperty = this.$el.find('.keyframe-property');
-      this._$keyframeProperty.dragon({
+      this.$el.dragon({
         within: this.keyframePropertyTrackView.$el
         ,drag: _.bind(this.onDrag, this)
       });
@@ -46,6 +45,14 @@ define([
     ,render: function () {
       this.$el.html(
           Mustache.render(KeyframePropertyTemplate, this.keyframeProperty));
+      var minimumBounds = this.keyframePropertyTrackView.getMinimumBounds();
+      // FIXME: At this point, there are no minimum bounds because nothing has
+      // been injected into the DOM.  The positioning of this View element
+      // needs to come after the initial DOM render.
+      this.$el.css({
+        top: minimumBounds.top
+        ,left: minimumBounds.left
+      });
     }
 
     ,onDrag: function () {
@@ -56,11 +63,8 @@ define([
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
     ,updateKeyframeProperty: function () {
-      var $container = this.keyframePropertyTrackView.$el;
-      var distanceFromLeft = this._$keyframeProperty.offset().left
-          - $container.offset().left
-          - parseInt($container.css('border-left-width'), 10)
-          - parseInt($container.css('padding-left'), 10);
+      var distanceFromLeft = this.$el.offset().left
+          - this.keyframePropertyTrackView.getMinimumBounds().left;
 
       var scaledValue = (
           distanceFromLeft / rekapiTimelineConstants.PIXELS_PER_SECOND) * 1000;
