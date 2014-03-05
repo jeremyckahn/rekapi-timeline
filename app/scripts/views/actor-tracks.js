@@ -79,11 +79,11 @@ define([
           this.rekapiTimeline.rekapi.getAnimationLength();
       var animationSeconds = (animationLength / 1000);
 
-      // This calculation accounts for the width of a KeyframePropertyView's
-      // element.  If there are no KeyframePropertyViews, this gracefully falls
-      // back to a value of 0.
+      // The width of the tracks container should always be the pixel width of
+      // the animation plus the width of the animation tracks view element to
+      // allow for lengthening of the animation tracks.
       return (rekapiTimelineConstants.PIXELS_PER_SECOND * animationSeconds)
-          + this.$el.find('.keyframe-property-view:first').width();
+          + this.rekapiTimeline.containerView.animationTracksView.$el.width();
     }
   });
 
