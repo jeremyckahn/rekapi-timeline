@@ -38,10 +38,10 @@ define([
       this.initialRender();
 
       if (this.rekapiTimeline.hasRendered) {
-        this.onInitialDOMRender();
+        this.onInitialTimelineDOMRender();
       } else {
         this.listenToOnce(this.rekapiTimeline, 'initialDOMRender',
-            _.bind(this.onInitialDOMRender, this));
+            _.bind(this.onInitialTimelineDOMRender, this));
       }
     }
 
@@ -50,7 +50,7 @@ define([
           Mustache.render(KeyframePropertyTemplate, this.keyframeProperty));
     }
 
-    ,onInitialDOMRender: function () {
+    ,onInitialTimelineDOMRender: function () {
       this.$el.dragon({
         within: this.keyframePropertyTrackView.$el
         ,drag: _.bind(this.onDrag, this)

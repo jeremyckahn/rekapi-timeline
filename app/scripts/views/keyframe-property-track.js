@@ -31,13 +31,7 @@ define([
       this._keyframePropertyViews = [];
       this.$el.addClass('keyframe-property-track-view');
       this.createKeyframePropertyViews();
-      this.initialRender();
-    }
-
-    ,initialRender: function () {
-      this._keyframePropertyViews.forEach(function (keyframePropertyView) {
-        this.$el.append(keyframePropertyView.$el);
-      }, this);
+      this.buildDOM();
     }
 
     ,render: function () {
@@ -48,6 +42,12 @@ define([
       this._keyframePropertyViews.forEach(function (keyframePropertyView) {
         keyframePropertyView.render();
       });
+    }
+
+    ,buildDOM: function () {
+      this._keyframePropertyViews.forEach(function (keyframePropertyView) {
+        this.$el.append(keyframePropertyView.$el);
+      }, this);
     }
 
     ,createKeyframePropertyViews: function () {

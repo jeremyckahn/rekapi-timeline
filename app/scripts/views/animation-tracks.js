@@ -27,15 +27,8 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
       this._actorTracksViews = [];
       this.createActorViews();
-      this.initialRender();
+      this.buildDOM();
       this.listenTo(this.rekapiTimeline, 'update', _.bind(this.render, this));
-    }
-
-    ,initialRender: function () {
-      this.$el.children().remove();
-      this._actorTracksViews.forEach(function (actorView) {
-        this.$el.append(actorView.$el);
-      }, this);
     }
 
     ,render: function () {
@@ -46,6 +39,13 @@ define([
       this._actorTracksViews.forEach(function (actorView) {
         actorView.render();
       });
+    }
+
+    ,buildDOM: function () {
+      this.$el.children().remove();
+      this._actorTracksViews.forEach(function (actorView) {
+        this.$el.append(actorView.$el);
+      }, this);
     }
 
     ,createActorViews: function () {
