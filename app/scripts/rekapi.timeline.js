@@ -31,6 +31,9 @@ define([
       ,rekapiTimeline: this
     });
 
+    this.hasRendered = true;
+    this.trigger('initialDOMRender');
+
     this.rekapi.on('timelineModified',
         _.bind(this.onRekapiTimelineModified, this));
 

@@ -37,10 +37,12 @@ define([
       this.$el.addClass('keyframe-property-view');
       this.initialRender();
 
-      this.$el.dragon({
-        within: this.keyframePropertyTrackView.$el
-        ,drag: _.bind(this.onDrag, this)
-      });
+      if (this.rekapiTimeline.hasRendered) {
+        this.onInitialDOMRender();
+      } else {
+        this.listenToOnce(this.rekapiTimeline, 'initialDOMRender',
+            _.bind(this.onInitialDOMRender, this));
+      }
     }
 
     ,initialRender: function () {
@@ -48,10 +50,16 @@ define([
           Mustache.render(KeyframePropertyTemplate, this.keyframeProperty));
     }
 
+    ,onInitialDOMRender: function () {
+      this.$el.dragon({
+        within: this.keyframePropertyTrackView.$el
+        ,drag: _.bind(this.onDrag, this)
+      });
+    }
+
     ,render: function () {
       this.$el.css({
-        top: 1
-        ,left: (
+        left: (
             rekapiTimelineConstants.PIXELS_PER_SECOND
             * this.keyframeProperty.millisecond) / 1000
       });
