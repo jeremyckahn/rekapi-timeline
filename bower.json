@@ -9,7 +9,8 @@
     "requirejs-text": "~2.0.5",
     "rekapi": "~1.0.4",
     "mustache": "~0.8.1",
-    "jquery-dragon": "0.3.1"
+    "jquery-dragon": "0.3.1",
+    "sass-bootstrap-glyphicons": "~1.0.0"
   },
   "devDependencies": {},
   "resolutions": {
