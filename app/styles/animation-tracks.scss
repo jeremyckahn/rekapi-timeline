@@ -1,3 +1,10 @@
+@import 'constants';
+
 .rekapi-timeline-animation-tracks-view {
+  bottom: 0;
+  left: 0;
   overflow: scroll;
+  position: absolute;
+  right: 0;
+  top: $CONTROL_BAR_HEIGHT;
 }
