@@ -1,10 +1,14 @@
 define([
 
-  'backbone'
+  'underscore'
+  ,'backbone'
+  ,'rekapi'
 
 ], function (
 
-  Backbone
+  _
+  ,Backbone
+  ,Rekapi
 
   ) {
   'use strict';
@@ -21,6 +25,13 @@ define([
       this.attributes = opts.actor;
     }
   });
+
+  // Proxy all Rekapi.Actor.prototype methods to RekapiTimelineActorModel
+  _.each(Rekapi.Actor.prototype, function (actorMethod, actorMethodName) {
+    RekapiTimelineActorModel.prototype[actorMethodName] = function () {
+      return actorMethod.apply(this.attributes, arguments);
+    };
+  }, this);
 
   return RekapiTimelineActorModel;
 });
