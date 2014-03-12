@@ -63,7 +63,7 @@ require([
   var timeline = rekapi.createTimeline(timelineEl);
   rekapi.play(1);
 
-  console.log(rekapi);
-  console.log(timeline);
+  console.log(window.rekapi = rekapi);
+  console.log(window.timeline = timeline);
 
 });

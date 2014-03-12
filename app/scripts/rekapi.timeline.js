@@ -6,6 +6,8 @@ define([
 
   ,'views/container'
 
+  ,'collections/actor'
+
   ,'jquery-dragon'
 
 ], function (
@@ -15,6 +17,8 @@ define([
   ,Backbone
 
   ,ContainerView
+
+  ,RekapiTimelineActorCollection
 
 ) {
   'use strict';
@@ -26,6 +30,10 @@ define([
    */
   function RekapiTimeline (rekapi, el) {
     this.rekapi = rekapi;
+    this.actorCollection = new RekapiTimelineActorCollection(null, {
+      rekapiTimeline: this
+    });
+
     this.containerView = new ContainerView({
       el: el
       ,rekapiTimeline: this
