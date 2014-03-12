@@ -26,12 +26,19 @@ define([
     ,initialize: function (models, opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
 
-      _.each(this.rekapiTimeline.rekapi.getAllActors(), function (actor) {
-        this.add({}, {
-          actor: actor
-          ,rekapiTimeline: this.rekapiTimeline
-        });
-      }, this);
+      var addActor = _.bind(this.addActor, this);
+      _.each(this.rekapiTimeline.rekapi.getAllActors(), addActor);
+      this.rekapiTimeline.rekapi.on('addActor', addActor);
+    }
+
+    /**
+     * @param {Rekapi.Actor} actor
+     */
+    ,addActor: function (actor) {
+      this.add({}, {
+        actor: actor
+        ,rekapiTimeline: this.rekapiTimeline
+      });
     }
   });
 
