@@ -26,15 +26,15 @@ define([
     ,initialize: function (models, opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
 
-      var addActor = _.bind(this.addActor, this);
-      _.each(this.rekapiTimeline.rekapi.getAllActors(), addActor);
-      this.rekapiTimeline.rekapi.on('addActor', addActor);
+      var addActorToCollection = _.bind(this.addActorToCollection, this);
+      _.each(this.rekapiTimeline.rekapi.getAllActors(), addActorToCollection);
+      this.rekapiTimeline.rekapi.on('addActor', addActorToCollection);
     }
 
     /**
      * @param {Rekapi.Actor} actor
      */
-    ,addActor: function (actor) {
+    ,addActorToCollection: function (actor) {
       this.add({}, {
         actor: actor
         ,rekapiTimeline: this.rekapiTimeline

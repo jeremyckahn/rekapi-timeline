@@ -4,11 +4,15 @@ define([
   ,'backbone'
   ,'rekapi'
 
+  ,'collections/keyframe-property'
+
 ], function (
 
   _
   ,Backbone
   ,Rekapi
+
+  ,RekapiTimelineKeyframePropertyCollection
 
   ) {
   'use strict';
@@ -23,6 +27,19 @@ define([
     initialize: function (attrs, opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.attributes = opts.actor;
+
+      this.keyframePropertyCollection =
+          new RekapiTimelineKeyframePropertyCollection(null, {
+        rekapiTimeline: this.rekapiTimeline
+        ,actorModel: this
+      });
+    }
+
+    /**
+     * @return {Rekapi.Actor}
+     */
+    ,getActor: function () {
+      return this.attributes;
     }
   });
 
