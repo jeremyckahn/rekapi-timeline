@@ -23,7 +23,6 @@ define([
     initialize: function (attrs, opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.attributes = opts.keyframeProperty;
-      console.log('Added!', arguments)
     }
   });
 

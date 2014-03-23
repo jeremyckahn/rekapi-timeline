@@ -49,7 +49,9 @@ define([
     }
 
     ,onAddKeyframeProperty: function (rekapi, keyframeProperty) {
-      this.addKeyframePropertyToCollection(keyframeProperty);
+      if (keyframeProperty.actor === this.actorModel.getActor()) {
+        this.addKeyframePropertyToCollection(keyframeProperty);
+      }
     }
 
     ,addKeyframePropertyToCollection: function (keyframeProperty) {
@@ -60,7 +62,9 @@ define([
     }
 
     ,onRemoveKeyframeProperty: function (rekapi, keyframeProperty) {
-      this.removeKeyframePropertyFromCollection(keyframeProperty);
+      if (keyframeProperty.actor === this.actorModel.getActor()) {
+        this.removeKeyframePropertyFromCollection(keyframeProperty);
+      }
     }
 
     ,removeKeyframePropertyFromCollection: function (keyframeProperty) {
