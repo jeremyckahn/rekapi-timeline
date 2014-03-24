@@ -7,7 +7,7 @@
     "backbone": "~1.0.0",
     "requirejs": "~2.1.5",
     "requirejs-text": "~2.0.5",
-    "rekapi": "~1.0.4",
+    "rekapi": "1.1.0",
     "mustache": "~0.8.1",
     "jquery-dragon": "0.3.1",
     "sass-bootstrap-glyphicons": "~1.0.0"
