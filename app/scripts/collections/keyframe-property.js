@@ -59,6 +59,8 @@ define([
         keyframeProperty: keyframeProperty
         ,rekapiTimeline: this.rekapiTimeline
       });
+
+      return this.findWhere({ id: keyframeProperty.id });
     }
 
     ,onRemoveKeyframeProperty: function (rekapi, keyframeProperty) {

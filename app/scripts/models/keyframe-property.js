@@ -24,6 +24,20 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
       this.attributes = opts.keyframeProperty;
     }
+
+    /**
+     * @return {Rekapi.KeyframeProperty}
+     */
+    ,getKeyframeProperty: function () {
+      return this.attributes;
+    }
+
+    /**
+     * @return {Rekapi.Actor}
+     */
+    ,getActor: function () {
+      return this.attributes.actor;
+    }
   });
 
   // Proxy all Rekapi.KeyframeProperty.prototype methods to

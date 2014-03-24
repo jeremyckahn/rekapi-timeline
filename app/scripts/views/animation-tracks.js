@@ -49,10 +49,12 @@ define([
     }
 
     ,createActorViews: function () {
-      _.each(this.rekapiTimeline.rekapi.getAllActors(), function (actor) {
+      _.each(this.rekapiTimeline.getAllActors(), function (actor) {
+        var actorModel =
+            this.rekapiTimeline.actorCollection.addActorToCollection(actor);
         this._actorTracksViews.push(new ActorTracksView({
           rekapiTimeline: this.rekapiTimeline
-          ,actor: actor
+          ,model: actorModel
         }));
       }, this);
     }

@@ -27,13 +27,11 @@ define([
     /**
      * @param {Object}
      *   @param {RekapiTimeline} rekapiTimeline
-     *   @param {Rekapi.KeyframeProperty} keyframeProperty
      *   @param {KeyframePropertyTrackView} keyframePropertyTrackView
      */
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.keyframePropertyTrackView = opts.keyframePropertyTrackView;
-      this.keyframeProperty = opts.keyframeProperty;
       this.$el.addClass('keyframe-property-view');
       this.initialRender();
 
@@ -46,8 +44,8 @@ define([
     }
 
     ,initialRender: function () {
-      this.$el.html(
-          Mustache.render(KeyframePropertyTemplate, this.keyframeProperty));
+      this.$el.html(Mustache.render(
+          KeyframePropertyTemplate, this.model.getKeyframeProperty()));
     }
 
     ,onInitialTimelineDOMRender: function () {
@@ -61,7 +59,7 @@ define([
       this.$el.css({
         left: (
             rekapiTimelineConstants.PIXELS_PER_SECOND
-            * this.keyframeProperty.millisecond) / 1000
+            * this.model.get('millisecond')) / 1000
       });
     }
 
@@ -81,9 +79,9 @@ define([
 
       // Modify the keyframeProperty via its actor so that the state of the
       // animation is updated.
-      var keyframeProperty = this.keyframeProperty;
-      keyframeProperty.actor.modifyKeyframeProperty(
-          keyframeProperty.name, keyframeProperty.millisecond, {
+      var model = this.model;
+      model.getActor().modifyKeyframeProperty(
+          model.get('name'), model.get('millisecond'), {
             millisecond: scaledValue
           });
     }

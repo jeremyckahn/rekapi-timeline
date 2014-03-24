@@ -62,5 +62,15 @@ define([
     return new RekapiTimeline(this, el);
   };
 
+  // Proxy Rekapi.prototype method that do not conflict with Backbone APIs to
+  // RekapiTimeline
+  var whitelistedProtoMethods =
+      _.difference(Object.keys(Rekapi.prototype), ['on', 'off']);
+  _.each(whitelistedProtoMethods, function (rekapiMethodName) {
+    RekapiTimeline.prototype[rekapiMethodName] = function () {
+      return Rekapi.prototype[rekapiMethodName].apply(this.rekapi, arguments);
+    };
+  }, this);
+
   return RekapiTimeline;
 });

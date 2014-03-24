@@ -21,12 +21,10 @@ define([
     /**
      * @param {Object}
      *   @param {RekapiTimeline} rekapiTimeline
-     *   @param {Rekapi.Actor} actor
      *   @param {string} trackName
      */
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
-      this.actor = opts.actor;
       this.trackName = opts.trackName;
       this._keyframePropertyViews = [];
       this.$el.addClass('keyframe-property-track-view');
@@ -51,12 +49,16 @@ define([
     }
 
     ,createKeyframePropertyViews: function () {
-      this.actor.getPropertiesInTrack(this.trackName).forEach(
+      this.model.getPropertiesInTrack(this.trackName).forEach(
           function (keyframeProperty) {
+        var keyframePropertyModel =
+            this.model.keyframePropertyCollection
+              .addKeyframePropertyToCollection(keyframeProperty);
+
         this._keyframePropertyViews.push(new KeyframePropertyView({
           rekapiTimeline: this.rekapiTimeline
           ,keyframePropertyTrackView: this
-          ,keyframeProperty: keyframeProperty
+          ,model: keyframePropertyModel
         }));
       }, this);
     }

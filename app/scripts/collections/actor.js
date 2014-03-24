@@ -27,18 +27,21 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
 
       var addActorToCollection = _.bind(this.addActorToCollection, this);
-      _.each(this.rekapiTimeline.rekapi.getAllActors(), addActorToCollection);
+      //_.each(this.rekapiTimeline.rekapi.getAllActors(), addActorToCollection);
       this.rekapiTimeline.rekapi.on('addActor', addActorToCollection);
     }
 
     /**
      * @param {Rekapi.Actor} actor
+     * @return {RekapiTimelineActorModel}
      */
     ,addActorToCollection: function (actor) {
       this.add({}, {
         actor: actor
         ,rekapiTimeline: this.rekapiTimeline
       });
+
+      return this.findWhere({ id: actor.id });
     }
   });
 
