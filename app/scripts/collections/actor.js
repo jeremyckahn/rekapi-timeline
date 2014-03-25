@@ -27,7 +27,6 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
 
       var addActorToCollection = _.bind(this.addActorToCollection, this);
-      //_.each(this.rekapiTimeline.rekapi.getAllActors(), addActorToCollection);
       this.rekapiTimeline.rekapi.on('addActor', addActorToCollection);
     }
 
@@ -41,7 +40,9 @@ define([
         ,rekapiTimeline: this.rekapiTimeline
       });
 
-      return this.findWhere({ id: actor.id });
+      var actorModel = this.findWhere({ id: actor.id });
+
+      return actorModel;
     }
   });
 

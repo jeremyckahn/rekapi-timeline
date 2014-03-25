@@ -26,6 +26,10 @@ define([
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this._actorTracksViews = [];
+
+      this.listenTo(this.rekapiTimeline.actorCollection, 'add',
+          _.bind(this.createActorView, this));
+
       this.createActorViews();
       this.buildDOM();
       this.listenTo(this.rekapiTimeline, 'update', _.bind(this.render, this));
@@ -49,14 +53,19 @@ define([
     }
 
     ,createActorViews: function () {
-      _.each(this.rekapiTimeline.getAllActors(), function (actor) {
-        var actorModel =
-            this.rekapiTimeline.actorCollection.addActorToCollection(actor);
-        this._actorTracksViews.push(new ActorTracksView({
-          rekapiTimeline: this.rekapiTimeline
-          ,model: actorModel
-        }));
-      }, this);
+      var actorCollection = this.rekapiTimeline.actorCollection;
+      _.each(this.rekapiTimeline.getAllActors(),
+          actorCollection.addActorToCollection, actorCollection);
+    }
+
+    /**
+     * @param {RekapiTimelineActorModel} actorModel
+     */
+    ,createActorView: function (actorModel) {
+      this._actorTracksViews.push(new ActorTracksView({
+        rekapiTimeline: this.rekapiTimeline
+        ,model: actorModel
+      }));
     }
   });
 
