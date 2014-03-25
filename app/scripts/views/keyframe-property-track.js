@@ -49,12 +49,11 @@ define([
     }
 
     ,createKeyframePropertyViews: function () {
-      this.model.getPropertiesInTrack(this.trackName).forEach(
-          function (keyframeProperty) {
-        var keyframePropertyModel =
-            this.model.keyframePropertyCollection
-              .addKeyframePropertyToCollection(keyframeProperty);
+      var trackProperties = this.model.keyframePropertyCollection.where({
+        name: this.trackName
+      });
 
+      trackProperties.forEach(function (keyframePropertyModel) {
         this._keyframePropertyViews.push(new KeyframePropertyView({
           rekapiTimeline: this.rekapiTimeline
           ,keyframePropertyTrackView: this
