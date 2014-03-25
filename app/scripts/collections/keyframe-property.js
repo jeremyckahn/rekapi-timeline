@@ -48,12 +48,29 @@ define([
           _.bind(this.onRemoveKeyframeProperty, this));
     }
 
+    /**
+     * @param {Rekapi} rekapi
+     * @param {Rekapi.KeyframeProperty} keyframeProperty
+     */
     ,onAddKeyframeProperty: function (rekapi, keyframeProperty) {
       if (keyframeProperty.actor === this.actorModel.getActor()) {
         this.addKeyframePropertyToCollection(keyframeProperty);
       }
     }
 
+    /**
+     * @param {Rekapi} rekapi
+     * @param {Rekapi.KeyframeProperty} keyframeProperty
+     */
+    ,onRemoveKeyframeProperty: function (rekapi, keyframeProperty) {
+      if (keyframeProperty.actor === this.actorModel.getActor()) {
+        this.removeKeyframePropertyFromCollection(keyframeProperty);
+      }
+    }
+
+    /**
+     * @param {Rekapi.KeyframeProperty} keyframeProperty
+     */
     ,addKeyframePropertyToCollection: function (keyframeProperty) {
       this.add({}, {
         keyframeProperty: keyframeProperty
@@ -63,12 +80,9 @@ define([
       return this.findWhere({ id: keyframeProperty.id });
     }
 
-    ,onRemoveKeyframeProperty: function (rekapi, keyframeProperty) {
-      if (keyframeProperty.actor === this.actorModel.getActor()) {
-        this.removeKeyframePropertyFromCollection(keyframeProperty);
-      }
-    }
-
+    /**
+     * @param {Rekapi.KeyframeProperty} keyframeProperty
+     */
     ,removeKeyframePropertyFromCollection: function (keyframeProperty) {
       this.remove(this.findWhere({ id: keyframeProperty.id }));
     }
