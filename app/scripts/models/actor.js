@@ -27,12 +27,20 @@ define([
     initialize: function (attrs, opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.attributes = opts.actor;
+      this.getTrackNames().forEach(this.addKeyframePropertyTrack, this);
 
       this.keyframePropertyCollection =
           new RekapiTimelineKeyframePropertyCollection(null, {
         rekapiTimeline: this.rekapiTimeline
         ,actorModel: this
       });
+    }
+
+    /**
+     * @param {string} trackName
+     */
+    ,addKeyframePropertyTrack: function (trackName) {
+      this.trigger('addKeyframePropertyTrack', trackName);
     }
 
     /**

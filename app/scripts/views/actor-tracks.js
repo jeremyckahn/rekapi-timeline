@@ -30,10 +30,22 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
       this._keyframePropertyTrackViews = [];
       this.$el.addClass('actor-tracks-view');
-      this.createKeyframePropertyTrackViews();
+
+      this.listenTo(this.model, 'addKeyframePropertyTrack',
+          _.bind(this.onAddKeyframePropertyTrack, this));
+      this.model.getTrackNames().forEach(
+          this.createKeyframePropertyTrackView, this);
+
       this.buildDOM();
       this.listenTo(this.rekapiTimeline, 'update',
           _.bind(this.onRekapiTimelineUpdate, this));
+    }
+
+    /**
+     * @param {string} newTrackName
+     */
+    ,onAddKeyframePropertyTrack: function (newTrackName) {
+      this.createKeyframePropertyTrackView(newTrackName);
     }
 
     ,render: function () {
@@ -54,14 +66,12 @@ define([
       }, this);
     }
 
-    ,createKeyframePropertyTrackViews: function () {
-      this.model.getTrackNames().forEach(function (trackName) {
-        this._keyframePropertyTrackViews.push(new KeyframePropertyTrackView({
-          rekapiTimeline: this.rekapiTimeline
-          ,model: this.model
-          ,trackName: trackName
-        }));
-      }, this);
+    ,createKeyframePropertyTrackView: function (trackName) {
+      this._keyframePropertyTrackViews.push(new KeyframePropertyTrackView({
+        rekapiTimeline: this.rekapiTimeline
+        ,model: this.model
+        ,trackName: trackName
+      }));
     }
 
     ,onRekapiTimelineUpdate: function () {

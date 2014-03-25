@@ -28,11 +28,18 @@ define([
       this._actorTracksViews = [];
 
       this.listenTo(this.rekapiTimeline.actorCollection, 'add',
-          _.bind(this.createActorView, this));
+          _.bind(this.onActorCollectionAdd, this));
 
       this.createActorViews();
       this.buildDOM();
       this.listenTo(this.rekapiTimeline, 'update', _.bind(this.render, this));
+    }
+
+    /**
+     * @param {RekapiTimelineActorModel} actorModel
+     */
+    ,onActorCollectionAdd: function (actorModel) {
+      this.createActorView(actorModel);
     }
 
     ,render: function () {
