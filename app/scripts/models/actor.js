@@ -34,6 +34,24 @@ define([
         rekapiTimeline: this.rekapiTimeline
         ,actorModel: this
       });
+
+      this.listenTo(this.keyframePropertyCollection, 'add',
+          _.bind(this.onAddKeyframeProperty, this));
+
+      // Backfill the collection with any keyframeProperties the actor may
+      // already have
+      this.getTrackNames().forEach(function (trackName) {
+        this.getPropertiesInTrack(trackName).forEach(
+            this.keyframePropertyCollection.addKeyframePropertyToCollection,
+            this.keyframePropertyCollection);
+      }, this);
+    }
+
+    /**
+     * @param {RekapiTimelineKeyframePropertyModel} model
+     */
+    ,onAddKeyframeProperty: function (model) {
+      this.trigger('addKeyframeProperty', model);
     }
 
     /**

@@ -28,20 +28,6 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
       this.actorModel = opts.actorModel;
 
-      var rawActorProperties = [];
-
-      var actor = this.actorModel.getActor();
-      actor.getTrackNames().forEach(function (trackName) {
-        actor.getPropertiesInTrack(trackName).forEach(
-            Array.prototype.push, rawActorProperties);
-      });
-
-      rawActorProperties
-        .filter(function (keyframeProperty) {
-          return keyframeProperty.actor === actor;
-        })
-        .forEach(this.addKeyframePropertyToCollection, this);
-
       this.rekapiTimeline.rekapi.on('addKeyframeProperty',
           _.bind(this.onAddKeyframeProperty, this));
       this.rekapiTimeline.rekapi.on('removeKeyframeProperty',
@@ -70,6 +56,8 @@ define([
 
     /**
      * @param {Rekapi.KeyframeProperty} keyframeProperty
+     * @return {RekapiTimelineKeyframePropertyModel} The keyframe property
+     * model that was added.
      */
     ,addKeyframePropertyToCollection: function (keyframeProperty) {
       this.add({}, {

@@ -22,14 +22,31 @@ define([
      * @param {Object}
      *   @param {RekapiTimeline} rekapiTimeline
      *   @param {string} trackName
+     *   @param {RekapiTimelineActorModel} model
      */
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.trackName = opts.trackName;
       this._keyframePropertyViews = [];
       this.$el.addClass('keyframe-property-track-view');
-      this.createKeyframePropertyViews();
+
+      this.listenTo(this.model, 'addKeyframeProperty',
+          _.bind(this.onAddKeyframeProperty, this));
+
+      // Retroactively create views for any keyframeProperties that the actor
+      // that hed before RekapiTimeline was initialized
+      this.model.keyframePropertyCollection
+          .where({ name: this.trackName })
+          .forEach(this.createKeyframePropertyView, this);
+
       this.buildDOM();
+    }
+
+    /**
+     * @param {RekapiTimelineKeyframePropertyModel} keyframePropertyModel
+     */
+    ,onAddKeyframeProperty: function (newKeyframeProperty) {
+      this.createKeyframePropertyView(newKeyframeProperty);
     }
 
     ,render: function () {
@@ -48,18 +65,15 @@ define([
       }, this);
     }
 
-    ,createKeyframePropertyViews: function () {
-      var trackProperties = this.model.keyframePropertyCollection.where({
-        name: this.trackName
-      });
-
-      trackProperties.forEach(function (keyframePropertyModel) {
-        this._keyframePropertyViews.push(new KeyframePropertyView({
-          rekapiTimeline: this.rekapiTimeline
-          ,keyframePropertyTrackView: this
-          ,model: keyframePropertyModel
-        }));
-      }, this);
+    /**
+     * @param {RekapiTimelineKeyframePropertyModel} keyframePropertyModel
+     */
+    ,createKeyframePropertyView: function (keyframePropertyModel) {
+      this._keyframePropertyViews.push(new KeyframePropertyView({
+        rekapiTimeline: this.rekapiTimeline
+        ,keyframePropertyTrackView: this
+        ,model: keyframePropertyModel
+      }));
     }
 
     /**
