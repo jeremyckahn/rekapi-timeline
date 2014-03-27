@@ -38,8 +38,6 @@ define([
       this.model.keyframePropertyCollection
           .where({ name: this.trackName })
           .forEach(this.createKeyframePropertyView, this);
-
-      this.buildDOM();
     }
 
     /**
@@ -59,43 +57,25 @@ define([
       });
     }
 
-    ,buildDOM: function () {
-      this._keyframePropertyViews.forEach(function (keyframePropertyView) {
-        this.$el.append(keyframePropertyView.$el);
-      }, this);
-    }
-
     /**
      * @param {RekapiTimelineKeyframePropertyModel} keyframePropertyModel
      */
     ,createKeyframePropertyView: function (keyframePropertyModel) {
-      this._keyframePropertyViews.push(new KeyframePropertyView({
-        rekapiTimeline: this.rekapiTimeline
+      // It's important to build the DOM before initializing the View in this
+      // case, the initialization logic in KeyframePropertyView is way easier
+      // that way.
+      var keyframePropertyEl = document.createElement('div');
+      this.$el.append(keyframePropertyEl);
+
+      var keyframePropertyView = new KeyframePropertyView({
+        el: keyframePropertyEl
+        ,rekapiTimeline: this.rekapiTimeline
         ,keyframePropertyTrackView: this
         ,model: keyframePropertyModel
-      }));
-    }
+      });
 
-    /**
-     * Gets the minimum $.fn.offset()-friendly coordinates for which containing
-     * elements should stay within.
-     * @return {{left: number, top: number}}
-     */
-    ,getMinimumBounds: function () {
-      var $el = this.$el;
-      var elOffset = $el.offset();
-
-      var minimumLeft = elOffset.left
-          + parseInt($el.css('border-left-width'), 10)
-          + parseInt($el.css('padding-left'), 10);
-      var minimumTop = elOffset.top
-          + parseInt($el.css('border-top-width'), 10)
-          + parseInt($el.css('padding-top'), 10);
-
-      return {
-        left: minimumLeft
-        ,top: minimumTop
-      };
+      this._keyframePropertyViews.push(keyframePropertyView);
+      keyframePropertyView.render();
     }
   });
 

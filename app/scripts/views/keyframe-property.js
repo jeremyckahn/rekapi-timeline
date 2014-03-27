@@ -71,8 +71,8 @@ define([
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
     ,updateKeyframeProperty: function () {
-      var distanceFromLeft = this.$el.offset().left
-          - this.keyframePropertyTrackView.getMinimumBounds().left;
+      var distanceFromLeft = parseInt(this.$el.css('left'), 10) -
+          parseInt(this.$el.parent().css('border-left-width'), 10);
 
       var scaledValue = (
           distanceFromLeft / rekapiTimelineConstants.PIXELS_PER_SECOND) * 1000;
