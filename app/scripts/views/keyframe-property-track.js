@@ -44,7 +44,9 @@ define([
      * @param {RekapiTimelineKeyframePropertyModel} keyframePropertyModel
      */
     ,onAddKeyframeProperty: function (newKeyframeProperty) {
-      this.createKeyframePropertyView(newKeyframeProperty);
+      if (newKeyframeProperty.get('name') === this.trackName) {
+        this.createKeyframePropertyView(newKeyframeProperty);
+      }
     }
 
     ,render: function () {

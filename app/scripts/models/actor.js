@@ -29,6 +29,9 @@ define([
       this.attributes = opts.actor;
       this.getTrackNames().forEach(this.addKeyframePropertyTrack, this);
 
+      this.rekapiTimeline.rekapi.on('addKeyframePropertyTrack',
+          _.bind(this.onRekapiAddKeyframePropertyTrack, this));
+
       this.keyframePropertyCollection =
           new RekapiTimelineKeyframePropertyCollection(null, {
         rekapiTimeline: this.rekapiTimeline
@@ -45,6 +48,14 @@ define([
             this.keyframePropertyCollection.addKeyframePropertyToCollection,
             this.keyframePropertyCollection);
       }, this);
+    }
+
+    /**
+     * @param {Rekapi} rekapi
+     * @param {Rekapi.KeyframeProperty} keyframeProperty
+     */
+    ,onRekapiAddKeyframePropertyTrack: function (rekapi, keyframeProperty) {
+      this.addKeyframePropertyTrack(keyframeProperty.name);
     }
 
     /**

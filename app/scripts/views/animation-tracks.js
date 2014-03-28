@@ -60,6 +60,7 @@ define([
     }
 
     ,createActorViews: function () {
+      // Creates views for any actors that were already in the animimation
       var actorCollection = this.rekapiTimeline.actorCollection;
       _.each(this.rekapiTimeline.getAllActors(),
           actorCollection.addActorToCollection, actorCollection);

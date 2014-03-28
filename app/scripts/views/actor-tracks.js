@@ -33,10 +33,11 @@ define([
 
       this.listenTo(this.model, 'addKeyframePropertyTrack',
           _.bind(this.onAddKeyframePropertyTrack, this));
+
+      // Create views for any keyframes that were already defined
       this.model.getTrackNames().forEach(
           this.createKeyframePropertyTrackView, this);
 
-      this.buildDOM();
       this.listenTo(this.rekapiTimeline, 'update',
           _.bind(this.onRekapiTimelineUpdate, this));
     }
@@ -59,19 +60,15 @@ define([
       });
     }
 
-    ,buildDOM: function () {
-      this._keyframePropertyTrackViews.forEach(
-          function (keyframePropertyTrackView) {
-        this.$el.append(keyframePropertyTrackView.$el);
-      }, this);
-    }
-
     ,createKeyframePropertyTrackView: function (trackName) {
-      this._keyframePropertyTrackViews.push(new KeyframePropertyTrackView({
+      var keyframePropertyTrackView = new KeyframePropertyTrackView({
         rekapiTimeline: this.rekapiTimeline
         ,model: this.model
         ,trackName: trackName
-      }));
+      });
+
+      this._keyframePropertyTrackViews.push(keyframePropertyTrackView);
+      this.$el.append(keyframePropertyTrackView.$el);
     }
 
     ,onRekapiTimelineUpdate: function () {
