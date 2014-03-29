@@ -49,16 +49,6 @@ define([
       }
     }
 
-    ,render: function () {
-      this.renderKeyframeProperties();
-    }
-
-    ,renderKeyframeProperties: function () {
-      this._keyframePropertyViews.forEach(function (keyframePropertyView) {
-        keyframePropertyView.render();
-      });
-    }
-
     /**
      * @param {RekapiTimelineKeyframePropertyModel} keyframePropertyModel
      */

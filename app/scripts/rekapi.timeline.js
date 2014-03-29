@@ -52,6 +52,26 @@ define([
     this.trigger('update');
   };
 
+  /**
+   * @param {Object} object
+   */
+  RekapiTimeline.prototype.dispose = function (object) {
+    if (typeof object.stopListening === 'function') {
+      object.stopListening();
+    }
+
+    _.each(object, function (value, key) {
+      if (typeof value !== 'undefined') {
+        if (value instanceof $) {
+          value.off();
+          value.remove();
+        }
+
+        delete object[key];
+      }
+    });
+  };
+
   _.extend(RekapiTimeline.prototype, Backbone.Events);
 
   // Decorate the Rekapi prototype with an init method.

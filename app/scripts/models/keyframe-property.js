@@ -23,6 +23,15 @@ define([
     initialize: function (attrs, opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.attributes = opts.keyframeProperty;
+
+      this.rekapiTimeline.rekapi.on('removeKeyframeProperty',
+          _.bind(this.onRekapiRemoveKeyframeProperty, this));
+    }
+
+    ,onRekapiRemoveKeyframeProperty: function (rekapi, keyframeProperty) {
+      if (keyframeProperty === this.attributes) {
+        this.destroy();
+      }
     }
 
     /**
@@ -37,6 +46,15 @@ define([
      */
     ,getActor: function () {
       return this.attributes.actor;
+    }
+
+    /**
+     * Overrides the standard Backbone.Model#destroy behavior, as there is no
+     * server data that thmodel is tied to.
+     * @override
+     */
+    ,destroy: function () {
+      this.trigger('destroy');
     }
   });
 

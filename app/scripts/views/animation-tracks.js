@@ -32,7 +32,6 @@ define([
 
       this.createActorViews();
       this.buildDOM();
-      this.listenTo(this.rekapiTimeline, 'update', _.bind(this.render, this));
     }
 
     /**
@@ -40,16 +39,6 @@ define([
      */
     ,onActorCollectionAdd: function (actorModel) {
       this.createActorView(actorModel);
-    }
-
-    ,render: function () {
-      this.renderActorViews();
-    }
-
-    ,renderActorViews: function () {
-      this._actorTracksViews.forEach(function (actorView) {
-        actorView.render();
-      });
     }
 
     ,buildDOM: function () {

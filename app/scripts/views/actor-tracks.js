@@ -49,17 +49,6 @@ define([
       this.createKeyframePropertyTrackView(newTrackName);
     }
 
-    ,render: function () {
-      this.renderKeyframePropertyTracks();
-    }
-
-    ,renderKeyframePropertyTracks: function () {
-      this._keyframePropertyTrackViews.forEach(
-          function (keyframePropertyTrackView) {
-        keyframePropertyTrackView.render();
-      });
-    }
-
     ,createKeyframePropertyTrackView: function (trackName) {
       var keyframePropertyTrackView = new KeyframePropertyTrackView({
         rekapiTimeline: this.rekapiTimeline

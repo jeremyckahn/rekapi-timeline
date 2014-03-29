@@ -41,6 +41,8 @@ define([
         this.listenToOnce(this.rekapiTimeline, 'initialDOMRender',
             _.bind(this.onInitialTimelineDOMRender, this));
       }
+
+      this.listenTo(this.model, 'destroy', _.bind(this.dispose, this));
     }
 
     ,initialRender: function () {
@@ -84,6 +86,10 @@ define([
           model.get('name'), model.get('millisecond'), {
             millisecond: scaledValue
           });
+    }
+
+    ,dispose: function () {
+      this.rekapiTimeline.dispose(this);
     }
   });
 
