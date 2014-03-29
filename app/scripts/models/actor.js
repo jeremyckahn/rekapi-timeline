@@ -55,7 +55,9 @@ define([
      * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
     ,onRekapiAddKeyframePropertyTrack: function (rekapi, keyframeProperty) {
-      this.addKeyframePropertyTrack(keyframeProperty.name);
+      if (keyframeProperty.actor === this.attributes) {
+        this.addKeyframePropertyTrack(keyframeProperty.name);
+      }
     }
 
     /**
