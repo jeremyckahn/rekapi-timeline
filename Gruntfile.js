@@ -58,6 +58,10 @@ module.exports = function (grunt) {
       compass: {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         tasks: ['compass']
+      },
+      test: {
+        files: ['<%= yeoman.app %>/scripts/{,*/}*.js', 'test/spec/**/*.js'],
+        tasks: ['test:true']
       }
     },
     connect: {
@@ -85,6 +89,19 @@ module.exports = function (grunt) {
             ];
           }
         }
+      },
+      test: {
+        options: {
+          port: 9001,
+          middleware: function (connect) {
+            return [
+              lrSnippet,
+              mountFolder(connect, '.tmp'),
+              mountFolder(connect, 'test'),
+              mountFolder(connect, yeomanConfig.app)
+            ];
+          }
+        }
       }
     },
     open: {
@@ -106,6 +123,14 @@ module.exports = function (grunt) {
         '<%= yeoman.app %>/scripts/{,*/}*.js',
         '!<%= yeoman.app %>/scripts/vendor/*',
       ]
+    },
+    mocha: {
+      all: {
+        options: {
+          run: true,
+          urls: ['http://localhost:<%= connect.test.options.port %>/index.html']
+        }
+      }
     },
     requirejs: {
       dist: {
@@ -251,6 +276,26 @@ module.exports = function (grunt) {
       //'open:server',
       'watch'
     ]);
+  });
+
+  grunt.registerTask('test', function (isConnected) {
+    isConnected = Boolean(isConnected);
+    var testTasks = [
+        'clean:server',
+        'compass',
+        'connect:test',
+        'mocha',
+        'watch:test'
+      ];
+
+    if(!isConnected) {
+      return grunt.task.run(testTasks);
+    } else {
+      // already connected so not going to connect again, remove the
+      // connect:test task
+      testTasks.splice(testTasks.indexOf('connect:test'), 1);
+      return grunt.task.run(testTasks);
+    }
   });
 
   grunt.registerTask('build', [
