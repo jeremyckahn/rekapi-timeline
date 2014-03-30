@@ -132,8 +132,22 @@ module.exports = function (grunt) {
         }
       }
     },
+    /* jshint camelcase:false */
+    mocha_require_phantom: {
+      options: {
+        base: '.',
+        main: 'test/main',
+        requireLib: '<%= yeoman.app %>/bower_components/requirejs/require.js',
+        files: ['test/spec/*.js'],
+        keepAlive: true
+      },
+      all: {
+        // Target-specific file lists and/or options go here.
+      },
+    },
     requirejs: {
       dist: {
+        /* jshint maxlen: 100 */
         // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
         options: {
           baseUrl: '<%= yeoman.app %>/scripts',
