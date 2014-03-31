@@ -107,6 +107,9 @@ module.exports = function (grunt) {
     open: {
       server: {
         path: 'http://localhost:<%= connect.options.port %>'
+      },
+      debug: {
+        path: 'http://localhost:3000'
       }
     },
     clean: {
@@ -124,26 +127,24 @@ module.exports = function (grunt) {
         '!<%= yeoman.app %>/scripts/vendor/*',
       ]
     },
-    mocha: {
-      all: {
-        options: {
-          run: true,
-          urls: ['http://localhost:<%= connect.test.options.port %>/index.html']
-        }
-      }
-    },
     /* jshint camelcase:false */
     mocha_require_phantom: {
       options: {
         base: '.',
         main: 'test/main',
         requireLib: '<%= yeoman.app %>/bower_components/requirejs/require.js',
-        files: ['test/spec/*.js'],
-        keepAlive: true
+        files: ['test/spec/*.js']
       },
-      all: {
-        // Target-specific file lists and/or options go here.
+      debug: {
+        options: {
+          keepAlive: true
+        }
       },
+      auto: {
+        options: {
+          keepAlive: false
+        }
+      }
     },
     requirejs: {
       dist: {
@@ -292,25 +293,18 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('test', function (isConnected) {
-    isConnected = Boolean(isConnected);
-    var testTasks = [
-        'clean:server',
-        'compass',
-        'connect:test',
-        'mocha',
-        'watch:test'
-      ];
+  grunt.registerTask('test', [
+    'clean:server',
+    'compass',
+    'mocha_require_phantom:auto',
+  ]);
 
-    if(!isConnected) {
-      return grunt.task.run(testTasks);
-    } else {
-      // already connected so not going to connect again, remove the
-      // connect:test task
-      testTasks.splice(testTasks.indexOf('connect:test'), 1);
-      return grunt.task.run(testTasks);
-    }
-  });
+  grunt.registerTask('debug', [
+    'clean:server',
+    'compass',
+    'open:debug',
+    'mocha_require_phantom:debug'
+  ]);
 
   grunt.registerTask('build', [
     'clean:dist',
