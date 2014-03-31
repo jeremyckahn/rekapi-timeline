@@ -19,7 +19,7 @@ define([
   var should = chai.should();
 
   describe('The code loads', function () {
-    it('should define Rekapi.prototype.createTimeline', function () {
+    it('Should define Rekapi.prototype.createTimeline', function () {
       assert.isFunction(Rekapi.prototype.createTimeline);
     });
   });
