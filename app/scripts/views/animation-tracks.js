@@ -31,7 +31,6 @@ define([
           _.bind(this.onActorCollectionAdd, this));
 
       this.createActorViews();
-      this.buildDOM();
     }
 
     /**
@@ -39,13 +38,6 @@ define([
      */
     ,onActorCollectionAdd: function (actorModel) {
       this.createActorView(actorModel);
-    }
-
-    ,buildDOM: function () {
-      this.$el.children().remove();
-      this._actorTracksViews.forEach(function (actorView) {
-        this.$el.append(actorView.$el);
-      }, this);
     }
 
     ,createActorViews: function () {
@@ -59,10 +51,12 @@ define([
      * @param {RekapiTimelineActorModel} actorModel
      */
     ,createActorView: function (actorModel) {
-      this._actorTracksViews.push(new ActorTracksView({
-        rekapiTimeline: this.rekapiTimeline
-        ,model: actorModel
-      }));
+      var actorTracksView = new ActorTracksView({
+          rekapiTimeline: this.rekapiTimeline
+          ,model: actorModel
+        });
+      this._actorTracksViews.push(actorTracksView);
+      this.$el.append(actorTracksView.$el);
     }
   });
 
