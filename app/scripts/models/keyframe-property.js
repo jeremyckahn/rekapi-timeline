@@ -28,6 +28,10 @@ define([
           _.bind(this.onRekapiRemoveKeyframeProperty, this));
     }
 
+    /**
+     * @param {Rekapi} rekapi
+     * @param {Rekapi.KeyframeProperty} keyframeProperty
+     */
     ,onRekapiRemoveKeyframeProperty: function (rekapi, keyframeProperty) {
       if (keyframeProperty === this.attributes) {
         this.destroy();

@@ -26,8 +26,16 @@ define([
     ,initialize: function (models, opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
 
-      var addActorToCollection = _.bind(this.addActorToCollection, this);
-      this.rekapiTimeline.rekapi.on('addActor', addActorToCollection);
+      this.rekapiTimeline.rekapi.on('addActor',
+          _.bind(this.onRekapiAddActor, this));
+    }
+
+    /**
+     * @param {Rekapi} rekapi
+     * @param {Rekapi.Actor} actor
+     */
+    ,onRekapiAddActor: function (rekapi, actor) {
+      this.addActorToCollection(actor);
     }
 
     /**
