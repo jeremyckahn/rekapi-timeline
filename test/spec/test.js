@@ -67,6 +67,37 @@ define([
             timelineEl.querySelectorAll('.keyframe-property-view').length, 2);
       });
     });
+
+    describe('removeKeyframe() removes a keyframe from the DOM', function () {
+      it('Should remove the created element for a keyframe', function () {
+        var timelineEl = document.createElement('div');
+        var rekapi = new Rekapi(document.body);
+
+        rekapi.createTimeline(timelineEl);
+        var actor = rekapi.addActor();
+        actor.keyframe(0, {x: 0});
+        actor.removeKeyframe(0);
+
+        assert.equal(
+            timelineEl.querySelectorAll('.keyframe-property-view').length, 0);
+      });
+    });
+
+    describe('removeAllKeyframes() removes all keyframe from the DOM',
+        function () {
+      it('Should remove the created element for a keyframe', function () {
+        var timelineEl = document.createElement('div');
+        var rekapi = new Rekapi(document.body);
+
+        rekapi.createTimeline(timelineEl);
+        var actor = rekapi.addActor();
+        actor.keyframe(0, {x: 0}).keyframe(1, {x: 1});
+        actor.removeAllKeyframes();
+
+        assert.equal(
+            timelineEl.querySelectorAll('.keyframe-property-view').length, 0);
+      });
+    });
   });
 
 
@@ -113,6 +144,37 @@ define([
 
         assert.equal(
             timelineEl.querySelectorAll('.keyframe-property-view').length, 2);
+      });
+    });
+
+    describe('removeKeyframe() removes a keyframe from the DOM', function () {
+      it('Should remove the created element for a keyframe', function () {
+        var timelineEl = document.createElement('div');
+        var rekapi = new Rekapi(document.body);
+
+        var actor = rekapi.addActor();
+        actor.keyframe(0, {x: 0});
+        rekapi.createTimeline(timelineEl);
+        actor.removeKeyframe(0);
+
+        assert.equal(
+            timelineEl.querySelectorAll('.keyframe-property-view').length, 0);
+      });
+    });
+
+    describe('removeAllKeyframes() removes all keyframe from the DOM',
+        function () {
+      it('Should remove the created element for a keyframe', function () {
+        var timelineEl = document.createElement('div');
+        var rekapi = new Rekapi(document.body);
+
+        var actor = rekapi.addActor();
+        actor.keyframe(0, {x: 0}).keyframe(1, {x: 1});
+        rekapi.createTimeline(timelineEl);
+        actor.removeAllKeyframes();
+
+        assert.equal(
+            timelineEl.querySelectorAll('.keyframe-property-view').length, 0);
       });
     });
   });
