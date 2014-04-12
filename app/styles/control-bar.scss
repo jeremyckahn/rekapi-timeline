@@ -1,4 +1,4 @@
-.rekapi-timeline-control-bar-view i {
+.rt-control-bar-view i {
   color: #000;
   float: left;
   font-size: 1.5em;
@@ -6,18 +6,18 @@
   width: 30px;
 }
 
-.rekapi-timeline-control-bar-view i:active {
+.rt-control-bar-view i:active {
   color: #888;
 }
 
-.rekapi-timeline-control-bar-view .rekapi-timeline-pause {
+.rt-control-bar-view .rt-pause {
   display: none;
 }
 
-.rekapi-timeline-control-bar-view.rekapi-timeline-playing .rekapi-timeline-pause {
+.rt-control-bar-view.rt-playing .rt-pause {
   display: block;
 }
 
-.rekapi-timeline-control-bar-view.rekapi-timeline-playing .rekapi-timeline-play {
+.rt-control-bar-view.rt-playing .rt-play {
   display: none;
 }

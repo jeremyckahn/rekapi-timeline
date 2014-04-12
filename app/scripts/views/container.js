@@ -36,12 +36,12 @@ define([
 
       this.initialRender();
       this.animationTracksView = new AnimationTracksView({
-        el: this.$el.find('.rekapi-timeline-animation-tracks-view')[0]
+        el: this.$el.find('.rt-animation-tracks-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
       });
 
       this.controlBarView = new ControlBarView({
-        el: this.$el.find('.rekapi-timeline-control-bar-view')[0]
+        el: this.$el.find('.rt-control-bar-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
       });
     }

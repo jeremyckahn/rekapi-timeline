@@ -15,9 +15,9 @@ define([
 
   var ControlBarView = Backbone.View.extend({
     events: {
-      'click .rekapi-timeline-play': 'onClickPlay'
-      ,'click .rekapi-timeline-pause': 'onClickPause'
-      ,'click .rekapi-timeline-stop': 'onClickStop'
+      'click .rt-play': 'onClickPlay'
+      ,'click .rt-pause': 'onClickPause'
+      ,'click .rt-stop': 'onClickStop'
     }
 
     /**
@@ -30,7 +30,7 @@ define([
       this.render();
 
       if (this.rekapiTimeline.rekapi.isPlaying()) {
-        this.$el.addClass('rekapi-timeline-playing');
+        this.$el.addClass('rt-playing');
       }
     }
 
@@ -40,19 +40,19 @@ define([
 
     ,onClickPlay: function () {
       this.rekapiTimeline.rekapi.play();
-      this.$el.addClass('rekapi-timeline-playing');
+      this.$el.addClass('rt-playing');
     }
 
     ,onClickPause: function () {
       this.rekapiTimeline.rekapi.pause();
-      this.$el.removeClass('rekapi-timeline-playing');
+      this.$el.removeClass('rt-playing');
     }
 
     ,onClickStop: function () {
       this.rekapiTimeline.rekapi
         .stop()
         .update(0);
-      this.$el.removeClass('rekapi-timeline-playing');
+      this.$el.removeClass('rt-playing');
     }
   });
 
