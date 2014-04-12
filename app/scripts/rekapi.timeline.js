@@ -8,6 +8,8 @@ define([
 
   ,'collections/actor'
 
+  ,'rekapi.timeline.constants'
+
   ,'jquery-dragon'
 
 ], function (
@@ -19,6 +21,8 @@ define([
   ,ContainerView
 
   ,RekapiTimelineActorCollection
+
+  ,rekapiTimelineConstants
 
 ) {
   'use strict';
@@ -50,6 +54,24 @@ define([
 
   RekapiTimeline.prototype.onRekapiTimelineModified = function () {
     this.trigger('update');
+  };
+
+  /**
+   * Gets the Rekapi timeline millisecond value for a slider handle-like
+   * element.  This is used for converting the position of keyframe DOM
+   * elements and the timeline scrubber position into the value it represents
+   * in the animation.
+   * @param {jQuery} $handle The handle element to retrieve the millisecond
+   * value for.
+   * @return {number}
+   */
+  RekapiTimeline.prototype.getTimelineMillisecondForHandle =
+      function ($handle) {
+    var distanceFromLeft = parseInt($handle.css('left'), 10) -
+        parseInt($handle.parent().css('border-left-width'), 10);
+
+    return (
+        distanceFromLeft / rekapiTimelineConstants.PIXELS_PER_SECOND) * 1000;
   };
 
   /**

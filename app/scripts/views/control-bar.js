@@ -39,7 +39,7 @@ define([
     }
 
     ,onClickPlay: function () {
-      this.rekapiTimeline.rekapi.play();
+      this.rekapiTimeline.rekapi.playFromCurrent();
       this.$el.addClass('rt-playing');
     }
 

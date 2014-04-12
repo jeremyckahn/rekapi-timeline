@@ -1,12 +1,14 @@
 define([
 
-  'backbone'
+  'underscore'
+  ,'backbone'
 
   ,'text!../templates/scrubber.mustache'
 
   ], function (
 
-  Backbone
+  _
+  ,Backbone
 
   ,scrubberTemplate
 
@@ -32,11 +34,18 @@ define([
 
       this.$scrubberHandle.dragon({
         within: this.$scrubberContainer
+        ,drag: _.bind(this.onScrubberDrag, this)
       });
     }
 
     ,render: function () {
       this.$el.html(scrubberTemplate);
+    }
+
+    ,onScrubberDrag: function () {
+      var millisecond = this.rekapiTimeline.getTimelineMillisecondForHandle(
+          this.$scrubberHandle);
+      this.rekapiTimeline.rekapi.update(millisecond);
     }
   });
 

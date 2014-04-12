@@ -73,11 +73,8 @@ define([
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
     ,updateKeyframeProperty: function () {
-      var distanceFromLeft = parseInt(this.$el.css('left'), 10) -
-          parseInt(this.$el.parent().css('border-left-width'), 10);
-
-      var scaledValue = (
-          distanceFromLeft / rekapiTimelineConstants.PIXELS_PER_SECOND) * 1000;
+      var scaledValue =
+          this.rekapiTimeline.getTimelineMillisecondForHandle(this.$el);
 
       // Modify the keyframeProperty via its actor so that the state of the
       // animation is updated.
