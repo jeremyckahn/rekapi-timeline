@@ -1,5 +1,20 @@
+@import 'constants';
+
 .rt-scrubber-view {
   clear: both;
   float: left;
   width: 100%;
+}
+
+.rt-scrubber-container {
+  height: $SCRUBBER_HANDLE_DIMENSIONS;
+}
+
+.rt-scrubber-handle {
+  cursor: ew-resize;
+  float: left;
+  // Need to fudge the font-size a bit to get it to center properly
+  font-size: $SCRUBBER_HANDLE_DIMENSIONS - 2;
+  height: $SCRUBBER_HANDLE_DIMENSIONS;
+  width: $SCRUBBER_HANDLE_DIMENSIONS;
 }

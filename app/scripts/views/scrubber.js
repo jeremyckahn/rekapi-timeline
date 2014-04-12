@@ -25,6 +25,14 @@ define([
     ,initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.render();
+
+      this.$scrubberContainer = this.$el.find('.rt-scrubber-container');
+      this.$scrubberHandle =
+          this.$scrubberContainer.find('.rt-scrubber-handle');
+
+      this.$scrubberHandle.dragon({
+        within: this.$scrubberContainer
+      });
     }
 
     ,render: function () {
