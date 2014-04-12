@@ -29,7 +29,7 @@ define([
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this._keyframePropertyTrackViews = [];
-      this.$el.addClass('actor-tracks-view');
+      this.$el.addClass('actor-view');
 
       this.listenTo(this.model, 'addKeyframePropertyTrack',
           _.bind(this.onAddKeyframePropertyTrack, this));

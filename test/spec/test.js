@@ -33,11 +33,8 @@ define([
         rekapi.createTimeline(timelineEl);
         rekapi.addActor();
 
-        // FIXME: This test is correct, but the behavior is wrong.  There
-        // should be a container for each actor, .actor-tracks-view represents
-        // all actors.
         assert.equal(
-            timelineEl.querySelectorAll('.actor-tracks-view').length, 1);
+            timelineEl.querySelectorAll('.actor-view').length, 1);
       });
     });
 
@@ -112,11 +109,8 @@ define([
         rekapi.addActor();
         rekapi.createTimeline(timelineEl);
 
-        // FIXME: This test is correct, but the behavior is wrong.  There
-        // should be a container for each actor, .actor-tracks-view represents
-        // all actors.
         assert.equal(
-            timelineEl.querySelectorAll('.actor-tracks-view').length, 1);
+            timelineEl.querySelectorAll('.actor-view').length, 1);
       });
     });
 
