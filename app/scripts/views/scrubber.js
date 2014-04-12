@@ -3,12 +3,16 @@ define([
   'underscore'
   ,'backbone'
 
+  ,'rekapi.timeline.constants'
+
   ,'text!../templates/scrubber.mustache'
 
   ], function (
 
   _
   ,Backbone
+
+  ,rekapiTimelineConstants
 
   ,scrubberTemplate
 
@@ -36,6 +40,9 @@ define([
         within: this.$scrubberContainer
         ,drag: _.bind(this.onScrubberDrag, this)
       });
+
+      this.rekapiTimeline.rekapi.on('afterUpdate',
+          _.bind(this.onRekapiAfterUpdate, this));
     }
 
     ,render: function () {
@@ -46,6 +53,14 @@ define([
       var millisecond = this.rekapiTimeline.getTimelineMillisecondForHandle(
           this.$scrubberHandle);
       this.rekapiTimeline.rekapi.update(millisecond);
+    }
+
+    ,onRekapiAfterUpdate: function (rekapi) {
+      var lastMillisecondUpdated =
+          rekapi.getLastPositionUpdated() * rekapi.getAnimationLength();
+      var scaledLeftValue = lastMillisecondUpdated * (
+          rekapiTimelineConstants.PIXELS_PER_SECOND / 1000);
+      this.$scrubberHandle.css('left', scaledLeftValue);
     }
   });
 
