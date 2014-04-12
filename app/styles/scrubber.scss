@@ -1,22 +1,21 @@
 @import 'constants';
 
 .rt-scrubber-view {
+  background: #ccc;
   clear: both;
   float: left;
   width: 100%;
 }
 
 .rt-scrubber-container {
+  background: #eee;
   height: $SCRUBBER_HANDLE_DIMENSIONS;
 }
 
 .rt-scrubber-handle {
   cursor: ew-resize !important; // Needs to override inline $.fn.dragon style
   float: left;
-
-  // Need to fudge the font-size a bit to get it to center properly
-  font-size: $SCRUBBER_HANDLE_DIMENSIONS - 2;
-
+  font-size: $SCRUBBER_HANDLE_DIMENSIONS;
   height: $SCRUBBER_HANDLE_DIMENSIONS;
   width: $SCRUBBER_HANDLE_DIMENSIONS;
 }
