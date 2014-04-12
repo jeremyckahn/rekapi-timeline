@@ -4,6 +4,8 @@ define([
   ,'underscore'
   ,'backbone'
 
+  ,'rekapi.timeline.constants'
+
   ,'views/actor-tracks'
 
 ], function (
@@ -11,6 +13,8 @@ define([
   $
   ,_
   ,Backbone
+
+  ,rekapiTimelineConstants
 
   ,ActorTracksView
 
@@ -26,9 +30,13 @@ define([
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this._actorTracksViews = [];
+      this.$actorWrapper = this.$el.find('.rt-animation-tracks-wrapper');
 
       this.listenTo(this.rekapiTimeline.actorCollection, 'add',
           _.bind(this.onActorCollectionAdd, this));
+
+      this.listenTo(this.rekapiTimeline, 'update',
+          _.bind(this.onRekapiTimelineUpdate, this));
 
       this.createActorViews();
     }
@@ -38,6 +46,10 @@ define([
      */
     ,onActorCollectionAdd: function (actorModel) {
       this.createActorView(actorModel);
+    }
+
+    ,onRekapiTimelineUpdate: function () {
+      this.$actorWrapper.css('width', this.getPixelWidthForTracks());
     }
 
     ,createActorViews: function () {
@@ -56,7 +68,23 @@ define([
           ,model: actorModel
         });
       this._actorTracksViews.push(actorTracksView);
-      this.$el.append(actorTracksView.$el);
+      this.$actorWrapper.append(actorTracksView.$el);
+    }
+
+    /**
+     * Determines how wide this View's element should be, in pixels.
+     * @return {number}
+     */
+    ,getPixelWidthForTracks: function () {
+      var animationLength =
+          this.rekapiTimeline.rekapi.getAnimationLength();
+      var animationSeconds = (animationLength / 1000);
+
+      // The width of the tracks container should always be the pixel width of
+      // the animation plus the width of the animation tracks view element to
+      // allow for lengthening of the animation tracks.
+      return (rekapiTimelineConstants.PIXELS_PER_SECOND * animationSeconds)
+          + this.rekapiTimeline.containerView.animationTracksView.$el.width();
     }
   });
 

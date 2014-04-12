@@ -1,10 +1,10 @@
-@import 'constants';
-
 .rt-animation-tracks-view {
-  bottom: 0;
-  left: 0;
+  clear: both;
+  float: left;
   overflow: scroll;
-  position: absolute;
-  right: 0;
-  top: $CONTROL_BAR_HEIGHT;
+  width: 100%;
+}
+
+.rt-animation-tracks-wrapper {
+  padding-bottom: 24px;
 }
