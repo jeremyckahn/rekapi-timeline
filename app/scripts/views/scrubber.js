@@ -36,6 +36,8 @@ define([
       this.$scrubberHandle =
           this.$scrubberContainer.find('.rt-scrubber-handle');
 
+      this.constrainScrubberToTimelineLength();
+
       this.$scrubberHandle.dragon({
         within: this.$scrubberContainer
         ,drag: _.bind(this.onScrubberDrag, this)
@@ -43,6 +45,8 @@ define([
 
       this.rekapiTimeline.rekapi.on('afterUpdate',
           _.bind(this.onRekapiAfterUpdate, this));
+      this.rekapiTimeline.rekapi.on('timelineModified',
+          _.bind(this.onRekapiTimelineModified, this));
     }
 
     ,render: function () {
@@ -61,6 +65,17 @@ define([
       var scaledLeftValue = lastMillisecondUpdated * (
           rekapiTimelineConstants.PIXELS_PER_SECOND / 1000);
       this.$scrubberHandle.css('left', scaledLeftValue);
+    }
+
+    ,onRekapiTimelineModified: function () {
+      this.constrainScrubberToTimelineLength();
+    }
+
+    ,constrainScrubberToTimelineLength: function () {
+      var scaledContainerWidth = this.rekapiTimeline.getAnimationLength() * (
+          rekapiTimelineConstants.PIXELS_PER_SECOND / 1000);
+      this.$scrubberContainer.width(
+          scaledContainerWidth + this.$scrubberHandle.width());
     }
   });
 
