@@ -32,7 +32,7 @@ define([
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.keyframePropertyTrackView = opts.keyframePropertyTrackView;
-      this.$el.addClass('keyframe-property-view');
+      this.$el.addClass('rt-keyframe-property-view');
       this.initialRender();
 
       if (this.rekapiTimeline.hasRendered) {

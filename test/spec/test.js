@@ -34,7 +34,7 @@ define([
         rekapi.addActor();
 
         assert.equal(
-            timelineEl.querySelectorAll('.actor-view').length, 1);
+            timelineEl.querySelectorAll('.rt-actor-view').length, 1);
       });
     });
 
@@ -47,7 +47,8 @@ define([
         rekapi.addActor().keyframe(0, {x: 0});
 
         assert.equal(
-            timelineEl.querySelectorAll('.keyframe-property-view').length, 1);
+            timelineEl.querySelectorAll('.rt-keyframe-property-view').length,
+            1);
       });
     });
 
@@ -61,7 +62,8 @@ define([
         rekapi.addActor().keyframe(0, {x: 0}).keyframe(1, {x: 1});
 
         assert.equal(
-            timelineEl.querySelectorAll('.keyframe-property-view').length, 2);
+            timelineEl.querySelectorAll('.rt-keyframe-property-view').length,
+            2);
       });
     });
 
@@ -76,7 +78,8 @@ define([
         actor.removeKeyframe(0);
 
         assert.equal(
-            timelineEl.querySelectorAll('.keyframe-property-view').length, 0);
+            timelineEl.querySelectorAll('.rt-keyframe-property-view').length,
+            0);
       });
     });
 
@@ -92,7 +95,8 @@ define([
         actor.removeAllKeyframes();
 
         assert.equal(
-            timelineEl.querySelectorAll('.keyframe-property-view').length, 0);
+            timelineEl.querySelectorAll('.rt-keyframe-property-view').length,
+            0);
       });
     });
   });
@@ -110,7 +114,7 @@ define([
         rekapi.createTimeline(timelineEl);
 
         assert.equal(
-            timelineEl.querySelectorAll('.actor-view').length, 1);
+            timelineEl.querySelectorAll('.rt-actor-view').length, 1);
       });
     });
 
@@ -123,7 +127,8 @@ define([
         rekapi.createTimeline(timelineEl);
 
         assert.equal(
-            timelineEl.querySelectorAll('.keyframe-property-view').length, 1);
+            timelineEl.querySelectorAll('.rt-keyframe-property-view').length,
+            1);
       });
     });
 
@@ -137,7 +142,8 @@ define([
         rekapi.createTimeline(timelineEl);
 
         assert.equal(
-            timelineEl.querySelectorAll('.keyframe-property-view').length, 2);
+            timelineEl.querySelectorAll('.rt-keyframe-property-view').length,
+            2);
       });
     });
 
@@ -152,7 +158,8 @@ define([
         actor.removeKeyframe(0);
 
         assert.equal(
-            timelineEl.querySelectorAll('.keyframe-property-view').length, 0);
+            timelineEl.querySelectorAll('.rt-keyframe-property-view').length,
+            0);
       });
     });
 
@@ -168,7 +175,8 @@ define([
         actor.removeAllKeyframes();
 
         assert.equal(
-            timelineEl.querySelectorAll('.keyframe-property-view').length, 0);
+            timelineEl.querySelectorAll('.rt-keyframe-property-view').length,
+            0);
       });
     });
   });
