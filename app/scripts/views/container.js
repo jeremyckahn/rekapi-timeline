@@ -7,6 +7,7 @@ define([
 
   ,'views/animation-tracks'
   ,'views/control-bar'
+  ,'views/scrubber'
 
   ,'text!../templates/container.mustache'
 
@@ -19,6 +20,7 @@ define([
 
   ,AnimationTracksView
   ,ControlBarView
+  ,ScrubberView
 
   ,containerTemplate
 
@@ -42,6 +44,11 @@ define([
 
       this.controlBarView = new ControlBarView({
         el: this.$el.find('.rt-control-bar-view')[0]
+        ,rekapiTimeline: this.rekapiTimeline
+      });
+
+      this.scrubberView = new ScrubberView({
+        el: this.$el.find('.rt-scrubber-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
       });
     }
