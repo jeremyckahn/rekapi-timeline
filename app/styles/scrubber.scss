@@ -11,10 +11,12 @@
 }
 
 .rt-scrubber-handle {
-  cursor: ew-resize;
+  cursor: ew-resize !important; // Needs to override inline $.fn.dragon style
   float: left;
+
   // Need to fudge the font-size a bit to get it to center properly
   font-size: $SCRUBBER_HANDLE_DIMENSIONS - 2;
+
   height: $SCRUBBER_HANDLE_DIMENSIONS;
   width: $SCRUBBER_HANDLE_DIMENSIONS;
 }

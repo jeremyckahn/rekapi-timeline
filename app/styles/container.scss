@@ -5,3 +5,13 @@
   height: $DEFAULT_CONTAINER_HEGHT;
   position: relative;
 }
+
+.rt-timeline {
+  overflow: auto;
+  position: relative;
+}
+
+  .rt-timeline-wrapper {
+    overflow: auto;
+    padding-bottom: 24px;
+  }
