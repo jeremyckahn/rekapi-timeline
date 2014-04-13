@@ -34,6 +34,7 @@ define([
       this.keyframePropertyTrackView = opts.keyframePropertyTrackView;
       this.$el.addClass('rt-keyframe-property-view');
       this.initialRender();
+      this.$handle = this.$el.find('.rt-keyframe-property');
 
       if (this.rekapiTimeline.hasRendered) {
         this.onInitialTimelineDOMRender();
@@ -54,6 +55,7 @@ define([
       this.$el.dragon({
         within: this.keyframePropertyTrackView.$el
         ,drag: _.bind(this.onDrag, this)
+        ,dragEnd: _.bind(this.onDragEnd, this)
       });
     }
 
@@ -67,6 +69,12 @@ define([
 
     ,onDrag: function () {
       this.updateKeyframeProperty();
+    }
+
+    // In Firefox, completing a $.fn.dragon drag does not focus the element, so
+    // it must be done explicity.
+    ,onDragEnd: function () {
+      this.$handle.focus();
     }
 
     /**

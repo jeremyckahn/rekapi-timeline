@@ -10,8 +10,15 @@
 
   .rt-keyframe-property {
     background: #000;
+    border: none;
+    cursor: move;
     height: 100%;
     opacity: 0.5;
     width: 100%;
     @include border-radius($KEYFRAME_PROPERTY_DIMENSION / 2);
+  }
+
+  .rt-keyframe-property:focus {
+    opacity: 0.75;
+    outline: none;
   }
