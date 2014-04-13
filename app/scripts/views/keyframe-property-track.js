@@ -28,7 +28,9 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
       this.trackName = opts.trackName;
       this._keyframePropertyViews = [];
-      this.$el.addClass('rt-keyframe-property-track-view');
+      this.$el
+          .addClass('rt-keyframe-property-track-view')
+          .attr('data-track-name', this.trackName);
 
       this.listenTo(this.model, 'addKeyframeProperty',
           _.bind(this.onAddKeyframeProperty, this));

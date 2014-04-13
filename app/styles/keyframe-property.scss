@@ -9,8 +9,9 @@
 }
 
   .rt-keyframe-property {
-    background: #888;
+    background: #000;
     height: 100%;
+    opacity: 0.5;
     width: 100%;
     @include border-radius($KEYFRAME_PROPERTY_DIMENSION / 2);
   }

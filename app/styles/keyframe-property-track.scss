@@ -4,3 +4,8 @@
   border: solid 1px #000;
   height: $KEYFRAME_PROPERTY_DIMENSION;
 }
+
+.rt-keyframe-property-track-view:before {
+  // I can't believe this actually works. http://stackoverflow.com/a/5734583
+  content: attr(data-track-name);
+}
