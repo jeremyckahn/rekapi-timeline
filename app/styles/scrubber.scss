@@ -13,9 +13,23 @@
 }
 
 .rt-scrubber-handle {
-  cursor: ew-resize !important; // Needs to override inline $.fn.dragon style
+  cursor: auto !important; // Overrides inline style set by $.fn.dragon
   float: left;
   font-size: $SCRUBBER_HANDLE_DIMENSIONS;
   height: $SCRUBBER_HANDLE_DIMENSIONS;
   width: $SCRUBBER_HANDLE_DIMENSIONS;
+}
+
+.rt-scrubber-icon {
+  cursor: ew-resize;
+}
+
+.rt-scrubber-guide {
+  background: #f00;
+  float: left;
+  left: $SCRUBBER_HANDLE_DIMENSIONS / 2;
+  margin: 0;
+  position: absolute;
+  top: $SCRUBBER_HANDLE_DIMENSIONS;
+  width: 1px;
 }

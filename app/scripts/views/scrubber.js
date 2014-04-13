@@ -35,6 +35,10 @@ define([
       this.$scrubberContainer = this.$el.find('.rt-scrubber-container');
       this.$scrubberHandle =
           this.$scrubberContainer.find('.rt-scrubber-handle');
+      this.$scrubberGuide = this.$el.find('.rt-scrubber-guide');
+      this.listenToOnce(
+          this.rekapiTimeline, 'initialDOMRender',
+          _.bind(this.resizeScrubberGuide, this));
 
       this.constrainScrubberToTimelineLength();
 
@@ -47,6 +51,8 @@ define([
           _.bind(this.onRekapiAfterUpdate, this));
       this.rekapiTimeline.rekapi.on('timelineModified',
           _.bind(this.onRekapiTimelineModified, this));
+      this.rekapiTimeline.rekapi.on('addKeyframePropertyTrack',
+          _.bind(this.onRekapiAddKeyframePropertyTrack, this));
     }
 
     ,render: function () {
@@ -71,11 +77,21 @@ define([
       this.constrainScrubberToTimelineLength();
     }
 
+    ,onRekapiAddKeyframePropertyTrack: function () {
+      this.resizeScrubberGuide();
+    }
+
     ,constrainScrubberToTimelineLength: function () {
       var scaledContainerWidth = this.rekapiTimeline.getAnimationLength() * (
           rekapiTimelineConstants.PIXELS_PER_SECOND / 1000);
       this.$scrubberContainer.width(
           scaledContainerWidth + this.$scrubberHandle.width());
+    }
+
+    ,resizeScrubberGuide: function () {
+      var wrapperHeight =
+          this.rekapiTimeline.containerView.$timelineWrapper.height();
+      this.$scrubberGuide.css('height', wrapperHeight - this.$el.height());
     }
   });
 
