@@ -5,13 +5,14 @@ define([
   ,'backbone'
   ,'mustache'
 
-  ,'views/animation-tracks'
   ,'views/control-bar'
   ,'views/scrubber'
+  ,'views/animation-tracks'
+  ,'views/keyframe-property-detail'
 
   ,'rekapi.timeline.constants'
 
-  ,'text!../templates/container.mustache'
+  ,'text!templates/container.mustache'
 
 ], function (
 
@@ -20,9 +21,10 @@ define([
   ,Backbone
   ,Mustache
 
-  ,AnimationTracksView
   ,ControlBarView
   ,ScrubberView
+  ,AnimationTracksView
+  ,KeyframePropertyDetailView
 
   ,rekapiTimelineConstants
 
@@ -44,11 +46,6 @@ define([
       this.$timeline = this.$el.find('.rt-timeline');
       this.$timelineWrapper = this.$el.find('.rt-timeline-wrapper');
 
-      this.animationTracksView = new AnimationTracksView({
-        el: this.$el.find('.rt-animation-tracks-view')[0]
-        ,rekapiTimeline: this.rekapiTimeline
-      });
-
       this.controlBarView = new ControlBarView({
         el: this.$el.find('.rt-control-bar-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
@@ -56,6 +53,16 @@ define([
 
       this.scrubberView = new ScrubberView({
         el: this.$el.find('.rt-scrubber-view')[0]
+        ,rekapiTimeline: this.rekapiTimeline
+      });
+
+      this.animationTracksView = new AnimationTracksView({
+        el: this.$el.find('.rt-animation-tracks-view')[0]
+        ,rekapiTimeline: this.rekapiTimeline
+      });
+
+      this.keyframePropertyDetailView = new KeyframePropertyDetailView({
+        el: this.$el.find('.rt-keyframe-property-detail-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
       });
 
