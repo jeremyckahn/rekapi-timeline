@@ -83,6 +83,8 @@ define([
           model.get('name'), model.get('millisecond'), {
             millisecond: scaledValue
           });
+
+      this.rekapiTimeline.update();
     }
 
     ,dispose: function () {

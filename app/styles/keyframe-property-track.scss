@@ -8,4 +8,7 @@
 .rt-keyframe-property-track-view:before {
   // I can't believe this actually works. http://stackoverflow.com/a/5734583
   content: attr(data-track-name);
+  font-family: sans-serif;
+  font-size: 0.75em;
+  padding-left: 4px;
 }
