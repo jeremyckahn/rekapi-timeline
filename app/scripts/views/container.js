@@ -68,6 +68,15 @@ define([
 
       this.listenTo(this.rekapiTimeline, 'update',
           _.bind(this.onRekapiTimelineUpdate, this));
+
+      // This handler must be bound here (as opposed to within ScrubberView)
+      // because the order that the addKeyframePropertyTrack handlers are
+      // executed is significant.  This particular handler resizes the scrubber
+      // guide line.  For that calculation, the DOM that represents the
+      // property tracks must be updated.  Binding this handler here ensures
+      // that the DOM update occurs before it is measured.
+      this.listenTo(this.rekapiTimeline.rekapi, 'addKeyframePropertyTrack',
+          _.bind(this.onRekapiAddKeyframePropertyTrack, this));
     }
 
     ,initialRender: function () {
@@ -79,6 +88,10 @@ define([
 
     ,onRekapiTimelineUpdate: function () {
       this.$timelineWrapper.css('width', this.getPixelWidthForTracks());
+    }
+
+    ,onRekapiAddKeyframePropertyTrack: function () {
+      this.scrubberView.resizeScrubberGuide();
     }
 
     /**

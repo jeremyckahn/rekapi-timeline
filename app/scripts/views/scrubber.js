@@ -51,8 +51,6 @@ define([
           _.bind(this.onRekapiAfterUpdate, this));
       this.rekapiTimeline.rekapi.on('timelineModified',
           _.bind(this.onRekapiTimelineModified, this));
-      this.rekapiTimeline.rekapi.on('addKeyframePropertyTrack',
-          _.bind(this.onRekapiAddKeyframePropertyTrack, this));
     }
 
     ,render: function () {
@@ -75,10 +73,6 @@ define([
 
     ,onRekapiTimelineModified: function () {
       this.constrainScrubberToTimelineLength();
-    }
-
-    ,onRekapiAddKeyframePropertyTrack: function () {
-      this.resizeScrubberGuide();
     }
 
     ,constrainScrubberToTimelineLength: function () {
