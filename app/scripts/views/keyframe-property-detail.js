@@ -26,6 +26,7 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
       this.render();
       this.$propertyName = this.$el.find('.rt-keyframe-property-name');
+      this.$propertyValue = this.$el.find('.rt-keyframe-property-value input');
 
       this.listenTo(this.rekapiTimeline, 'focusKeyframeProperty',
           _.bind(this.onFocusKeyframeProperty, this));
@@ -37,6 +38,7 @@ define([
 
     ,onFocusKeyframeProperty: function (evt) {
       this.$propertyName.text(evt.targetView.model.get('name'));
+      this.$propertyValue.val(evt.targetView.model.get('value'));
     }
   });
 
