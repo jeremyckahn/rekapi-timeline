@@ -24,12 +24,16 @@ define([
   'use strict';
 
   var KeyframePropertyView = Backbone.View.extend({
+    events: {
+      'focus button': 'onFocus'
+    }
+
     /**
      * @param {Object}
      *   @param {RekapiTimeline} rekapiTimeline
      *   @param {KeyframePropertyTrackView} keyframePropertyTrackView
      */
-    initialize: function (opts) {
+    ,initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.keyframePropertyTrackView = opts.keyframePropertyTrackView;
       this.$el.addClass('rt-keyframe-property-view');
@@ -65,6 +69,11 @@ define([
             rekapiTimelineConstants.PIXELS_PER_SECOND
             * this.model.get('millisecond')) / 1000
       });
+    }
+
+    ,onFocus: function (evt) {
+      evt.targetView = this;
+      this.rekapiTimeline.trigger('focusKeyframeProperty', evt);
     }
 
     ,onDrag: function () {

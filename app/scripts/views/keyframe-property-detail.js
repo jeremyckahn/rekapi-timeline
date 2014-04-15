@@ -1,13 +1,15 @@
 define([
 
-  'backbone'
+  'underscore'
+  ,'backbone'
   ,'mustache'
 
   ,'text!templates/keyframe-property-detail.mustache'
 
 ], function (
 
-  Backbone
+  _
+  ,Backbone
   ,Mustache
 
   ,keyframePropertyDetailTemplate
@@ -23,10 +25,18 @@ define([
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.render();
+      this.$propertyName = this.$el.find('.rt-keyframe-property-name');
+
+      this.listenTo(this.rekapiTimeline, 'focusKeyframeProperty',
+          _.bind(this.onFocusKeyframeProperty, this));
     }
 
     ,render: function () {
       this.$el.html(keyframePropertyDetailTemplate);
+    }
+
+    ,onFocusKeyframeProperty: function (evt) {
+      this.$propertyName.text(evt.targetView.model.get('name'));
     }
   });
 
