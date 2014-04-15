@@ -1,0 +1,11 @@
+@import 'constants';
+
+.rt-keyframe-property-detail-view {
+  background: #bbb;
+  bottom: 0;
+  position: absolute;
+  right: 0;
+  top: $CONTROL_BAR_HEIGHT;
+  width: $KEYFRAME_PROPERTY_DETAIL_WIDTH;
+}
+

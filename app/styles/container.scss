@@ -1,4 +1,4 @@
-@import "constants";
+@import 'constants';
 
 .rt-container-view {
   border: solid 1px #000;
@@ -9,6 +9,7 @@
 .rt-timeline {
   overflow: auto;
   position: relative;
+  width: calc(100% - 200px);
 }
 
   .rt-timeline-wrapper {

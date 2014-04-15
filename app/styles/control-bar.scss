@@ -1,5 +1,8 @@
+@import 'constants';
+
 .rt-control-bar-view {
   overflow: auto;
+  height: $CONTROL_BAR_HEIGHT;
 }
 
 .rt-control-bar-view i {
