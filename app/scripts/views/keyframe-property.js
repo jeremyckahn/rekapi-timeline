@@ -90,12 +90,16 @@ define([
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
     ,updateKeyframeProperty: function () {
-      var scaledValue =
-          this.rekapiTimeline.getTimelineMillisecondForHandle(this.$el);
+      var scaledValue = Math.round(
+          this.rekapiTimeline.getTimelineMillisecondForHandle(this.$el));
 
       // Modify the keyframeProperty via its actor so that the state of the
       // animation is updated.
       var model = this.model;
+      model.set('millisecond', scaledValue);
+
+      // FIXME: Updating the Rekapi data should be done in the model, not the
+      // view.
       model.getActor().modifyKeyframeProperty(
           model.get('name'), model.get('millisecond'), {
             millisecond: scaledValue

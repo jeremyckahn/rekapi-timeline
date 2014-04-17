@@ -24,21 +24,36 @@ define([
      */
     initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
-      this.render();
+      this.initialRender();
       this.$propertyName = this.$el.find('.rt-keyframe-property-name');
       this.$propertyValue = this.$el.find('.rt-keyframe-property-value input');
+      this.$propertyMillisecond =
+          this.$el.find('.rt-keyframe-property-millisecond input');
 
       this.listenTo(this.rekapiTimeline, 'focusKeyframeProperty',
           _.bind(this.onFocusKeyframeProperty, this));
     }
 
-    ,render: function () {
+    ,initialRender: function () {
       this.$el.html(keyframePropertyDetailTemplate);
     }
 
+    ,render: function () {
+      this.$propertyName.text(this.activeKeyframePropertyModel.get('name'));
+      this.$propertyMillisecond.val(
+          this.activeKeyframePropertyModel.get('millisecond'));
+      this.$propertyValue.val(this.activeKeyframePropertyModel.get('value'));
+    }
+
     ,onFocusKeyframeProperty: function (evt) {
-      this.$propertyName.text(evt.targetView.model.get('name'));
-      this.$propertyValue.val(evt.targetView.model.get('value'));
+      if (this.activeKeyframePropertyModel) {
+        this.stopListening(this.activeKeyframePropertyModel);
+      }
+
+      this.activeKeyframePropertyModel = evt.targetView.model;
+      this.listenTo(this.activeKeyframePropertyModel, 'change',
+          _.bind(this.render, this));
+      this.render();
     }
   });
 
