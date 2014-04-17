@@ -54,10 +54,14 @@ require([
 
   actor
     .keyframe(0, {
-      'transform': 'translateX(0px) translateY(0px)'
+      translateX: '0px'
+      ,translateY: '0px'
+      ,scaleX: 1
+      ,scaleY: 1
     })
     .keyframe(1000, {
-      'transform': 'translateX(150px) translateY(100px)'
+      translateX: '150px'
+      ,translateY: '100px'
     });
 
   var timeline = rekapi.createTimeline(timelineEl);
