@@ -18,11 +18,15 @@ define([
   'use strict';
 
   var KeyframePropertyDetailView = Backbone.View.extend({
+    events: {
+      'change input': 'onChangeInput'
+    }
+
     /**
      * @param {Object}
      *   @param {RekapiTimeline} rekapiTimeline
      */
-    initialize: function (opts) {
+    ,initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
       this.initialRender();
       this.$propertyName = this.$el.find('.rt-keyframe-property-name');
@@ -43,6 +47,12 @@ define([
       this.$propertyMillisecond.val(
           this.activeKeyframePropertyModel.get('millisecond'));
       this.$propertyValue.val(this.activeKeyframePropertyModel.get('value'));
+    }
+
+    ,onChangeInput: function (evt) {
+      var $target = $(evt.target);
+      this.activeKeyframePropertyModel.set($target.attr('name'), $target.val());
+      this.rekapiTimeline.update();
     }
 
     ,onFocusKeyframeProperty: function (evt) {

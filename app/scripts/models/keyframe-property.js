@@ -38,6 +38,20 @@ define([
       }
     }
 
+    ,set: function (key, value) {
+      Backbone.Model.prototype.set.apply(this, arguments);
+
+      if (key in this.attributes) {
+        // Modify the keyframeProperty via its actor so that the state of the
+        // animation is updated.
+        var obj = {};
+        obj[key] = value;
+        this.getActor().modifyKeyframeProperty(
+            this.get('name'), this.get('millisecond'), obj);
+      }
+
+    }
+
     /**
      * @return {Rekapi.KeyframeProperty}
      */

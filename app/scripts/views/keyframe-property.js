@@ -47,6 +47,7 @@ define([
             _.bind(this.onInitialTimelineDOMRender, this));
       }
 
+      this.listenTo(this.model, 'change', _.bind(this.render, this));
       this.listenTo(this.model, 'destroy', _.bind(this.dispose, this));
     }
 
@@ -93,17 +94,8 @@ define([
       var scaledValue = Math.round(
           this.rekapiTimeline.getTimelineMillisecondForHandle(this.$el));
 
-      // Modify the keyframeProperty via its actor so that the state of the
-      // animation is updated.
       var model = this.model;
       model.set('millisecond', scaledValue);
-
-      // FIXME: Updating the Rekapi data should be done in the model, not the
-      // view.
-      model.getActor().modifyKeyframeProperty(
-          model.get('name'), model.get('millisecond'), {
-            millisecond: scaledValue
-          });
 
       this.rekapiTimeline.update();
     }
