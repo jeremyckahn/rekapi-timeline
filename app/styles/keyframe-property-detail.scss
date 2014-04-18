@@ -21,11 +21,16 @@
 }
 
   .rt-keyframe-property-detail-view .rt-label-input-pair p,
-  .rt-keyframe-property-detail-view .rt-label-input-pair input {
+  .rt-keyframe-property-detail-view .rt-label-input-pair input,
+  .rt-keyframe-property-detail-view .rt-label-input-pair select {
     float: left;
     height: 12px;
     line-height: 12px;
     width: 80px;
+  }
+
+  .rt-keyframe-property-detail-view .rt-label-input-pair select {
+    width: 115px;
   }
 
   .rt-keyframe-property-detail-view .rt-label-input-pair p {

@@ -3,6 +3,7 @@ define([
   'underscore'
   ,'backbone'
   ,'mustache'
+  ,'shifty'
 
   ,'text!templates/keyframe-property-detail.mustache'
 
@@ -11,6 +12,7 @@ define([
   _
   ,Backbone
   ,Mustache
+  ,Tweenable
 
   ,keyframePropertyDetailTemplate
 
@@ -20,6 +22,7 @@ define([
   var KeyframePropertyDetailView = Backbone.View.extend({
     events: {
       'change input': 'onChangeInput'
+      ,'change select': 'onChangeInput'
     }
 
     /**
@@ -33,6 +36,8 @@ define([
       this.$propertyValue = this.$el.find('.rt-keyframe-property-value input');
       this.$propertyMillisecond =
           this.$el.find('.rt-keyframe-property-millisecond input');
+      this.$propertyEasing =
+          this.$el.find('.rt-keyframe-property-easing select');
 
       this.listenTo(this.rekapiTimeline, 'focusKeyframeProperty',
           _.bind(this.onFocusKeyframeProperty, this));
@@ -63,6 +68,18 @@ define([
       this.activeKeyframePropertyModel = evt.targetView.model;
       this.listenTo(this.activeKeyframePropertyModel, 'change',
           _.bind(this.render, this));
+
+      var inputs = [];
+      _.each(Tweenable.prototype.formula, function (formula, name) {
+        var option = document.createElement('option');
+        option.innerText = name;
+        inputs.push(option);
+      }, this);
+
+      this.$propertyEasing.children().remove();
+      this.$propertyEasing.append(inputs).val(
+          this.activeKeyframePropertyModel.get('easing'));
+
       this.render();
     }
   });
