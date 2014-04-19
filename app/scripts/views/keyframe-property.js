@@ -70,6 +70,11 @@ define([
             rekapiTimelineConstants.PIXELS_PER_SECOND
             * this.model.get('millisecond')) / 1000
       });
+
+      var model = this.model;
+      this.$handle
+          .attr('data-millisecond', model.get('millisecond'))
+          .attr('data-value', model.get('value'));
     }
 
     ,onFocus: function (evt) {
@@ -94,9 +99,7 @@ define([
       var scaledValue = Math.round(
           this.rekapiTimeline.getTimelineMillisecondForHandle(this.$el));
 
-      var model = this.model;
-      model.set('millisecond', scaledValue);
-
+      this.model.set('millisecond', scaledValue);
       this.rekapiTimeline.update();
     }
 
