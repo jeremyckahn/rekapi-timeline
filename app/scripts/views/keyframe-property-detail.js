@@ -5,6 +5,8 @@ define([
   ,'mustache'
   ,'shifty'
 
+  ,'rekapi.timeline.constants'
+
   ,'text!templates/keyframe-property-detail.mustache'
 
 ], function (
@@ -13,6 +15,8 @@ define([
   ,Backbone
   ,Mustache
   ,Tweenable
+
+  ,rekapiTimelineConstants
 
   ,keyframePropertyDetailTemplate
 
@@ -23,6 +27,7 @@ define([
     events: {
       'change input': 'onChangeInput'
       ,'change select': 'onChangeInput'
+      ,'click .rt-add': 'onClickAdd'
     }
 
     /**
@@ -60,6 +65,10 @@ define([
       this.rekapiTimeline.update();
     }
 
+    ,onClickAdd: function () {
+      this.addNewKeyframeProperty();
+    }
+
     ,onFocusKeyframeProperty: function (evt) {
       if (this.activeKeyframePropertyModel) {
         this.stopListening(this.activeKeyframePropertyModel);
@@ -81,6 +90,27 @@ define([
           this.activeKeyframePropertyModel.get('easing'));
 
       this.render();
+    }
+
+    ,addNewKeyframeProperty: function () {
+      if (!this.activeKeyframePropertyModel) {
+        return;
+      }
+
+      var activeKeyframePropertyModel = this.activeKeyframePropertyModel;
+      var actorModel = activeKeyframePropertyModel.getActorModel();
+
+      var targetMillisecond =
+          activeKeyframePropertyModel.get('millisecond') +
+          rekapiTimelineConstants.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
+      var keyframeObject = {};
+      keyframeObject[activeKeyframePropertyModel.get('name')] =
+          activeKeyframePropertyModel.get('value');
+
+      actorModel.keyframe(
+          targetMillisecond
+          ,keyframeObject
+          ,activeKeyframePropertyModel.get('easing'));
     }
   });
 

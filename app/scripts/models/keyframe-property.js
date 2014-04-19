@@ -67,6 +67,13 @@ define([
     }
 
     /**
+     * @return {RekapiTimelineActorModel}
+     */
+    ,getActorModel: function () {
+      return this.collection.actorModel;
+    }
+
+    /**
      * Overrides the standard Backbone.Model#destroy behavior, as there is no
      * server data that thmodel is tied to.
      * @override
