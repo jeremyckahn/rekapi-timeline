@@ -28,6 +28,7 @@ define([
       'change input': 'onChangeInput'
       ,'change select': 'onChangeInput'
       ,'click .rt-add': 'onClickAdd'
+      ,'click .rt-delete': 'onClickDelete'
     }
 
     /**
@@ -67,6 +68,10 @@ define([
 
     ,onClickAdd: function () {
       this.addNewKeyframeProperty();
+    }
+
+    ,onClickDelete: function () {
+      this.deleteCurrentKeyframeProperty();
     }
 
     ,onFocusKeyframeProperty: function (evt) {
@@ -120,6 +125,17 @@ define([
           '"] [data-millisecond="', targetMillisecond, '"]'].join('');
       this.rekapiTimeline.containerView.animationTracksView.$el.find(selector)
           .focus();
+    }
+
+    ,deleteCurrentKeyframeProperty: function () {
+      if (!this.activeKeyframePropertyModel) {
+        return;
+      }
+
+      var activeKeyframePropertyModel = this.activeKeyframePropertyModel;
+      activeKeyframePropertyModel.getActorModel().removeKeyframeProperty(
+          activeKeyframePropertyModel.get('name')
+          ,activeKeyframePropertyModel.get('millisecond'));
     }
   });
 

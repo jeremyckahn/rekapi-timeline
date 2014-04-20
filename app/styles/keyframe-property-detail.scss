@@ -16,6 +16,7 @@
 }
 
 .rt-keyframe-property-detail-view .rt-label-input-pair {
+  float: left;
   font-size: 12px;
   overflow: auto;
 }
@@ -43,4 +44,10 @@
   position: absolute;
   right: 0;
   top: 0;
+}
+
+.rt-keyframe-property-detail-view .rt-delete {
+  bottom: 0;
+  position: absolute;
+  right: 0;
 }
