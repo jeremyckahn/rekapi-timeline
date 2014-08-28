@@ -10,7 +10,10 @@
 .rt-timeline {
   overflow: auto;
   position: relative;
-  width: calc(100% - 200px);
+  // 272 = total width of .rt-keyframe-property-detail-view
+  width: calc(100% - 272px);
+
+  margin-left: $CONTROL_BAR_VIEW;
 }
 
   .rt-timeline-wrapper {

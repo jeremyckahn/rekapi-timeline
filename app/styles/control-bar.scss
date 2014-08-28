@@ -1,16 +1,24 @@
 @import 'constants';
 
 .rt-control-bar-view {
+  float: left;
   overflow: auto;
-  height: $CONTROL_BAR_HEIGHT;
+  width: $PLAYBACK_ICON_DIMENSIONS * 2;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-right: solid 1px #000;
+  z-index: 20;
 }
 
 .rt-control-bar-view i {
   color: #000;
   float: left;
   font-size: 1.5em;
-  height: 30px;
-  width: 30px;
+  height: $PLAYBACK_ICON_DIMENSIONS;
+  width: $PLAYBACK_ICON_DIMENSIONS;
 }
 
 .rt-control-bar-view i:active {
