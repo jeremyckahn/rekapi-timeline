@@ -5,6 +5,8 @@ define([
   ,'mustache'
   ,'shifty'
 
+  ,'incrementer-field'
+
   ,'rekapi.timeline.constants'
 
   ,'text!templates/keyframe-property-detail.mustache'
@@ -15,6 +17,8 @@ define([
   ,Backbone
   ,Mustache
   ,Tweenable
+
+  ,IncrementerFieldView
 
   ,rekapiTimelineConstants
 
@@ -40,10 +44,20 @@ define([
       this.initialRender();
       this.$propertyName = this.$el.find('.rt-keyframe-property-name');
       this.$propertyValue = this.$el.find('.rt-keyframe-property-value input');
-      this.$propertyMillisecond =
-          this.$el.find('.rt-keyframe-property-millisecond input');
       this.$propertyEasing =
           this.$el.find('.rt-keyframe-property-easing select');
+
+      this.propertyMillisecondView = new IncrementerFieldView({
+        el: this.$el.find('.rt-keyframe-property-millisecond input')[0]
+      });
+
+      this.propertyMillisecondView.onValReenter = _.bind(function () {
+        if (this.activeKeyframePropertyModel) {
+          this.propertyMillisecondView.$el.trigger('change');
+        } else {
+          this.propertyMillisecondView.$el.val('');
+        }
+      }, this);
 
       this.listenTo(this.rekapiTimeline, 'focusKeyframeProperty',
           _.bind(this.onFocusKeyframeProperty, this));
@@ -55,7 +69,7 @@ define([
 
     ,render: function () {
       this.$propertyName.text(this.activeKeyframePropertyModel.get('name'));
-      this.$propertyMillisecond.val(
+      this.propertyMillisecondView.$el.val(
           this.activeKeyframePropertyModel.get('millisecond'));
       this.$propertyValue.val(this.activeKeyframePropertyModel.get('value'));
     }
