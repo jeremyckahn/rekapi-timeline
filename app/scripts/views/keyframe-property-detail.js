@@ -43,7 +43,6 @@ define([
       this.rekapiTimeline = opts.rekapiTimeline;
       this.initialRender();
       this.$propertyName = this.$el.find('.rt-keyframe-property-name');
-      this.$propertyValue = this.$el.find('.rt-keyframe-property-value input');
       this.$propertyEasing =
           this.$el.find('.rt-keyframe-property-easing select');
 
@@ -59,6 +58,18 @@ define([
         }
       }, this);
 
+      this.propertyValueView = new IncrementerFieldView({
+        el: this.$el.find('.rt-keyframe-property-value input')[0]
+      });
+
+      this.propertyValueView.onValReenter = _.bind(function () {
+        if (this.activeKeyframePropertyModel) {
+          this.propertyValueView.$el.trigger('change');
+        } else {
+          this.propertyValueView.$el.val('');
+        }
+      }, this);
+
       this.listenTo(this.rekapiTimeline, 'focusKeyframeProperty',
           _.bind(this.onFocusKeyframeProperty, this));
     }
@@ -71,7 +82,8 @@ define([
       this.$propertyName.text(this.activeKeyframePropertyModel.get('name'));
       this.propertyMillisecondView.$el.val(
           this.activeKeyframePropertyModel.get('millisecond'));
-      this.$propertyValue.val(this.activeKeyframePropertyModel.get('value'));
+      this.propertyValueView.$el.val(
+          this.activeKeyframePropertyModel.get('value'));
     }
 
     ,onChangeInput: function (evt) {

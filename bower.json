@@ -11,7 +11,7 @@
     "mustache": "~0.8.1",
     "jquery-dragon": "0.3.1",
     "sass-bootstrap-glyphicons": "~1.0.0",
-    "jck-library-extensions": "~0.0.11",
+    "jck-library-extensions": "~0.0.12",
     "jquery-mousewheel": "~3.1.12"
   },
   "devDependencies": {},
