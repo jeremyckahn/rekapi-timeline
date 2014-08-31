@@ -30,7 +30,7 @@ define([
      */
     ,initialize: function (opts) {
       this.rekapiTimeline = opts.rekapiTimeline;
-      this.render();
+      this.initialRender();
 
       this.$scrubberContainer = this.$el.find('.rt-scrubber-container');
       this.$scrubberHandle =
@@ -40,7 +40,7 @@ define([
           this.rekapiTimeline, 'initialDOMRender',
           _.bind(this.resizeScrubberGuide, this));
 
-      this.constrainScrubberToTimelineLength();
+      this.syncContainerToTimelineLength();
 
       this.$scrubberHandle.dragon({
         within: this.$scrubberContainer
@@ -51,35 +51,57 @@ define([
           _.bind(this.onRekapiAfterUpdate, this));
       this.rekapiTimeline.rekapi.on('timelineModified',
           _.bind(this.onRekapiTimelineModified, this));
+
+      this.listenTo(this.rekapiTimeline, 'change:timelineScale',
+          _.bind(this.onChangeTimelineScale, this));
+    }
+
+    ,initialRender: function () {
+      this.$el.html(scrubberTemplate);
     }
 
     ,render: function () {
-      this.$el.html(scrubberTemplate);
+      this.syncContainerToTimelineLength();
+      this.syncHandleToTimelineLength();
     }
 
     ,onScrubberDrag: function () {
       var millisecond = this.rekapiTimeline.getTimelineMillisecondForHandle(
-          this.$scrubberHandle);
+          this.$scrubberHandle) / this.rekapiTimeline.timelineScale;
       this.rekapiTimeline.rekapi.update(millisecond);
     }
 
-    ,onRekapiAfterUpdate: function (rekapi) {
-      var lastMillisecondUpdated =
-          rekapi.getLastPositionUpdated() * rekapi.getAnimationLength();
-      var scaledLeftValue = lastMillisecondUpdated * (
-          rekapiTimelineConstants.PIXELS_PER_SECOND / 1000);
-      this.$scrubberHandle.css('left', scaledLeftValue);
+    ,onRekapiAfterUpdate: function () {
+      this.render();
     }
 
     ,onRekapiTimelineModified: function () {
-      this.constrainScrubberToTimelineLength();
+      this.render();
     }
 
-    ,constrainScrubberToTimelineLength: function () {
-      var scaledContainerWidth = this.rekapiTimeline.getAnimationLength() * (
-          rekapiTimelineConstants.PIXELS_PER_SECOND / 1000);
+    ,onChangeTimelineScale: function () {
+      this.render();
+    }
+
+    ,syncContainerToTimelineLength: function () {
+      var scaledContainerWidth =
+          this.rekapiTimeline.getAnimationLength() *
+          (rekapiTimelineConstants.PIXELS_PER_SECOND / 1000) *
+          this.rekapiTimeline.timelineScale;
+
       this.$scrubberContainer.width(
           scaledContainerWidth + this.$scrubberHandle.width());
+    }
+
+    ,syncHandleToTimelineLength: function () {
+      var lastMillisecondUpdated =
+          this.rekapiTimeline.rekapi.getLastPositionUpdated() *
+          this.rekapiTimeline.rekapi.getAnimationLength();
+      var scaledLeftValue = lastMillisecondUpdated *
+          (rekapiTimelineConstants.PIXELS_PER_SECOND / 1000) *
+          this.rekapiTimeline.timelineScale;
+
+      this.$scrubberHandle.css('left', scaledLeftValue);
     }
 
     ,resizeScrubberGuide: function () {

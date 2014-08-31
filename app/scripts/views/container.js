@@ -8,6 +8,7 @@ define([
   ,'views/control-bar'
   ,'views/scrubber'
   ,'views/animation-tracks'
+  ,'views/scrubber-detail'
   ,'views/keyframe-property-detail'
 
   ,'rekapi.timeline.constants'
@@ -24,6 +25,7 @@ define([
   ,ControlBarView
   ,ScrubberView
   ,AnimationTracksView
+  ,ScrubberDetailView
   ,KeyframePropertyDetailView
 
   ,rekapiTimelineConstants
@@ -58,6 +60,11 @@ define([
 
       this.animationTracksView = new AnimationTracksView({
         el: this.$el.find('.rt-animation-tracks-view')[0]
+        ,rekapiTimeline: this.rekapiTimeline
+      });
+
+      this.scrubberDetailView = new ScrubberDetailView({
+        el: this.$el.find('.rt-scrubber-detail-view')[0]
         ,rekapiTimeline: this.rekapiTimeline
       });
 

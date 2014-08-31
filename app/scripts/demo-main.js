@@ -70,10 +70,13 @@ require([
     context: document.querySelector('#actor-1')
   });
 
+  window.actor = actor;
+
   actor
     .keyframe(0, {
       translateX: '0px'
       ,translateY: '0px'
+      ,rotate: '0deg'
       ,scaleX: 1
       ,scaleY: 1
     })

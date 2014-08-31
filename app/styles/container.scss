@@ -25,3 +25,13 @@ button.rt-no-background {
   background: none;
   border: 0;
 }
+
+.rt-detail-views-container {
+  background: #bbb;
+  bottom: 0;
+  position: absolute;
+  padding: 0 6px 6px 6px;
+  right: 0;
+  top: 0;
+  width: $KEYFRAME_PROPERTY_DETAIL_WIDTH;
+}

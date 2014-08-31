@@ -1,13 +1,9 @@
 @import 'constants';
 
 .rt-keyframe-property-detail-view {
-  background: #bbb;
-  bottom: 0;
-  position: absolute;
-  padding: 6px;
-  right: 0;
-  top: 0;
-  width: $KEYFRAME_PROPERTY_DETAIL_WIDTH;
+  overflow: auto;
+  padding: 30px 6px 6px 6px;
+  position: relative;
 }
 
 .rt-keyframe-property-detail-view h1 {

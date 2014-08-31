@@ -47,6 +47,8 @@ define([
             _.bind(this.onInitialTimelineDOMRender, this));
       }
 
+      this.listenTo(this.rekapiTimeline,
+          'change:timelineScale', _.bind(this.render, this));
       this.listenTo(this.model, 'change', _.bind(this.render, this));
       this.listenTo(this.model, 'destroy', _.bind(this.dispose, this));
     }
@@ -65,10 +67,19 @@ define([
     }
 
     ,render: function () {
+      var elData = this.$el.data('dragon');
+      if (elData && elData.isDragging) {
+        return;
+      }
+
+      var scaledXCoordinate = (
+          rekapiTimelineConstants.PIXELS_PER_SECOND *
+            this.model.get('millisecond')) /
+          1000 *
+          this.rekapiTimeline.timelineScale;
+
       this.$el.css({
-        left: (
-            rekapiTimelineConstants.PIXELS_PER_SECOND
-            * this.model.get('millisecond')) / 1000
+        left: scaledXCoordinate
       });
 
       var model = this.model;
@@ -96,10 +107,11 @@ define([
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
     ,updateKeyframeProperty: function () {
-      var scaledValue = Math.round(
-          this.rekapiTimeline.getTimelineMillisecondForHandle(this.$el));
+      var scaledValue =
+          this.rekapiTimeline.getTimelineMillisecondForHandle(this.$el) /
+          this.rekapiTimeline.timelineScale;
 
-      this.model.set('millisecond', scaledValue);
+      this.model.set('millisecond', Math.round(scaledValue));
       this.rekapiTimeline.update();
     }
 

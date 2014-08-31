@@ -34,6 +34,7 @@ define([
    */
   function RekapiTimeline (rekapi, el) {
     this.rekapi = rekapi;
+    this.timelineScale = rekapiTimelineConstants.DEFAULT_TIMELINE_SCALE;
     this.actorCollection = new RekapiTimelineActorCollection(null, {
       rekapiTimeline: this
     });
@@ -69,9 +70,18 @@ define([
       function ($handle) {
     var distanceFromLeft = parseInt($handle.css('left'), 10) -
         parseInt($handle.parent().css('border-left-width'), 10);
-
-    return (
+    var baseMillisecond = (
         distanceFromLeft / rekapiTimelineConstants.PIXELS_PER_SECOND) * 1000;
+
+    return baseMillisecond;
+  };
+
+  /**
+   * @param {number} newScale
+   */
+  RekapiTimeline.prototype.setTimelineScale = function (newScale) {
+    this.timelineScale = newScale;
+    this.trigger('change:timelineScale', newScale);
   };
 
   /**

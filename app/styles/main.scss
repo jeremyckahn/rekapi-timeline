@@ -5,4 +5,13 @@
 @import 'actor-tracks';
 @import 'keyframe-property-track';
 @import 'keyframe-property';
+@import 'scrubber-detail';
 @import 'keyframe-property-detail';
+
+.rt-fill {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
