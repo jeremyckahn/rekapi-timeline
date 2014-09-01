@@ -42,11 +42,14 @@ define([
         el: this.$el.find('.rt-scrubber-scale')[0]
       });
 
-      this.scrubberScaleView.increment = 10;
-      this.scrubberScaleView.mousewheelIncrement = 1;
-      this.scrubberScaleView.onValReenter = _.bind(function (newScale) {
-        this.rekapiTimeline.setTimelineScale(newScale / 100);
-      }, this);
+      _.extend(this.scrubberScaleView, {
+        incrementer: 10
+        ,mousewheelIncrement: 1
+        ,lowerBound: 0
+        ,onValReenter: _.bind(function (newScale) {
+          this.rekapiTimeline.setTimelineScale(newScale / 100);
+        }, this)
+      });
     }
 
     ,render: function () {
