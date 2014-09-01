@@ -42,16 +42,16 @@ define([
         el: this.$el.find('.rt-scrubber-scale')[0]
       });
 
-      this.scrubberScaleView.increment = 0.1;
-      this.scrubberScaleView.mousewheelIncrement = 0.01;
+      this.scrubberScaleView.increment = 10;
+      this.scrubberScaleView.mousewheelIncrement = 1;
       this.scrubberScaleView.onValReenter = _.bind(function (newScale) {
-        this.rekapiTimeline.setTimelineScale(newScale);
+        this.rekapiTimeline.setTimelineScale(newScale / 100);
       }, this);
     }
 
     ,render: function () {
       this.$el.html(Mustache.render(scrubberDetailTemplate, {
-        scale: this.rekapiTimeline.timelineScale
+        initialZoom: this.rekapiTimeline.timelineScale * 100
       }));
     }
   });
