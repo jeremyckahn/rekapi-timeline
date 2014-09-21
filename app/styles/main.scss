@@ -21,3 +21,18 @@ label.rt-row {
   clear: both;
   margin-bottom: 12px;
 }
+
+label.rt-row,
+.rt-field-button {
+  cursor: pointer;
+}
+
+.rt-field-button {
+  background: #222;
+  border-radius: 2px;
+  border: solid 1px #888;
+  color: #ddd;
+  font-size: 0.7em;
+  margin: 0 6px 0 4px;
+  padding: 5px 12px
+}
