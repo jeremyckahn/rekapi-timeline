@@ -8,7 +8,8 @@
 }
 
 .rt-scrubber-container {
-  background: #555;
+  background: #888;
+  border-bottom: solid 10px #555;
   height: $SCRUBBER_HANDLE_DIMENSIONS;
 }
 
@@ -21,7 +22,7 @@
 }
 
 i.glyphicon.rt-scrubber-icon {
-  color: #ddd;
+  color: #eee;
   cursor: ew-resize;
 }
 

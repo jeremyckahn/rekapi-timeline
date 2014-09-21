@@ -107,7 +107,10 @@ define([
     ,resizeScrubberGuide: function () {
       var wrapperHeight =
           this.rekapiTimeline.containerView.$timelineWrapper.height();
-      this.$scrubberGuide.css('height', wrapperHeight - this.$el.height());
+      var scrubberBottomBorder =
+          parseInt(this.$scrubberContainer.css('borderBottomWidth'), 10);
+      this.$scrubberGuide.css('height',
+          wrapperHeight - this.$el.height() + scrubberBottomBorder);
     }
   });
 
