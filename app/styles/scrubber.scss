@@ -1,14 +1,14 @@
 @import 'constants';
 
 .rt-scrubber-view {
-  background: #ccc;
+  background: #000;
   clear: both;
   float: left;
   width: 100%;
 }
 
 .rt-scrubber-container {
-  background: #eee;
+  background: #555;
   height: $SCRUBBER_HANDLE_DIMENSIONS;
 }
 
@@ -20,7 +20,8 @@
   width: $SCRUBBER_HANDLE_DIMENSIONS;
 }
 
-.rt-scrubber-icon {
+i.glyphicon.rt-scrubber-icon {
+  color: #ddd;
   cursor: ew-resize;
 }
 

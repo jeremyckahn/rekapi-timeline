@@ -1,6 +1,7 @@
 @import 'constants';
 
 .rt-container-view {
+  background: #1a1a1a;
   border: solid 1px #000;
   color: #fefefe;
   font-family: sans-serif;
@@ -19,6 +20,7 @@
 
   .rt-container-view i.glyphicon {
     color: #aaa;
+    cursor: pointer;
   }
 
   .rt-container-view select {
@@ -57,12 +59,11 @@
     }
 
 .rt-timeline {
+  // 272 = total width of .rt-keyframe-property-detail-view
+  margin-left: $CONTROL_BAR_VIEW;
   overflow: auto;
   position: relative;
-  // 272 = total width of .rt-keyframe-property-detail-view
   width: calc(100% - 272px);
-
-  margin-left: $CONTROL_BAR_VIEW;
 }
 
   .rt-timeline-wrapper {

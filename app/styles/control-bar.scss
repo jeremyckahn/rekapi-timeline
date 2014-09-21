@@ -1,15 +1,15 @@
 @import 'constants';
 
 .rt-control-bar-view {
+  background: #353535;
+  border-right: solid 1px #000;
+  bottom: 0;
   float: left;
+  left: 0;
   overflow: auto;
-  width: $PLAYBACK_ICON_DIMENSIONS * 2;
-
   position: absolute;
   top: 0;
-  left: 0;
-  bottom: 0;
-  border-right: solid 1px #000;
+  width: $PLAYBACK_ICON_DIMENSIONS * 2;
   z-index: 20;
 }
 

@@ -1,7 +1,8 @@
 @import "constants";
 
 .rt-keyframe-property-track-view {
-  border-bottom: solid 1px #000;
+  border-bottom: solid 1px #555;
+  color: #ddd;
   height: $KEYFRAME_PROPERTY_DIMENSION;
 }
 
