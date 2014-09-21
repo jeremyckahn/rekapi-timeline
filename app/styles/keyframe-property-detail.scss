@@ -8,7 +8,7 @@
 
 .rt-keyframe-property-detail-view h1 {
   font-size: 14px;
-  margin: 0 0 8px 0;
+  margin: 8px 0 14px 0;
 }
 
 .rt-keyframe-property-detail-view .rt-label-input-pair {
@@ -18,13 +18,17 @@
 }
 
   .rt-keyframe-property-detail-view .rt-label-input-pair p,
-  .rt-keyframe-property-detail-view .rt-label-input-pair input,
-  .rt-keyframe-property-detail-view .rt-label-input-pair select {
+  .rt-keyframe-property-detail-view .rt-label-input-pair input {
     float: left;
     height: 12px;
     line-height: 12px;
     width: 80px;
   }
+
+    .rt-keyframe-property-detail-view .rt-label-input-pair.rt-select-container p {
+      height: 20px;
+      line-height: 20px;
+    }
 
   .rt-keyframe-property-detail-view .rt-label-input-pair select {
     width: 115px;
