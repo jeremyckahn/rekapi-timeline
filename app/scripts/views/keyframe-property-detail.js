@@ -112,7 +112,7 @@ define([
       var inputs = [];
       _.each(Tweenable.prototype.formula, function (formula, name) {
         var option = document.createElement('option');
-        option.innerText = name;
+        option.innerHTML = name;
         inputs.push(option);
       }, this);
 
