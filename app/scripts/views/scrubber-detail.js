@@ -6,9 +6,9 @@ define([
 
   ,'incrementer-field'
 
-  ,'rekapi.timeline.constants'
+  ,'../rekapi.timeline.constants'
 
-  ,'text!templates/scrubber-detail.mustache'
+  ,'text!../templates/scrubber-detail.mustache'
 
   ], function (
 

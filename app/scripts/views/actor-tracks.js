@@ -4,7 +4,7 @@ define([
   ,'underscore'
   ,'backbone'
 
-  ,'views/keyframe-property-track'
+  ,'./keyframe-property-track'
 
 ], function (
 

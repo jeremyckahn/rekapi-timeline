@@ -4,7 +4,7 @@ define([
   ,'backbone'
   ,'rekapi'
 
-  ,'collections/keyframe-property'
+  ,'../collections/keyframe-property'
 
 ], function (
 

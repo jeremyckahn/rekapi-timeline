@@ -4,7 +4,7 @@ define([
   ,'underscore'
   ,'backbone'
 
-  ,'views/actor-tracks'
+  ,'./actor-tracks'
 
 ], function (
 

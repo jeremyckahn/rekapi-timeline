@@ -45,6 +45,12 @@ require.config({
     ,pane: '../bower_components/jck-library-extensions/src/backbone/pane/pane'
     ,alert: '../bower_components/jck-library-extensions/src/backbone/alert/alert'
     ,modal: '../bower_components/jck-library-extensions/src/backbone/modal/modal'
+
+    ,packages: [{
+      name: 'rekapi.timeline'
+      ,location: '/'
+      ,main: 'rekapi.timeline'
+    }]
   }
 });
 
@@ -52,8 +58,7 @@ require([
 
   'rekapi'
 
-  // Doesn't return value is not used here, it is attached to the Rekapi
-  // object.
+  // Return value is not used here, it is attached to the Rekapi object.
   ,'rekapi.timeline'
 
 ], function (

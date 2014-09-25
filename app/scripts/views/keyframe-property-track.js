@@ -4,7 +4,7 @@ define([
   ,'underscore'
   ,'backbone'
 
-  ,'views/keyframe-property'
+  ,'./keyframe-property'
 
 ], function (
 

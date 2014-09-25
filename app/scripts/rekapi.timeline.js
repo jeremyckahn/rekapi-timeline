@@ -4,11 +4,11 @@ define([
   ,'underscore'
   ,'backbone'
 
-  ,'views/container'
+  ,'./views/container'
 
-  ,'collections/actor'
+  ,'./collections/actor'
 
-  ,'rekapi.timeline.constants'
+  ,'./rekapi.timeline.constants'
 
   ,'jquery-dragon'
 

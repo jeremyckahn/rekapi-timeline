@@ -7,9 +7,9 @@ define([
 
   ,'incrementer-field'
 
-  ,'rekapi.timeline.constants'
+  ,'../rekapi.timeline.constants'
 
-  ,'text!templates/keyframe-property-detail.mustache'
+  ,'text!../templates/keyframe-property-detail.mustache'
 
 ], function (
 

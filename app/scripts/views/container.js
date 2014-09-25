@@ -5,15 +5,15 @@ define([
   ,'backbone'
   ,'mustache'
 
-  ,'views/control-bar'
-  ,'views/scrubber'
-  ,'views/animation-tracks'
-  ,'views/scrubber-detail'
-  ,'views/keyframe-property-detail'
-
   ,'rekapi.timeline.constants'
 
-  ,'text!templates/container.mustache'
+  ,'./control-bar'
+  ,'./scrubber'
+  ,'./animation-tracks'
+  ,'./scrubber-detail'
+  ,'./keyframe-property-detail'
+
+  ,'text!../templates/container.mustache'
 
 ], function (
 
@@ -22,13 +22,13 @@ define([
   ,Backbone
   ,Mustache
 
+  ,rekapiTimelineConstants
+
   ,ControlBarView
   ,ScrubberView
   ,AnimationTracksView
   ,ScrubberDetailView
   ,KeyframePropertyDetailView
-
-  ,rekapiTimelineConstants
 
   ,containerTemplate
 

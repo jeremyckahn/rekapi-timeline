@@ -5,9 +5,9 @@ define([
   ,'backbone'
   ,'mustache'
 
-  ,'rekapi.timeline.constants'
+  ,'../rekapi.timeline.constants'
 
-  ,'text!templates/keyframe-property.mustache'
+  ,'text!../templates/keyframe-property.mustache'
 
 ], function (
 

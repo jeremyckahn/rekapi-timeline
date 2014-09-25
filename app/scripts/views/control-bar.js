@@ -4,7 +4,7 @@ define([
   ,'underscore'
   ,'backbone'
 
-  ,'text!templates/control-bar.mustache'
+  ,'text!../templates/control-bar.mustache'
 
   ], function (
 

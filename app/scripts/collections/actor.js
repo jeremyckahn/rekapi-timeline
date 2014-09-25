@@ -3,7 +3,7 @@ define([
   'underscore'
   ,'backbone'
 
-  ,'models/actor'
+  ,'../models/actor'
 
 ], function (
 

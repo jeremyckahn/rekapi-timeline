@@ -3,9 +3,9 @@ define([
   'underscore'
   ,'backbone'
 
-  ,'rekapi.timeline.constants'
+  ,'../rekapi.timeline.constants'
 
-  ,'text!templates/scrubber.mustache'
+  ,'text!../templates/scrubber.mustache'
 
   ], function (
 

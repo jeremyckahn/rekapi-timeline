@@ -3,7 +3,7 @@ define([
   'underscore'
   ,'backbone'
 
-  ,'models/keyframe-property'
+  ,'../models/keyframe-property'
 
 ], function (
 
