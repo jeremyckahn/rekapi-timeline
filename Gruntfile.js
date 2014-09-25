@@ -1,4 +1,5 @@
 'use strict';
+var _ = require('underscore');
 var LIVERELOAD_PORT = 35730;
 var SERVER_PORT = 9010;
 var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
@@ -28,6 +29,35 @@ var DEPENDENCY_PATHS = {
   ,pane: '../bower_components/jck-library-extensions/src/backbone/pane/pane'
   ,alert: '../bower_components/jck-library-extensions/src/backbone/alert/alert'
   ,modal: '../bower_components/jck-library-extensions/src/backbone/modal/modal'
+};
+
+var REQUIREJS_BASE_CONFIG = {
+/* jshint maxlen: 100 */
+// Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
+  baseUrl: '<%= yeoman.app %>/scripts',
+  optimize: 'none',
+  shim: {
+    underscore: {
+      exports: '_'
+    }
+    ,backbone: {
+      deps: [
+        'underscore'
+        ,'jquery'
+      ]
+      ,exports: 'Backbone'
+    }
+  },
+  paths: DEPENDENCY_PATHS,
+  // TODO: Figure out how to make sourcemaps work with grunt-usemin
+  // https://github.com/yeoman/grunt-usemin/issues/30
+  //generateSourceMaps: true,
+  // required to support SourceMaps
+  // http://requirejs.org/docs/errors.html#sourcemapcomments
+  preserveLicenseComments: false,
+  useStrict: true,
+  wrap: true
+  //uglify2: {} // https://github.com/mishoo/UglifyJS2
 };
 
 // # Globbing
@@ -162,37 +192,18 @@ module.exports = function (grunt) {
     requirejs: {
       // Note: This target excludes all non-core dependency modules.
       dist: {
-        /* jshint maxlen: 100 */
-        // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
-        options: {
-          baseUrl: '<%= yeoman.app %>/scripts',
+        options:
+         _.extend({
           name: 'rekapi.timeline',
           out: '<%= yeoman.dist %>/rekapi.timeline.js',
-          optimize: 'none',
-          shim: {
-            underscore: {
-              exports: '_'
-            }
-            ,backbone: {
-              deps: [
-                'underscore'
-                ,'jquery'
-              ]
-              ,exports: 'Backbone'
-            }
-          },
-          paths: DEPENDENCY_PATHS,
-          exclude: Object.keys(DEPENDENCY_PATHS),
-          // TODO: Figure out how to make sourcemaps work with grunt-usemin
-          // https://github.com/yeoman/grunt-usemin/issues/30
-          //generateSourceMaps: true,
-          // required to support SourceMaps
-          // http://requirejs.org/docs/errors.html#sourcemapcomments
-          preserveLicenseComments: false,
-          useStrict: true,
-          wrap: true
-          //uglify2: {} // https://github.com/mishoo/UglifyJS2
-        }
+          exclude: Object.keys(DEPENDENCY_PATHS)
+        }, REQUIREJS_BASE_CONFIG)
+      },
+      demo: {
+        options: _.extend({
+          name: 'demo-main',
+          out: '<%= yeoman.dist %>/demo/main.js'
+        }, REQUIREJS_BASE_CONFIG)
       }
     },
     useminPrepare: {
@@ -254,6 +265,13 @@ module.exports = function (grunt) {
         files: [{
           src: ['.tmp/styles/main.css'],
           dest: '<%= yeoman.dist %>/styles/main.css'
+        }, {
+          src: ['app/bower_components/sass-bootstrap-glyphicons/css/bootstrap-glyphicons.css'],
+          dest: '<%= yeoman.dist %>/demo/'
+        }, {
+          expand: true,
+          src: ['app/bower_components/sass-bootstrap-glyphicons/fonts/*'],
+          dest: '<%= yeoman.dist %>/demo/'
         }]
       }
     },
