@@ -5,7 +5,7 @@ define([
   ,'backbone'
   ,'mustache'
 
-  ,'rekapi.timeline.constants'
+  ,'./../rekapi.timeline.constants'
 
   ,'./control-bar'
   ,'./scrubber'
