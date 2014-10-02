@@ -37,30 +37,19 @@ define([
         this.$el.addClass('rt-playing');
       }
 
-      // FIXME: Needs to be torn down.
-      $(document.body).on('keydown', _.bind(this.onWindowKeydown, this));
+      this.rekapiTimeline.rekapi.on(
+          'playStateChange', _.bind(this.onRekapiPlayStateChanged, this));
     }
 
     ,render: function () {
       this.$el.html(controlBarTemplate);
     }
 
-    ,onWindowKeydown: function (evt) {
-      var keyCode = evt.keyCode;
-
-      // This is true if the user is focused on an element such as an input or
-      // a link.  RekapiTimeline keyboard shortcuts should be disabled, in that
-      // case.
-      if (evt.target !== evt.currentTarget) {
-        return;
-      }
-
-      if (keyCode === 32) { // space
-        if (this.rekapiTimeline.isPlaying()) {
-          this.pause();
-        } else {
-          this.play();
-        }
+    ,onRekapiPlayStateChanged: function () {
+      if (this.rekapiTimeline.isPlaying()) {
+        this.$el.addClass('rt-playing');
+      } else {
+        this.$el.removeClass('rt-playing');
       }
     }
 
@@ -76,17 +65,14 @@ define([
       this.rekapiTimeline.rekapi
         .stop()
         .update(0);
-      this.$el.removeClass('rt-playing');
     }
 
     ,play: function () {
       this.rekapiTimeline.rekapi.playFromCurrent();
-      this.$el.addClass('rt-playing');
     }
 
     ,pause: function () {
       this.rekapiTimeline.rekapi.pause();
-      this.$el.removeClass('rt-playing');
     }
   });
 
