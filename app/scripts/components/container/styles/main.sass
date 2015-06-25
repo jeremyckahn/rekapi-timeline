@@ -1,0 +1,78 @@
+@import styles/variables
+
+.rt-container-view
+  background: #1a1a1a
+  border: solid 1px #000
+  color: #fefefe
+  font-family: sans-serif
+  height: $DEFAULT_CONTAINER_HEGHT
+  position: relative
+
+  p,
+  h1
+    color: #fefefe
+
+  input
+    background: #555
+    border-radius: 2px
+    border: none
+    color: #ddd
+    font-size: 0.8em
+    padding: 4px
+
+  i.glyphicon
+    color: #aaa
+    cursor: pointer
+
+  select
+    background: #666
+    border: solid 1px #333
+    color: #fff
+    font-size: 1em
+
+  .rt-label-input-pair
+    float: left
+    font-size: 12px
+    overflow: auto
+
+    p,
+    input
+      float: left
+      height: 12px
+      line-height: 12px
+      width: 80px
+
+      &.rt-select-container p
+        height: 20px
+        line-height: 20px
+
+    select
+      width: 115px
+
+    p
+      line-height: 18px
+      margin: 0
+      padding: 2px 0
+
+// FIXME: Move this to another component style file
+.rt-timeline
+  // 272 = total width of .rt-keyframe-property-detail-view
+  // FIXME: Move this to a proper variable
+  margin-left: $CONTROL_BAR_VIEW
+  overflow: auto
+  position: relative
+  width: calc(100% - 272px)
+
+  .rt-timeline-wrapper
+    overflow: auto
+    padding-bottom: 24px
+
+// FIXME: Move this to another component style file
+.rt-detail-views-container
+  background: #353535
+  bottom: 0
+  position: absolute
+  padding: 0 6px 6px 6px
+  right: 0
+  top: 0
+  width: $KEYFRAME_PROPERTY_DETAIL_WIDTH

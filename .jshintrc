@@ -1,7 +1,7 @@
 {
   "globals": {
-    "define": true,
-    "require": true
+    "require": true,
+    "define": true
   },
   "node": true,
   "browser": true,
@@ -12,7 +12,6 @@
   "eqeqeq": true,
   "immed": true,
   "latedef": true,
-  "laxbreak": true,
   "laxcomma": true,
   "maxlen": 80,
   "newcap": true,
