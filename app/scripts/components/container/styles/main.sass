@@ -1,6 +1,6 @@
 @import styles/variables
 
-.rt-container-view
+.container-view
   background: #1a1a1a
   border: solid 1px #000
   color: #fefefe
@@ -30,7 +30,7 @@
     color: #fff
     font-size: 1em
 
-  .rt-label-input-pair
+  .label-input-pair
     float: left
     font-size: 12px
     overflow: auto
@@ -42,7 +42,7 @@
       line-height: 12px
       width: 80px
 
-      &.rt-select-container p
+      &.select-container p
         height: 20px
         line-height: 20px
 
@@ -55,20 +55,20 @@
       padding: 2px 0
 
 // FIXME: Move this to another component style file
-.rt-timeline
-  // 272 = total width of .rt-keyframe-property-detail-view
+.timeline
+  // 272 = total width of .keyframe-property-detail-view
   // FIXME: Move this to a proper variable
   margin-left: $CONTROL_BAR_VIEW
   overflow: auto
   position: relative
   width: calc(100% - 272px)
 
-  .rt-timeline-wrapper
+  .timeline-wrapper
     overflow: auto
     padding-bottom: 24px
 
 // FIXME: Move this to another component style file
-.rt-detail-views-container
+.detail-views-container
   background: #353535
   bottom: 0
   position: absolute

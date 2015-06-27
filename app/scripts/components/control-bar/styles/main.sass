@@ -1,1 +1,34 @@
+@import styles/variables
+
 .control-bar-view
+  background: #353535
+  border-right: solid 1px #000
+  bottom: 0
+  float: left
+  left: 0
+  overflow: auto
+  position: absolute
+  top: 0
+  width: $PLAYBACK_ICON_DIMENSIONS * 2
+  z-index: 20
+
+  i
+    color: #000
+    float: left
+    font-size: 1.5em
+    height: $PLAYBACK_ICON_DIMENSIONS
+    width: $PLAYBACK_ICON_DIMENSIONS
+
+    &:active
+      color: #888
+
+  .pause
+    display: none
+
+    &.playing
+
+      .rt-pause
+        display: block
+
+      .rt-play
+        display: none
