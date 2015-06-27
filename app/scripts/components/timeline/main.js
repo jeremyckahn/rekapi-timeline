@@ -6,6 +6,8 @@ define([
   ,'./view'
   ,'text!./template.mustache'
 
+  ,'rekapi-timeline.component.scrubber'
+
 ], function (
 
   Lateralus
@@ -13,6 +15,8 @@ define([
   ,Model
   ,View
   ,template
+
+  ,ScrubberComponent
 
 ) {
   'use strict';
@@ -24,6 +28,12 @@ define([
     ,Model: Model
     ,View: View
     ,template: template
+
+    ,initialize: function () {
+      this.scrubber = this.addComponent(ScrubberComponent, {
+        el: this.view.$scrubber[0]
+      });
+    }
   });
 
   return TimelineComponent;
