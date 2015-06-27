@@ -8,6 +8,7 @@ define([
 
   ,'rekapi-timeline.component.control-bar'
   ,'rekapi-timeline.component.timeline'
+  ,'rekapi-timeline.component.details'
 
 ], function (
 
@@ -19,6 +20,7 @@ define([
 
   ,ControlBarComponent
   ,TimelineComponent
+  ,DetailsComponent
 
 ) {
   'use strict';
@@ -38,6 +40,10 @@ define([
 
       this.timelineComponent = this.addComponent(TimelineComponent, {
         el: this.view.$timeline[0]
+      });
+
+      this.detailsComponent = this.addComponent(DetailsComponent, {
+        el: this.view.$details[0]
       });
     }
   });
