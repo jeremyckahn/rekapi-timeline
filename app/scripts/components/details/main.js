@@ -7,6 +7,7 @@ define([
   ,'text!./template.mustache'
 
   ,'rekapi-timeline.component.scrubber-detail'
+  ,'rekapi-timeline.component.keyframe-property-detail'
 
 ], function (
 
@@ -17,6 +18,7 @@ define([
   ,template
 
   ,ScrubberDetailComponent
+  ,KeyframePropertyDetailComponent
 
 ) {
   'use strict';
@@ -33,6 +35,11 @@ define([
       this.scrubberDetailComponent =
         this.addComponent(ScrubberDetailComponent, {
         el: this.view.$scrubberDetail[0]
+      });
+
+      this.keyframePropertyDetailComponent =
+        this.addComponent(KeyframePropertyDetailComponent, {
+        el: this.view.$keyframePropertyDetail[0]
       });
     }
   });
