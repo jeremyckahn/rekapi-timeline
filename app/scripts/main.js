@@ -27,6 +27,9 @@ require.config({
   }, {
     name: 'rekapi-timeline.component.container'
     ,location: 'scripts/components/container'
+  }, {
+    name: 'rekapi-timeline.component.timeline'
+    ,location: 'scripts/components/timeline'
   }]
 });
 
@@ -39,5 +42,6 @@ require([
   RekapiTimeline
 
 ) {
-  window.rekapiTimeline = new RekapiTimeline(document.getElementById('rekapi-timeline'));
+  window.rekapiTimeline =
+    new RekapiTimeline(document.getElementById('rekapi-timeline'));
 });

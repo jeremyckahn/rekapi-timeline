@@ -6,6 +6,8 @@ define([
   ,'./view'
   ,'text!./template.mustache'
 
+  ,'rekapi-timeline.component.timeline'
+
 ], function (
 
   Lateralus
@@ -13,6 +15,8 @@ define([
   ,Model
   ,View
   ,template
+
+  ,TimelineComponent
 
 ) {
   'use strict';
@@ -24,6 +28,12 @@ define([
     ,Model: Model
     ,View: View
     ,template: template
+
+    ,initialize: function () {
+      this.timelineComponent = this.addComponent(TimelineComponent, {
+        el: this.view.$timeline[0]
+      });
+    }
   });
 
   return ContainerComponent;
