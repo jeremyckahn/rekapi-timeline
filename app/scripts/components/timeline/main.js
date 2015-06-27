@@ -30,7 +30,7 @@ define([
     ,template: template
 
     ,initialize: function () {
-      this.scrubber = this.addComponent(ScrubberComponent, {
+      this.scrubberComponent = this.addComponent(ScrubberComponent, {
         el: this.view.$scrubber[0]
       });
     }

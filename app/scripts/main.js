@@ -39,6 +39,9 @@ require.config({
   }, {
     name: 'rekapi-timeline.component.scrubber'
     ,location: 'scripts/components/scrubber'
+  }, {
+    name: 'rekapi-timeline.component.scrubber-detail'
+    ,location: 'scripts/components/scrubber-detail'
   }]
 });
 
