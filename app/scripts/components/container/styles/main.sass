@@ -30,6 +30,35 @@
     color: #fff
     font-size: 1em
 
+  .fill
+    bottom: 0
+    left: 0
+    position: absolute
+    right: 0
+    top: 0
+
+
+  label.row
+    float: left
+    clear: both
+    margin-bottom: 12px
+
+
+  label.row,
+  .field-button
+    cursor: pointer
+
+
+  .field-button
+    background: #222
+    border-radius: 2px
+    border: solid 1px #888
+    color: #ddd
+    font-size: 0.7em
+    margin: 0 6px 0 4px
+    padding: 5px 12px
+
+
   .label-input-pair
     float: left
     font-size: 12px
@@ -53,26 +82,3 @@
       line-height: 18px
       margin: 0
       padding: 2px 0
-
-// FIXME: Move this to another component style file
-.timeline
-  // 272 = total width of .keyframe-property-detail-view
-  // FIXME: Move this to a proper variable
-  margin-left: $CONTROL_BAR_VIEW
-  overflow: auto
-  position: relative
-  width: calc(100% - 272px)
-
-  .timeline-wrapper
-    overflow: auto
-    padding-bottom: 24px
-
-// FIXME: Move this to another component style file
-.detail-views-container
-  background: #353535
-  bottom: 0
-  position: absolute
-  padding: 0 6px 6px 6px
-  right: 0
-  top: 0
-  width: $KEYFRAME_PROPERTY_DETAIL_WIDTH
