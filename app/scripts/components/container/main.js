@@ -6,6 +6,7 @@ define([
   ,'./view'
   ,'text!./template.mustache'
 
+  ,'rekapi-timeline.component.control-bar'
   ,'rekapi-timeline.component.timeline'
 
 ], function (
@@ -16,6 +17,7 @@ define([
   ,View
   ,template
 
+  ,ControlBarComponent
   ,TimelineComponent
 
 ) {
@@ -30,6 +32,10 @@ define([
     ,template: template
 
     ,initialize: function () {
+      this.controlBar = this.addComponent(ControlBarComponent, {
+        el: this.view.$controlBar[0]
+      });
+
       this.timelineComponent = this.addComponent(TimelineComponent, {
         el: this.view.$timeline[0]
       });

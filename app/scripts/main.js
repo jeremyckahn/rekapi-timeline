@@ -30,6 +30,9 @@ require.config({
   }, {
     name: 'rekapi-timeline.component.timeline'
     ,location: 'scripts/components/timeline'
+  }, {
+    name: 'rekapi-timeline.component.control-bar'
+    ,location: 'scripts/components/control-bar'
   }]
 });
 
