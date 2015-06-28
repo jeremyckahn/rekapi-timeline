@@ -15,6 +15,8 @@ require.config({
     ,backbone: 'bower_components/backbone/backbone'
     ,underscore: 'bower_components/lodash/dist/lodash'
     ,mustache: 'bower_components/mustache/mustache'
+    ,shifty: 'bower_components/shifty/dist/shifty'
+    ,rekapi: 'bower_components/rekapi/dist/rekapi'
   }
   ,packages: [{
     name: 'lateralus'
@@ -50,13 +52,16 @@ require.config({
 
 require([
 
-  'rekapi-timeline'
+  'rekapi'
+  ,'rekapi-timeline'
 
 ], function (
 
-  RekapiTimeline
+  Rekapi
+  ,RekapiTimeline
 
 ) {
+  var rekapi = new Rekapi(document.body);
   window.rekapiTimeline =
-    new RekapiTimeline(document.getElementById('rekapi-timeline'));
+    new RekapiTimeline(document.getElementById('rekapi-timeline'), rekapi);
 });
