@@ -19,6 +19,12 @@ define([
   var DetailsComponentView = Base.extend({
     template: template
 
+    ,lateralusEvents: {
+      timelineModified: function () {
+        this.$el.css('width', this.collectOne('pixelWidthForTracks'));
+      }
+    }
+
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */

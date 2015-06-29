@@ -34,8 +34,8 @@ define([
     this.containerComponent = this.addComponent(ContainerComponent);
     this.model.set('hasRendered', true);
     this.emit('initialDOMRender');
-    this.rekapi.on('timelineModified', this.emit.bind('update', this));
-    this.emit('update');
+    this.rekapi.on('timelineModified', this.emit.bind('melineModified', this));
+    this.emit('melineModified');
   }, {
     Model: RekapiTimelineModel
   });
