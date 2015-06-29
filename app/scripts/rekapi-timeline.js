@@ -1,6 +1,7 @@
 define([
 
   'lateralus'
+  ,'rekapi'
 
   ,'rekapi-timeline.component.container'
 
@@ -10,6 +11,7 @@ define([
 ], function (
 
   Lateralus
+  ,Rekapi
 
   ,ContainerComponent
 
@@ -37,6 +39,43 @@ define([
   }, {
     Model: RekapiTimelineModel
   });
+
+  /**
+   * FIXME: Legacy code.  Change this to be a `provide`-ed method.
+   * Gets the Rekapi timeline millisecond value for a slider handle-like
+   * element.  This is used for converting the position of keyframe DOM
+   * elements and the timeline scrubber position into the value it represents
+   * in the animation.
+   * @param {jQuery} $handle The handle element to retrieve the millisecond
+   * value for.
+   * @return {number}
+   */
+  RekapiTimeline.prototype.getTimelineMillisecondForHandle =
+      function ($handle) {
+    var distanceFromLeft = parseInt($handle.css('left'), 10) -
+        parseInt($handle.parent().css('border-left-width'), 10);
+    var baseMillisecond = (
+        distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
+
+    return baseMillisecond;
+  };
+
+  /**
+   * FIXME: Legacy code.  Change this to be a `lateralusEvent`.
+   * @param {number} newScale
+   */
+  RekapiTimeline.prototype.setTimelineScale = function (newScale) {
+    this.timelineScale = newScale;
+    this.trigger('change:timelineScale', newScale);
+  };
+
+  // Decorate the Rekapi prototype with an init method.
+  /**
+   * @param {HTMLElement} el The element to contain the widget.
+   */
+  Rekapi.prototype.createTimeline = function (el) {
+    return new RekapiTimeline(this, el);
+  };
 
   return RekapiTimeline;
 });
