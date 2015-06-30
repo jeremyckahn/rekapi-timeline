@@ -23,24 +23,14 @@ define([
   var TimelineComponentView = Base.extend({
     template: template
 
-    ,provide: {
-      /**
-       * Determines how wide this View's element should be, in pixels.
-       * @return {number}
-       */
-      pixelWidthForTracks: function () {
-        var animationLength =
-            this.rekapiTimeline.rekapi.getAnimationLength();
-        var animationSeconds = (animationLength / 1000);
-
-        // The width of the tracks container should always be the pixel width
-        // of the animation plus the width of the timeline element to allow for
-        // lengthening of the animation tracks by the user.
-        return (constant.PIXELS_PER_SECOND * animationSeconds) +
-            this.$el.width();
+    ,lateralusEvents: {
+      timelineModified: function () {
+        this.$el.css('width', this.getPixelWidthForTracks());
       }
+    }
 
-      ,timelineWrapperHeight: function () {
+    ,provide: {
+      timelineWrapperHeight: function () {
         return this.$timelineWrapper.height();
       }
     }
@@ -50,6 +40,21 @@ define([
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
+    }
+
+    /**
+     * Determines how wide this View's element should be, in pixels.
+     * @return {number}
+     */
+    ,getPixelWidthForTracks: function () {
+      var animationLength = this.lateralus.rekapi.getAnimationLength();
+      var animationSeconds = (animationLength / 1000);
+
+      // The width of the tracks container should always be the pixel width of
+      // the animation plus the width of the timeline element to allow for
+      // lengthening of the animation tracks by the user.
+      return (constant.PIXELS_PER_SECOND * animationSeconds) +
+        this.$el.width();
     }
   });
 
