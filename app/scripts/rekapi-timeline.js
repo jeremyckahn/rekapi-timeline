@@ -8,6 +8,9 @@ define([
   ,'rekapi-timeline/model'
   ,'rekapi-timeline/constant'
 
+  // Silent dependency
+  ,'jquery-dragon'
+
 ], function (
 
   Lateralus
