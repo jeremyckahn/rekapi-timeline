@@ -1,6 +1,7 @@
 define([
 
-  'lateralus'
+  'underscore'
+  ,'lateralus'
   ,'rekapi'
 
   ,'rekapi-timeline.component.container'
@@ -13,7 +14,8 @@ define([
 
 ], function (
 
-  Lateralus
+  _
+  ,Lateralus
   ,Rekapi
 
   ,ContainerComponent
@@ -79,6 +81,16 @@ define([
   Rekapi.prototype.createTimeline = function (el) {
     return new RekapiTimeline(this, el);
   };
+
+  // Proxy Rekapi.prototype method that do not conflict with Backbone APIs to
+  // RekapiTimeline
+  var whitelistedProtoMethods =
+      _.difference(Object.keys(Rekapi.prototype), ['on', 'off']);
+  _.each(whitelistedProtoMethods, function (rekapiMethodName) {
+    RekapiTimeline.prototype[rekapiMethodName] = function () {
+      return Rekapi.prototype[rekapiMethodName].apply(this.rekapi, arguments);
+    };
+  }, this);
 
   return RekapiTimeline;
 });
