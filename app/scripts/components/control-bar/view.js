@@ -54,7 +54,7 @@ define([
     }
 
     ,onRekapiPlayStateChanged: function () {
-      if (this.lateralus.isPlaying()) {
+      if (this.lateralus.rekapi.isPlaying()) {
         this.$el.addClass('playing');
       } else {
         this.$el.removeClass('playing');
