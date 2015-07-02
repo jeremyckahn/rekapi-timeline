@@ -8,6 +8,7 @@ define([
 
   ,'rekapi-timeline/model'
   ,'rekapi-timeline/constant'
+  ,'rekapi-timeline/collections/actor'
 
   // Silent dependency
   ,'jquery-dragon'
@@ -22,6 +23,7 @@ define([
 
   ,RekapiTimelineModel
   ,constant
+  ,ActorCollection
 
 ) {
   'use strict';
@@ -35,8 +37,16 @@ define([
   var RekapiTimeline = Lateralus.beget(function (el, rekapi) {
     Lateralus.apply(this, arguments);
     this.rekapi = rekapi;
+
+    // FIXME: This should be on the Lateralus.Model.
     this.timelineScale = constant.DEFAULT_TIMELINE_SCALE;
-    this.containerComponent = this.addComponent(ContainerComponent);
+
+    this.actorCollection = this.initCollection(ActorCollection);
+
+    this.containerComponent = this.addComponent(ContainerComponent, {
+      el: el
+    });
+
     this.model.set('hasRendered', true);
     this.emit('initialDOMRender');
     this.rekapi.on('timelineModified', this.emit.bind('melineModified', this));
@@ -66,7 +76,7 @@ define([
   };
 
   /**
-   * FIXME: Legacy code.  Change this to be a `lateralusEvent`.
+   * FIXME: Legacy code.  Change this to be a `lateralusEvents` event.
    * @param {number} newScale
    */
   RekapiTimeline.prototype.setTimelineScale = function (newScale) {
