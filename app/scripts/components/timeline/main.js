@@ -7,6 +7,7 @@ define([
   ,'text!./template.mustache'
 
   ,'rekapi-timeline.component.scrubber'
+  ,'rekapi-timeline.component.animation-tracks'
 
 ], function (
 
@@ -17,6 +18,7 @@ define([
   ,template
 
   ,ScrubberComponent
+  ,AnimationTracksComponent
 
 ) {
   'use strict';
@@ -32,6 +34,11 @@ define([
     ,initialize: function () {
       this.scrubberComponent = this.addComponent(ScrubberComponent, {
         el: this.view.$scrubber[0]
+      });
+
+      this.animationTracksComponent = this.addComponent(
+          AnimationTracksComponent, {
+        el: this.view.$animationTracks[0]
       });
     }
   });

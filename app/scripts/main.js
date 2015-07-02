@@ -46,6 +46,9 @@ require.config({
     name: 'rekapi-timeline.component.scrubber-detail'
     ,location: 'scripts/components/scrubber-detail'
   }, {
+    name: 'rekapi-timeline.component.animation-tracks'
+    ,location: 'scripts/components/animation-tracks'
+  }, {
     name: 'rekapi-timeline.component.keyframe-property-detail'
     ,location: 'scripts/components/keyframe-property-detail'
   }]
