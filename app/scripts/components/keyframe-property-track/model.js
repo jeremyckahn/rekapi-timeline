@@ -12,7 +12,7 @@ define([
   var Base = Lateralus.Component.Model;
   var baseProto = Base.prototype;
 
-  var KeyframePropertyTracksComponentModel = Base.extend({
+  var KeyframePropertyTrackComponentModel = Base.extend({
     /**
      * Parameters are the same as http://backbonejs.org/#Model-constructor
      * @param {Object} [attributes]
@@ -23,5 +23,5 @@ define([
     }
   });
 
-  return KeyframePropertyTracksComponentModel;
+  return KeyframePropertyTrackComponentModel;
 });

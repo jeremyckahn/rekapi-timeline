@@ -19,12 +19,12 @@ define([
 
   var Base = Lateralus.Component;
 
-  var KeyframePropertyTracksComponent = Base.extend({
-    name: 'keyframe-property-tracks'
+  var KeyframePropertyTrackComponent = Base.extend({
+    name: 'keyframe-property-track'
     ,Model: Model
     ,View: View
     ,template: template
   });
 
-  return KeyframePropertyTracksComponent;
+  return KeyframePropertyTrackComponent;
 });

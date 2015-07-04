@@ -16,7 +16,7 @@ define([
   var Base = Lateralus.Component.View;
   var baseProto = Base.prototype;
 
-  var KeyframePropertyTracksComponentView = Base.extend({
+  var KeyframePropertyTrackComponentView = Base.extend({
     template: template
 
     /**
@@ -27,5 +27,5 @@ define([
     }
   });
 
-  return KeyframePropertyTracksComponentView;
+  return KeyframePropertyTrackComponentView;
 });

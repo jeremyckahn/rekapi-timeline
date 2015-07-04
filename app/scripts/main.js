@@ -52,8 +52,8 @@ require.config({
     name: 'rekapi-timeline.component.actor-tracks'
     ,location: 'scripts/components/actor-tracks'
   }, {
-    name: 'rekapi-timeline.component.keyframe-property-tracks'
-    ,location: 'scripts/components/keyframe-property-tracks'
+    name: 'rekapi-timeline.component.keyframe-property-track'
+    ,location: 'scripts/components/keyframe-property-track'
   }, {
     name: 'rekapi-timeline.component.keyframe-property-detail'
     ,location: 'scripts/components/keyframe-property-detail'
