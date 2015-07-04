@@ -4,15 +4,11 @@ define([
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.keyframe-property'
-
 ], function (
 
   Lateralus
 
   ,template
-
-  ,KeyframePropertyTrack
 
 ) {
   'use strict';
@@ -20,7 +16,7 @@ define([
   var Base = Lateralus.Component.View;
   var baseProto = Base.prototype;
 
-  var KeyframePropertyTrackComponentView = Base.extend({
+  var KeyframePropertyComponentView = Base.extend({
     template: template
 
     /**
@@ -31,5 +27,5 @@ define([
     }
   });
 
-  return KeyframePropertyTrackComponentView;
+  return KeyframePropertyComponentView;
 });

@@ -55,6 +55,9 @@ require.config({
     name: 'rekapi-timeline.component.keyframe-property-track'
     ,location: 'scripts/components/keyframe-property-track'
   }, {
+    name: 'rekapi-timeline.component.keyframe-property'
+    ,location: 'scripts/components/keyframe-property'
+  }, {
     name: 'rekapi-timeline.component.keyframe-property-detail'
     ,location: 'scripts/components/keyframe-property-detail'
   }]
