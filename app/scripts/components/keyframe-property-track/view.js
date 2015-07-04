@@ -12,7 +12,7 @@ define([
 
   ,template
 
-  ,KeyframePropertyTrack
+  ,KeyframeProperty
 
 ) {
   'use strict';
