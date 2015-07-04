@@ -48,7 +48,8 @@ define([
 
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     *   @param {KeyframePropertyTrackView} keyframePropertyTrackView
+     *   @param {KeyframePropertyTrackComponentView}
+     *   keyframePropertyTrackComponentView
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
@@ -57,7 +58,7 @@ define([
 
     ,deferredInitialize: function () {
       this.$el.dragon({
-        within: this.keyframePropertyTrackView.$el
+        within: this.keyframePropertyTrackComponentView.$el
         ,drag: this.onDrag.bind(this)
         ,dragEnd: this.onDragEnd.bind(this)
       });
