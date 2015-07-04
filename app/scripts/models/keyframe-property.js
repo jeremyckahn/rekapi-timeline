@@ -65,14 +65,6 @@ define([
     }
 
     /**
-     * FIXME: Obviate this.
-     * @return {Rekapi.KeyframeProperty}
-     */
-    ,getKeyframeProperty: function () {
-      return this.attributes.keyframeProperty;
-    }
-
-    /**
      * FIXME: Try to obviate this.
      * @return {Rekapi.Actor}
      */
