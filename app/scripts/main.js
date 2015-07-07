@@ -78,7 +78,7 @@ require([
   //window.rekapiTimeline =
     //new RekapiTimeline(document.getElementById('rekapi-timeline'), rekapi);
 
-  var timelineEl = document.querySelector('#timeline');
+  var timelineEl = document.querySelector('#rekapi-timeline');
   var rekapi = new Rekapi(document.body);
 
   var actor = rekapi.addActor({
