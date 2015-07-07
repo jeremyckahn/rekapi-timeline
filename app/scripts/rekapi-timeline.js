@@ -96,7 +96,9 @@ define([
 
   utils.proxy(Rekapi, RekapiTimeline, {
     blacklistedMethodNames: ['on', 'off']
-    ,targetProperty: 'rekapi'
+    ,subject: function () {
+      return this.rekapi;
+    }
   });
 
   return RekapiTimeline;

@@ -18,13 +18,13 @@ define([
      * @param {Object} opts
      * @param {Array.<string>} [opts.blacklistedMethodNames] A list of method
      * names that should not be copied over from Source.prototype.
-     * @param {string} [opts.targetProperty] The instance property of Target
-     * that Source's methods should be applied to.
+     * @param {function} [opts.subject] A function that returns the Object that
+     * Source's methods should be applied to.
      */
     proxy: function (Source, Target, opts) {
       opts = opts || {};
       var blacklistedMethodNames = opts.blacklistedMethodNames || [];
-      var targetProperty = opts.targetProperty;
+      var subject = opts.subject;
 
       var whitelistedMethodNames =
         _.difference(Object.keys(Source.prototype), blacklistedMethodNames);
@@ -34,7 +34,7 @@ define([
       whitelistedMethodNames.forEach(function (methodName) {
         var method = sourceProto[methodName];
         targetProto[methodName] = function () {
-          var target = targetProperty ? this[targetProperty] : this;
+          var target = subject ? subject.call(this) : this;
           return method.apply(target, arguments);
         };
       }, this);

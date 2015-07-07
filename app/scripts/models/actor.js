@@ -34,7 +34,7 @@ define([
       this.getTrackNames().forEach(this.addKeyframePropertyTrack, this);
 
       // FIXME: This should be leveraging `lateralusEvents`.
-      this.rekapiTimeline.rekapi.on('addKeyframePropertyTrack',
+      this.lateralus.rekapi.on('addKeyframePropertyTrack',
         this.onRekapiAddKeyframePropertyTrack.bind(this));
 
       this.keyframePropertyCollection = this.initCollection(
@@ -88,7 +88,11 @@ define([
     }
   });
 
-  utils.proxy(Rekapi.Actor, ActorModel);
+  utils.proxy(Rekapi.Actor, ActorModel, {
+    subject: function () {
+      return this.attributes.actor;
+    }
+  });
 
   return ActorModel;
 });
