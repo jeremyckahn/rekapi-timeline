@@ -91,7 +91,7 @@ define([
    * @param {HTMLElement} el The element to contain the widget.
    */
   Rekapi.prototype.createTimeline = function (el) {
-    return new RekapiTimeline(this, el);
+    return new RekapiTimeline(el, this);
   };
 
   utils.proxy(Rekapi, RekapiTimeline, ['on', 'off']);
