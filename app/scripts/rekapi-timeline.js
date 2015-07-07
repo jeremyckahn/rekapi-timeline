@@ -94,7 +94,10 @@ define([
     return new RekapiTimeline(el, this);
   };
 
-  utils.proxy(Rekapi, RekapiTimeline, ['on', 'off']);
+  utils.proxy(Rekapi, RekapiTimeline, {
+    blacklistedMethodNames: ['on', 'off']
+    ,targetProperty: 'rekapi'
+  });
 
   return RekapiTimeline;
 });
