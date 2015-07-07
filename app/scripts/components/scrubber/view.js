@@ -44,7 +44,7 @@ define([
       this.syncContainerToTimelineLength();
 
       this.$scrubberHandle.dragon({
-        within: this.$scrubberContainer
+        within: this.$scrubberWrapper
         ,drag: this.onScrubberDrag.bind(this)
       });
 
