@@ -74,7 +74,35 @@ require([
   ,RekapiTimeline
 
 ) {
+  //var rekapi = new Rekapi(document.body);
+  //window.rekapiTimeline =
+    //new RekapiTimeline(document.getElementById('rekapi-timeline'), rekapi);
+
+  var timelineEl = document.querySelector('#timeline');
   var rekapi = new Rekapi(document.body);
-  window.rekapiTimeline =
-    new RekapiTimeline(document.getElementById('rekapi-timeline'), rekapi);
+
+  var actor = rekapi.addActor({
+    context: document.querySelector('#actor-1')
+  });
+
+  window.actor = actor;
+
+  actor
+    .keyframe(0, {
+      translateX: '0px'
+      ,translateY: '0px'
+      ,rotate: '0deg'
+      ,scaleX: 1
+      ,scaleY: 1
+    })
+    .keyframe(1000, {
+      translateX: '150px'
+      ,translateY: '100px'
+    });
+
+  var timeline = rekapi.createTimeline(timelineEl);
+  rekapi.play(1);
+
+  console.log(window.rekapi = rekapi);
+  console.log(window.timeline = timeline);
 });
