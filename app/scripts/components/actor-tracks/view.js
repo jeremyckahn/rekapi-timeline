@@ -50,8 +50,11 @@ define([
     ,addKeyframePropertyTrackComponent: function (trackName) {
       var keyframePropertyTrackComponent = this.addComponent(
           KeyframePropertyTrackComponent, {
-        model: this.model
-        ,trackName: trackName
+        actorModel: this.model
+      }, {
+        modelAttributes: {
+          trackName: trackName
+        }
       });
 
       this.keyframePropertyTrackComponents.push(

@@ -28,7 +28,7 @@ define([
        * @param {KeyframePropertyModel} newKeyframeProperty
        */
       addKeyframeProperty: function (newKeyframeProperty) {
-        if (newKeyframeProperty.get('name') === this.trackName) {
+        if (newKeyframeProperty.get('name') === this.model.get('trackName')) {
           this.addKeyframePropertyComponent(newKeyframeProperty);
         }
       }
@@ -36,18 +36,18 @@ define([
 
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     *   @param {string} trackName
-     *   @param {ActorModel} model
+     *   @param {ActorModel} actorModel
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.keyframePropertyComponents = [];
-      this.$el.attr('data-track-name', this.trackName);
+      var trackName = this.model.get('trackName');
+      this.$el.attr('data-track-name', trackName);
 
       // Retroactively create views for any keyframeProperties that the actor
       // that hed before RekapiTimeline was initialized
-      this.model.keyframePropertyCollection
-        .where({ name: this.trackName })
+      this.actorModel.keyframePropertyCollection
+        .where({ name: trackName })
         .forEach(this.addKeyframePropertyComponent, this);
     }
 

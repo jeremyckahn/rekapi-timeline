@@ -13,12 +13,15 @@ define([
   var baseProto = Base.prototype;
 
   var KeyframePropertyTrackComponentModel = Base.extend({
+    defaults: {
+      trackName: ''
+    }
     /**
      * Parameters are the same as http://backbonejs.org/#Model-constructor
      * @param {Object} [attributes]
      * @param {Object} [options]
      */
-    initialize: function () {
+    ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
     }
   });
