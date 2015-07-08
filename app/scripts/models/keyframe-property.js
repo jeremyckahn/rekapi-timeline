@@ -31,11 +31,15 @@ define([
      *   @param {Rekapi.KeyframeProperty} keyframeProperty
      */
     ,initialize: function () {
+      // Have all Backbone.Model.prototype methods act upon the
+      // Rekapi.KeyframeProperty instance.
+      this.attributes = this.attributes.keyframeProperty;
+
       // FIXME: Abstract this to be `lateralusEvents` event.
       this.lateralus.rekapi.on('removeKeyframeProperty',
         this.onRekapiRemoveKeyframeProperty.bind(this));
 
-      this.id = this.attributes.keyframeProperty.id;
+      this.id = this.attributes.id;
     }
 
     /**
@@ -43,7 +47,7 @@ define([
      * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
     ,onRekapiRemoveKeyframeProperty: function (rekapi, keyframeProperty) {
-      if (keyframeProperty === this.attributes.keyframeProperty) {
+      if (keyframeProperty === this.attributes) {
         this.destroy();
       }
     }
@@ -54,13 +58,13 @@ define([
     ,set: function (key, value) {
       Backbone.Model.prototype.set.apply(this, arguments);
 
-      if (key in this.attributes.keyframeProperty) {
+      if (key in this.attributes) {
         // Modify the keyframeProperty via its actor so that the state of the
         // animation is updated.
         var obj = {};
         obj[key] = value;
-        this.attributes.keyframeProperty.actor.modifyKeyframeProperty(
-            this.get('name'), this.get('millisecond'), obj);
+        this.attributes.actor.modifyKeyframeProperty(
+            this.attributes.name, this.attributes.millisecond, obj);
       }
     }
 
@@ -69,7 +73,7 @@ define([
      * @return {Rekapi.Actor}
      */
     ,getActor: function () {
-      return this.attributes.keyframeProperty.actor;
+      return this.attributes.actor;
     }
 
     /**
