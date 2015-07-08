@@ -53,7 +53,6 @@ define([
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
-      this.initialRender();
     }
 
     ,deferredInitialize: function () {
