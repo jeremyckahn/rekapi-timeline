@@ -51,7 +51,8 @@ define([
 
     this.model.set('hasRendered', true);
     this.emit('initialDOMRender');
-    this.rekapi.on('timelineModified', this.emit.bind('melineModified', this));
+    this.rekapi.on(
+      'timelineModified', this.emit.bind(this, 'timelineModified'));
     this.emit('timelineModified');
   }, {
     Model: RekapiTimelineModel
