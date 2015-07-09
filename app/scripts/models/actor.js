@@ -31,6 +31,10 @@ define([
      *   @param {Rekapi.Actor} actor
      */
     ,initialize: function () {
+      // Have all Backbone.Model.prototype methods act upon the
+      // Rekapi.Actor instance.
+      this.attributes = this.attributes.actor;
+
       this.getTrackNames().forEach(this.addKeyframePropertyTrack, this);
 
       // FIXME: This should be leveraging `lateralusEvents`.
@@ -61,7 +65,7 @@ define([
      * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
     ,onRekapiAddKeyframePropertyTrack: function (rekapi, keyframeProperty) {
-      if (keyframeProperty.actor === this.attributes.actor) {
+      if (keyframeProperty.actor === this.attributes) {
         this.addKeyframePropertyTrack(keyframeProperty.name);
       }
     }
@@ -84,13 +88,13 @@ define([
      * @return {Rekapi.Actor}
      */
     ,getActor: function () {
-      return this.attributes.actor;
+      return this.attributes;
     }
   });
 
   utils.proxy(Rekapi.Actor, ActorModel, {
     subject: function () {
-      return this.attributes.actor;
+      return this.attributes;
     }
   });
 
