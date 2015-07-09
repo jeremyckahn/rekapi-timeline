@@ -25,7 +25,7 @@ define([
 
     ,lateralusEvents: {
       timelineModified: function () {
-        this.$el.css('width', this.getPixelWidthForTracks());
+        this.$timelineWrapper.css('width', this.getPixelWidthForTracks());
       }
     }
 
