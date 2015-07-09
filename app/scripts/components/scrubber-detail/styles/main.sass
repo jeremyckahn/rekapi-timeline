@@ -6,8 +6,15 @@
   top: 4px
   z-index: 20
 
-  label span
-    font-size: .8em
+  label
+
+    span
+      font-size: .8em
+
+    &:after
+      content: "%"
+      line-height: 20px
+      padding-left: 4px
 
   .scrubber-scale
     width: 50px
