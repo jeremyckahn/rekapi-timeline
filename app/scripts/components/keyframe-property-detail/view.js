@@ -1,14 +1,22 @@
 define([
 
-  'lateralus'
+  'underscore'
+  ,'lateralus'
+  ,'shifty'
 
   ,'text!./template.mustache'
 
+  ,'rekapi-timeline/constant'
+
 ], function (
 
-  Lateralus
+  _
+  ,Lateralus
+  ,Tweenable
 
   ,template
+
+  ,constant
 
 ) {
   'use strict';
@@ -19,11 +27,118 @@ define([
   var KeyframePropertyDetailComponentView = Base.extend({
     template: template
 
+    ,lateralusEvents: {
+      /**
+       * @param {jQuery.Event} evt
+       */
+      focusKeyframeProperty: function (evt) {
+        if (this.activeKeyframePropertyModel) {
+          this.stopListening(this.activeKeyframePropertyModel);
+        }
+
+        this.activeKeyframePropertyModel = evt.targetView.model;
+        this.listenTo(this.activeKeyframePropertyModel, 'change',
+            this.render.bind(this));
+
+        var inputs = [];
+        _.each(Tweenable.prototype.formula, function (formula, name) {
+          var option = document.createElement('option');
+          option.innerHTML = name;
+          inputs.push(option);
+        }, this);
+
+        this.$propertyEasing.children().remove();
+        this.$propertyEasing.append(inputs).val(
+            this.activeKeyframePropertyModel.get('easing'));
+
+        this.render();
+      }
+    }
+
+    ,events: {
+      'change input': 'onChangeInput'
+      ,'change select': 'onChangeInput'
+
+      ,'click .add': function () {
+        this.addNewKeyframeProperty();
+      }
+
+      ,'click .delete': function () {
+        this.deleteCurrentKeyframeProperty();
+      }
+
+      ,'change .property-millisecond': function () {
+        // FIXME: Port code from propertyMillisecondView
+      }
+
+      ,'change .property-value': function () {
+        // FIXME: Port code from propertyValueView
+      }
+    }
+
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
+    }
+
+    ,render: function () {
+      this.$propertyName.text(this.activeKeyframePropertyModel.get('name'));
+      this.$propertyMillisecond.val(
+          this.activeKeyframePropertyModel.get('millisecond'));
+      this.$propertyValue.val(
+          this.activeKeyframePropertyModel.get('value'));
+    }
+
+    /**
+     * @param {jQuery.Event} evt
+     */
+    ,onChangeInput: function (evt) {
+      var $target = $(evt.target);
+      this.activeKeyframePropertyModel.set($target.attr('name'), $target.val());
+      this.lateralus.update();
+    }
+
+    ,addNewKeyframeProperty: function () {
+      if (!this.activeKeyframePropertyModel) {
+        return;
+      }
+
+      var activeKeyframePropertyModel = this.activeKeyframePropertyModel;
+      var actorModel = activeKeyframePropertyModel.getActorModel();
+
+      var targetMillisecond =
+          activeKeyframePropertyModel.get('millisecond') +
+          constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
+      var keyframeObject = {};
+      keyframeObject[activeKeyframePropertyModel.get('name')] =
+          activeKeyframePropertyModel.get('value');
+
+      actorModel.keyframe(
+          targetMillisecond
+          ,keyframeObject
+          ,activeKeyframePropertyModel.get('easing'));
+
+      // Locate the keyframe property's slider and focus it.  Accessing the
+      // keyframe property through the DOM has the effect of focusing the
+      // property as though the user clicked it manually.
+      var selector = [
+          '[data-track-name="', activeKeyframePropertyModel.get('name'),
+          '"] [data-millisecond="', targetMillisecond, '"]'].join('');
+      this.lateralus.containerView.animationTracksView.$el.find(selector)
+          .focus();
+    }
+
+    ,deleteCurrentKeyframeProperty: function () {
+      if (!this.activeKeyframePropertyModel) {
+        return;
+      }
+
+      var activeKeyframePropertyModel = this.activeKeyframePropertyModel;
+      activeKeyframePropertyModel.getActorModel().removeKeyframeProperty(
+          activeKeyframePropertyModel.get('name')
+          ,activeKeyframePropertyModel.get('millisecond'));
     }
   });
 
