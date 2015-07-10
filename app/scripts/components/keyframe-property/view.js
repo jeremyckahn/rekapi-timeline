@@ -26,7 +26,7 @@ define([
     ,events: {
       'focus button':  function (evt) {
         evt.targetView = this;
-        this.emit('focusKeyframeProperty', evt);
+        this.emit('userFocusedKeyframeProperty', evt);
       }
     }
 
@@ -50,6 +50,7 @@ define([
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      *   @param {KeyframePropertyTrackComponentView}
      *   keyframePropertyTrackComponentView
+     *   @param {boolean=} preventInitialFocus
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
@@ -61,6 +62,10 @@ define([
         ,drag: this.onDrag.bind(this)
         ,dragEnd: this.onDragEnd.bind(this)
       });
+
+      if (this.lateralus.model.get('hasBooted')) {
+        this.$handle.focus();
+      }
     }
 
     ,render: function () {
@@ -81,11 +86,6 @@ define([
       this.$handle
           .attr('data-millisecond', model.get('millisecond'))
           .attr('data-value', model.get('value'));
-    }
-
-    ,onFocus: function (evt) {
-      evt.targetView = this;
-      this.emit('focusKeyframeProperty', evt);
     }
 
     ,onDrag: function () {

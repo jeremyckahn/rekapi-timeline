@@ -54,9 +54,15 @@ define([
     this.rekapi.on(
       'timelineModified', this.emit.bind(this, 'timelineModified'));
     this.emit('timelineModified');
+
+    _.defer(this.deferredInitialize.bind(this));
   }, {
     Model: RekapiTimelineModel
   });
+
+  RekapiTimeline.prototype.deferredInitialize = function () {
+    this.model.set('hasBooted', true);
+  };
 
   /**
    * FIXME: Legacy code.  Change this to be a `provide`-ed method.

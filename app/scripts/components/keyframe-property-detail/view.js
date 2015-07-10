@@ -31,7 +31,7 @@ define([
       /**
        * @param {jQuery.Event} evt
        */
-      focusKeyframeProperty: function (evt) {
+      userFocusedKeyframeProperty: function (evt) {
         if (this.activeKeyframePropertyModel) {
           this.stopListening(this.activeKeyframePropertyModel);
         }
@@ -119,15 +119,6 @@ define([
           targetMillisecond
           ,keyframeObject
           ,activeKeyframePropertyModel.get('easing'));
-
-      // Locate the keyframe property's slider and focus it.  Accessing the
-      // keyframe property through the DOM has the effect of focusing the
-      // property as though the user clicked it manually.
-      var selector = [
-          '[data-track-name="', activeKeyframePropertyModel.get('name'),
-          '"] [data-millisecond="', targetMillisecond, '"]'].join('');
-      this.lateralus.containerView.animationTracksView.$el.find(selector)
-          .focus();
     }
 
     ,deleteCurrentKeyframeProperty: function () {

@@ -23,7 +23,7 @@ define([
   var KeyframePropertyTrackComponentView = Base.extend({
     template: template
 
-    ,modelEvents: {
+    ,lateralusEvents: {
       /**
        * @param {KeyframePropertyModel} newKeyframeProperty
        */
