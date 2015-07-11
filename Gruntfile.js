@@ -120,6 +120,24 @@ module.exports = function (grunt) {
         // Options:
         // https://github.com/jrburke/r.js/blob/master/build/example.build.js
         options: {
+          paths: {
+            jquery: 'empty:',
+            'jquery-dragon': 'empty:',
+            backbone: 'empty:',
+            underscore: 'empty:',
+            mustache: 'empty:',
+            shifty: 'empty:',
+            rekapi: 'empty:',
+            lateralus: 'empty:',
+            'lateralus/lateralus.mixins': 'empty:',
+            'lateralus/lateralus.model': 'empty:',
+            'lateralus/lateralus.router': 'empty:',
+            'lateralus/lateralus.component.view': 'empty:',
+            'lateralus/lateralus.component.model': 'empty:',
+            'lateralus/lateralus.component.collection': 'empty:',
+            'lateralus/lateralus.component': 'empty:',
+            'lateralus/lateralus': 'empty:'
+          },
           baseUrl: '<%= yeoman.app %>',
           out: '<%= yeoman.dist %>/scripts/rekapi-timeline.js',
           optimize: 'none',
