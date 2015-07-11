@@ -96,7 +96,16 @@ define([
      */
     ,onChangeInput: function (evt) {
       var $target = $(evt.target);
-      this.activeKeyframePropertyModel.set($target.attr('name'), $target.val());
+      var val = $target.val();
+
+      // If the inputted value string can be coerced into an equivalent Number,
+      // do it.  Keyframe property values are initially set up as numbers, and
+      // this cast prevents the user from inadvertently setting inconsistently
+      // typed keyframe property values, thus breaking Rekapi.
+      // jshint eqeqeq: false
+      var coercedVal = val == +val ? +val : val;
+
+      this.activeKeyframePropertyModel.set($target.attr('name'), coercedVal);
       this.lateralus.update();
     }
 
