@@ -87,6 +87,10 @@ define([
      * @param {jQuery.Event} evt
      */
     ,onChangeInput: function (evt) {
+      if (!this.activeKeyframePropertyModel) {
+        return;
+      }
+
       var $target = $(evt.target);
       var val = $target.val();
 
