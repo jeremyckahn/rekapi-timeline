@@ -150,7 +150,7 @@ module.exports = function (grunt) {
           useStrict: true,
           wrap: true,
           mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
-          name: 'scripts/rekapi-timeline'
+          name: 'rekapi-timeline'
           //uglify2: {} // https://github.com/mishoo/UglifyJS2
         }
       }
