@@ -138,6 +138,7 @@ module.exports = function (grunt) {
             'lateralus/lateralus.component': 'empty:',
             'lateralus/lateralus': 'empty:'
           },
+          stubModules: ['text'],
           baseUrl: '<%= yeoman.app %>',
           out: '<%= yeoman.dist %>/scripts/rekapi-timeline.js',
           optimize: 'none',
