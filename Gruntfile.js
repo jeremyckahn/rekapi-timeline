@@ -121,7 +121,7 @@ module.exports = function (grunt) {
         // https://github.com/jrburke/r.js/blob/master/build/example.build.js
         options: {
           baseUrl: '<%= yeoman.app %>',
-          out: '<%= yeoman.dist %>/scripts/main.js',
+          out: '<%= yeoman.dist %>/scripts/rekapi-timeline.js',
           optimize: 'none',
           // TODO: Figure out how to make sourcemaps work with grunt-usemin
           // https://github.com/yeoman/grunt-usemin/issues/30
@@ -132,14 +132,13 @@ module.exports = function (grunt) {
           useStrict: true,
           wrap: true,
           mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
-          name: 'scripts/main'
+          name: 'scripts/rekapi-timeline'
           //uglify2: {} // https://github.com/mishoo/UglifyJS2
         }
       }
     },
     uglify: {
-      'dist/scripts/main.js': '<%= yeoman.dist %>/scripts/main.js',
-      'dist/bower_components/requirejs/require.js': '<%= yeoman.app %>/bower_components/requirejs/require.js'
+      'dist/scripts/rekapi-timeline.js': '<%= yeoman.dist %>/scripts/rekapi-timeline.js'
     },
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
@@ -274,9 +273,8 @@ module.exports = function (grunt) {
     'htmlmin',
     'concat',
     'cssmin',
-    'uglify',
+    //'uglify',
     'copy',
-    'rev',
     'usemin'
   ]);
 
