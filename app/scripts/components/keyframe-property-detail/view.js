@@ -66,14 +66,6 @@ define([
       ,'click .delete': function () {
         this.deleteCurrentKeyframeProperty();
       }
-
-      ,'change .property-millisecond': function () {
-        // FIXME: Port code from propertyMillisecondView
-      }
-
-      ,'change .property-value': function () {
-        // FIXME: Port code from propertyValueView
-      }
     }
 
     /**
