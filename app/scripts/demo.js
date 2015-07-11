@@ -1,5 +1,3 @@
-// This file is for development purposes only and is not a part of the standard
-// distribution.
 require([
   'scripts/main.js'
 ], function () {

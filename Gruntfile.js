@@ -8,6 +8,8 @@ var mountFolder = function (connect, dir) {
   return connect.static(require('path').resolve(dir));
 };
 
+// Options:
+// https://github.com/jrburke/r.js/blob/master/build/example.build.js
 var requireJsOptions = {
   baseUrl: '<%= yeoman.app %>',
   out: '<%= yeoman.dist %>/scripts/rekapi-timeline.js',
@@ -135,8 +137,6 @@ module.exports = function (grunt) {
     },
     requirejs: {
       dist: {
-        // Options:
-        // https://github.com/jrburke/r.js/blob/master/build/example.build.js
         options: _.defaults({
           paths: {
             jquery: 'empty:',
@@ -160,16 +160,24 @@ module.exports = function (grunt) {
         }, requireJsOptions)
       },
       distWithDependencies: {
-        // Options:
-        // https://github.com/jrburke/r.js/blob/master/build/example.build.js
         options: _.defaults({
           out: '<%= yeoman.dist %>/scripts/rekapi-timeline.full.js',
+        }, requireJsOptions)
+      },
+      demo: {
+        options: _.defaults({
+          out: '<%= yeoman.dist %>/scripts/demo.js',
+          name: 'scripts/demo',
+          onBuildWrite: function (moduleName, path, contents) {
+            return contents.replace('scripts/main.js', 'scripts/rekapi-timeline.full.min.js');
+          }
         }, requireJsOptions)
       }
     },
     uglify: {
       'dist/scripts/rekapi-timeline.min.js': '<%= yeoman.dist %>/scripts/rekapi-timeline.js',
-      'dist/scripts/rekapi-timeline.full.min.js': '<%= yeoman.dist %>/scripts/rekapi-timeline.full.js'
+      'dist/scripts/rekapi-timeline.full.min.js': '<%= yeoman.dist %>/scripts/rekapi-timeline.full.js',
+      'dist/bower_components/requirejs/require.js': '<%= yeoman.app %>/bower_components/requirejs/require.js'
     },
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
@@ -301,6 +309,7 @@ module.exports = function (grunt) {
     'useminPrepare',
     'requirejs:dist',
     'requirejs:distWithDependencies',
+    'requirejs:demo',
     'imagemin',
     'htmlmin',
     'concat',
