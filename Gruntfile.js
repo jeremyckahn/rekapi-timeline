@@ -1,3 +1,4 @@
+// jshint maxlen: 120
 'use strict';
 var LIVERELOAD_PORT = 35739;
 var SERVER_PORT = 9013;
@@ -120,6 +121,7 @@ module.exports = function (grunt) {
         // https://github.com/jrburke/r.js/blob/master/build/example.build.js
         options: {
           baseUrl: '<%= yeoman.app %>',
+          out: '<%= yeoman.dist %>/scripts/main.js',
           optimize: 'none',
           // TODO: Figure out how to make sourcemaps work with grunt-usemin
           // https://github.com/yeoman/grunt-usemin/issues/30
@@ -134,6 +136,10 @@ module.exports = function (grunt) {
           //uglify2: {} // https://github.com/mishoo/UglifyJS2
         }
       }
+    },
+    uglify: {
+      'dist/scripts/main.js': '<%= yeoman.dist %>/scripts/main.js',
+      'dist/bower_components/requirejs/require.js': '<%= yeoman.app %>/bower_components/requirejs/require.js'
     },
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
