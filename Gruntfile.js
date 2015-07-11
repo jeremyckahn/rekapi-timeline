@@ -168,7 +168,8 @@ module.exports = function (grunt) {
       }
     },
     uglify: {
-      'dist/scripts/rekapi-timeline.js': '<%= yeoman.dist %>/scripts/rekapi-timeline.js'
+      'dist/scripts/rekapi-timeline.min.js': '<%= yeoman.dist %>/scripts/rekapi-timeline.js',
+      'dist/scripts/rekapi-timeline.full.min.js': '<%= yeoman.dist %>/scripts/rekapi-timeline.full.js'
     },
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
@@ -304,7 +305,7 @@ module.exports = function (grunt) {
     'htmlmin',
     'concat',
     'cssmin',
-    //'uglify',
+    'uglify',
     'copy',
     'usemin'
   ]);
