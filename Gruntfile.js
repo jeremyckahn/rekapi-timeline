@@ -3,8 +3,26 @@
 var LIVERELOAD_PORT = 35739;
 var SERVER_PORT = 9013;
 var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
+var _ = require('underscore');
 var mountFolder = function (connect, dir) {
   return connect.static(require('path').resolve(dir));
+};
+
+var requireJsOptions = {
+  baseUrl: '<%= yeoman.app %>',
+  out: '<%= yeoman.dist %>/scripts/rekapi-timeline.js',
+  optimize: 'none',
+  // TODO: Figure out how to make sourcemaps work with grunt-usemin
+  // https://github.com/yeoman/grunt-usemin/issues/30
+  //generateSourceMaps: true,
+  // required to support SourceMaps
+  // http://requirejs.org/docs/errors.html#sourcemapcomments
+  preserveLicenseComments: false,
+  useStrict: true,
+  wrap: true,
+  mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
+  name: 'rekapi-timeline'
+  //uglify2: {} // https://github.com/mishoo/UglifyJS2
 };
 
 // # Globbing
@@ -119,7 +137,7 @@ module.exports = function (grunt) {
       dist: {
         // Options:
         // https://github.com/jrburke/r.js/blob/master/build/example.build.js
-        options: {
+        options: _.defaults({
           paths: {
             jquery: 'empty:',
             'jquery-dragon': 'empty:',
@@ -139,21 +157,14 @@ module.exports = function (grunt) {
             'lateralus/lateralus': 'empty:'
           },
           stubModules: ['text'],
-          baseUrl: '<%= yeoman.app %>',
-          out: '<%= yeoman.dist %>/scripts/rekapi-timeline.js',
-          optimize: 'none',
-          // TODO: Figure out how to make sourcemaps work with grunt-usemin
-          // https://github.com/yeoman/grunt-usemin/issues/30
-          //generateSourceMaps: true,
-          // required to support SourceMaps
-          // http://requirejs.org/docs/errors.html#sourcemapcomments
-          preserveLicenseComments: false,
-          useStrict: true,
-          wrap: true,
-          mainConfigFile: '<%= yeoman.app %>/scripts/main.js',
-          name: 'rekapi-timeline'
-          //uglify2: {} // https://github.com/mishoo/UglifyJS2
-        }
+        }, requireJsOptions)
+      },
+      distWithDependencies: {
+        // Options:
+        // https://github.com/jrburke/r.js/blob/master/build/example.build.js
+        options: _.defaults({
+          out: '<%= yeoman.dist %>/scripts/rekapi-timeline.full.js',
+        }, requireJsOptions)
       }
     },
     uglify: {
@@ -287,7 +298,8 @@ module.exports = function (grunt) {
     'clean:dist',
     'compass:dist',
     'useminPrepare',
-    'requirejs',
+    'requirejs:dist',
+    'requirejs:distWithDependencies',
     'imagemin',
     'htmlmin',
     'concat',
