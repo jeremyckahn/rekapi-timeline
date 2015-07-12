@@ -24,7 +24,6 @@ define([
     template: template
 
     ,lateralusEvents: {
-      // FIXME: timelineScale is not currently a part of RekapiTimelineModel.
       'change:timelineScale': function () {
         this.render();
       }
@@ -68,7 +67,7 @@ define([
 
     ,onScrubberDrag: function () {
       var millisecond = this.lateralus.getTimelineMillisecondForHandle(
-          this.$scrubberHandle) / this.lateralus.timelineScale;
+          this.$scrubberHandle) / this.lateralus.model.get('timelineScale');
       this.lateralus.rekapi.update(millisecond);
     }
 
@@ -76,7 +75,7 @@ define([
       var scaledContainerWidth =
         this.lateralus.getAnimationLength() *
         (constant.PIXELS_PER_SECOND / 1000) *
-        this.lateralus.timelineScale;
+        this.lateralus.model.get('timelineScale');
 
       this.$scrubberWrapper.width(
         scaledContainerWidth + this.$scrubberHandle.width());
@@ -88,7 +87,7 @@ define([
         this.lateralus.rekapi.getAnimationLength();
       var scaledLeftValue = lastMillisecondUpdated *
         (constant.PIXELS_PER_SECOND / 1000) *
-        this.lateralus.timelineScale;
+        this.lateralus.model.get('timelineScale');
 
       this.$scrubberHandle.css('left', scaledLeftValue);
     }

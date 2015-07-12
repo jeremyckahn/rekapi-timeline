@@ -23,9 +23,9 @@ define([
 
     ,events: {
       'change .scrubber-scale': function () {
-        // FIXME: This should be emitted.
         // FIXME: Needs validation to prevent negative values.
-        this.lateralus.setTimelineScale(this.$scrubberScale.val() / 100);
+        this.lateralus.model.set(
+          'timelineScale', (this.$scrubberScale.val() / 100));
       }
     }
 
@@ -43,7 +43,7 @@ define([
       var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
 
       _.extend(renderData, {
-        initialZoom: this.lateralus.timelineScale * 100
+        initialZoom: this.lateralus.model.get('timelineScale') * 100
       });
 
       return renderData;

@@ -76,7 +76,7 @@ define([
 
       var scaledXCoordinate = (
           constant.PIXELS_PER_SECOND * this.model.get('millisecond')) /
-          1000 * this.lateralus.timelineScale;
+          1000 * this.lateralus.model.get('timelineScale');
 
       this.$el.css({
         left: scaledXCoordinate
@@ -104,7 +104,7 @@ define([
     ,updateKeyframeProperty: function () {
       var scaledValue =
           this.lateralus.getTimelineMillisecondForHandle(this.$el) /
-          this.lateralus.timelineScale;
+          this.lateralus.model.get('timelineScale');
 
       this.model.set('millisecond', Math.round(scaledValue));
       this.lateralus.update();

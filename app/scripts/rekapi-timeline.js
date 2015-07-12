@@ -41,15 +41,12 @@ define([
     this.rekapi = rekapi;
 
     // Amplify all Rekapi events to "rekapi:" lateralusEvents.
-    this.rekapi.getEventNames().forEach(function (eventName) {
+    this.getEventNames().forEach(function (eventName) {
       this.rekapi.on(eventName, function () {
         this.emit.apply(
           this, ['rekapi:' + eventName].concat(_.toArray(arguments)));
       }.bind(this));
     }.bind(this));
-
-    // FIXME: This should be on the Lateralus.Model.
-    this.timelineScale = constant.DEFAULT_TIMELINE_SCALE;
 
     this.actorCollection = this.initCollection(ActorCollection);
 
@@ -87,15 +84,6 @@ define([
         distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
 
     return baseMillisecond;
-  };
-
-  /**
-   * FIXME: Legacy code.  Change this to be a `lateralusEvents` event.
-   * @param {number} newScale
-   */
-  RekapiTimeline.prototype.setTimelineScale = function (newScale) {
-    this.timelineScale = newScale;
-    this.trigger('change:timelineScale', newScale);
   };
 
   // Decorate the Rekapi prototype with an init method.
