@@ -25,28 +25,22 @@ define([
   var AnimationTracksComponentView = Base.extend({
     template: template
 
+    ,lateralusEvents: {
+      /**
+       * @param {RekapiTimelineActorModel} actorModel
+       */
+      actorAdded: function (actorModel) {
+        this.createActorComponent(actorModel);
+      }
+    }
+
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.actorTracksComponents = [];
-
-      // FIXME: This should be leveraging `lateralusEvents`.
-      this.listenTo(
-        this.lateralus.actorCollection
-        ,'add'
-        ,this.onActorCollectionAdd.bind(this)
-      );
-
       this.createActorComponents();
-    }
-
-    /**
-     * @param {RekapiTimelineActorModel} actorModel
-     */
-    ,onActorCollectionAdd: function (actorModel) {
-      this.createActorComponent(actorModel);
     }
 
     ,createActorComponents: function () {

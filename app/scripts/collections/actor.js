@@ -32,11 +32,10 @@ define([
 
     /**
      * @param {Rekapi.Actor} actor
-     * @return {ActorModel}
      */
     ,addActorToCollection: function (actor) {
       var actorModel = this.initModel(ActorModel, { actor: actor });
-      return this.add(actorModel);
+      this.emit('actorAdded', this.add(actorModel));
     }
   });
 
