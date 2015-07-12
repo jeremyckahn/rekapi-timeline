@@ -30,7 +30,7 @@ define([
        * @param {RekapiTimelineActorModel} actorModel
        */
       actorAdded: function (actorModel) {
-        this.createActorComponent(actorModel);
+        this.addActorComponent(actorModel);
       }
     }
 
@@ -40,20 +40,15 @@ define([
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.actorTracksComponents = [];
-      this.createActorComponents();
-    }
 
-    ,createActorComponents: function () {
-      // Creates views for any actors that were already in the animimation
-      var actorCollection = this.lateralus.actorCollection;
-      _.each(this.lateralus.getAllActors(),
-          actorCollection.addActorToCollection, actorCollection);
+      // Backfill any preexisting ActorModels
+      this.collectOne('actorCollection').each(this.addActorComponent, this);
     }
 
     /**
      * @param {RekapiTimelineActorModel} actorModel
      */
-    ,createActorComponent: function (actorModel) {
+    ,addActorComponent: function (actorModel) {
       var actorTracksComponent = this.addComponent(ActorTracksComponent, {
         model: actorModel
       });

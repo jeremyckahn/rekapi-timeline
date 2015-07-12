@@ -1,13 +1,15 @@
 define([
 
-  'backbone'
+  'underscore'
+  ,'backbone'
   ,'lateralus'
 
   ,'rekapi-timeline/models/actor'
 
 ], function (
 
-  Backbone
+  _
+  ,Backbone
   ,Lateralus
 
   ,ActorModel
@@ -20,20 +22,33 @@ define([
   var ActorCollection = Base.extend({
     model: ActorModel
 
+    ,provide: {
+      /**
+       * @return {ActorCollection}
+       */
+      actorCollection: function () {
+        return this;
+      }
+    }
+
     ,lateralusEvents: {
       /**
        * @param {Rekapi} rekapi
        * @param {Rekapi.Actor} actor
        */
       'rekapi:addActor': function (rekapi, actor) {
-        this.addActorToCollection(actor);
+        this.addActor(actor);
       }
+    }
+
+    ,initialize: function () {
+      _.each(this.lateralus.getAllActors(), this.addActor, this);
     }
 
     /**
      * @param {Rekapi.Actor} actor
      */
-    ,addActorToCollection: function (actor) {
+    ,addActor: function (actor) {
       var actorModel = this.initModel(ActorModel, { actor: actor });
       this.emit('actorAdded', this.add(actorModel));
     }
