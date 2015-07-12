@@ -20,6 +20,28 @@ define([
   var KeyframePropertyCollection = Base.extend({
     model: KeyframePropertyModel
 
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.KeyframeProperty} keyframeProperty
+       */
+      'rekapi:addKeyframeProperty': function (rekapi, keyframeProperty) {
+        if (keyframeProperty.actor === this.actorModel.getActor()) {
+          this.addKeyframePropertyToCollection(keyframeProperty);
+        }
+      }
+
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.KeyframeProperty} keyframeProperty
+       */
+      ,'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
+        if (keyframeProperty.actor === this.actorModel.getActor()) {
+          this.removeKeyframePropertyFromCollection(keyframeProperty);
+        }
+      }
+    }
+
     /**
      * @param {null} models Should not contain anything.
      * @param {Object} opts
@@ -28,32 +50,6 @@ define([
      */
     ,initialize: function (models, opts) {
       this.actorModel = opts.actorModel;
-
-      // FIXME: This should be leveraging `lateralusEvents`.
-      this.lateralus.rekapi.on('addKeyframeProperty',
-          this.onAddKeyframeProperty.bind(this));
-      this.lateralus.rekapi.on('removeKeyframeProperty',
-          this.onRemoveKeyframeProperty.bind(this));
-    }
-
-    /**
-     * @param {Rekapi} rekapi
-     * @param {Rekapi.KeyframeProperty} keyframeProperty
-     */
-    ,onAddKeyframeProperty: function (rekapi, keyframeProperty) {
-      if (keyframeProperty.actor === this.actorModel.getActor()) {
-        this.addKeyframePropertyToCollection(keyframeProperty);
-      }
-    }
-
-    /**
-     * @param {Rekapi} rekapi
-     * @param {Rekapi.KeyframeProperty} keyframeProperty
-     */
-    ,onRemoveKeyframeProperty: function (rekapi, keyframeProperty) {
-      if (keyframeProperty.actor === this.actorModel.getActor()) {
-        this.removeKeyframePropertyFromCollection(keyframeProperty);
-      }
     }
 
     /**

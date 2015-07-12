@@ -24,7 +24,7 @@ define([
     template: template
 
     ,lateralusEvents: {
-      timelineModified: function () {
+      'rekapi:timelineModified': function () {
         this.$timelineWrapper.css('width', this.getPixelWidthForTracks());
       }
     }

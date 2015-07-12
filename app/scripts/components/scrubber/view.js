@@ -28,6 +28,14 @@ define([
       'change:timelineScale': function () {
         this.render();
       }
+
+      ,'rekapi:timelineModified': function () {
+        this.render();
+      }
+
+      ,'rekapi:afterUpdate': function () {
+        this.render();
+      }
     }
 
     /**
@@ -47,12 +55,6 @@ define([
         within: this.$scrubberWrapper
         ,drag: this.onScrubberDrag.bind(this)
       });
-
-      // FIXME: Refactor these to be lateralusEvents.
-      this.lateralus.rekapi.on('afterUpdate',
-          this.onRekapiAfterUpdate.bind(this));
-      this.lateralus.rekapi.on('timelineModified',
-          this.onRekapiTimelineModified.bind(this));
     }
 
     ,deferredInitialize: function () {
@@ -68,14 +70,6 @@ define([
       var millisecond = this.lateralus.getTimelineMillisecondForHandle(
           this.$scrubberHandle) / this.lateralus.timelineScale;
       this.lateralus.rekapi.update(millisecond);
-    }
-
-    ,onRekapiAfterUpdate: function () {
-      this.render();
-    }
-
-    ,onRekapiTimelineModified: function () {
-      this.render();
     }
 
     ,syncContainerToTimelineLength: function () {

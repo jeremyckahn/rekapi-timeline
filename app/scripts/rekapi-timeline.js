@@ -40,6 +40,14 @@ define([
     Lateralus.apply(this, arguments);
     this.rekapi = rekapi;
 
+    // Amplify all Rekapi events to "rekapi:" lateralusEvents.
+    this.rekapi.getEventNames().forEach(function (eventName) {
+      this.rekapi.on(eventName, function () {
+        this.emit.apply(
+          this, ['rekapi:' + eventName].concat(_.toArray(arguments)));
+      }.bind(this));
+    }.bind(this));
+
     // FIXME: This should be on the Lateralus.Model.
     this.timelineScale = constant.DEFAULT_TIMELINE_SCALE;
 
@@ -51,9 +59,6 @@ define([
 
     this.model.set('hasRendered', true);
     this.emit('initialDOMRender');
-    this.rekapi.on(
-      'timelineModified', this.emit.bind(this, 'timelineModified'));
-    this.emit('timelineModified');
 
     _.defer(this.deferredInitialize.bind(this));
   }, {

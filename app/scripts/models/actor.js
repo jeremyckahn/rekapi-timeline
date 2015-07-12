@@ -26,6 +26,18 @@ define([
       actor: Rekapi.Actor
     }
 
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.KeyframeProperty} keyframeProperty
+       */
+      'rekapi:addKeyframePropertyTrack': function (rekapi, keyframeProperty) {
+        if (keyframeProperty.actor === this.attributes) {
+          this.addKeyframePropertyTrack(keyframeProperty.name);
+        }
+      }
+    }
+
     /**
      * @param {Object} attrs
      *   @param {Rekapi.Actor} actor
@@ -36,10 +48,6 @@ define([
       this.attributes = this.attributes.actor;
 
       this.getTrackNames().forEach(this.addKeyframePropertyTrack, this);
-
-      // FIXME: This should be leveraging `lateralusEvents`.
-      this.lateralus.rekapi.on('addKeyframePropertyTrack',
-        this.onRekapiAddKeyframePropertyTrack.bind(this));
 
       this.keyframePropertyCollection = this.initCollection(
         KeyframePropertyCollection
@@ -58,16 +66,6 @@ define([
           this.keyframePropertyCollection.addKeyframePropertyToCollection,
           this.keyframePropertyCollection);
       }, this);
-    }
-
-    /**
-     * @param {Rekapi} rekapi
-     * @param {Rekapi.KeyframeProperty} keyframeProperty
-     */
-    ,onRekapiAddKeyframePropertyTrack: function (rekapi, keyframeProperty) {
-      if (keyframeProperty.actor === this.attributes) {
-        this.addKeyframePropertyTrack(keyframeProperty.name);
-      }
     }
 
     /**

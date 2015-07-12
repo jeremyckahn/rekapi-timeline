@@ -20,17 +20,14 @@ define([
   var ActorCollection = Base.extend({
     model: ActorModel
 
-    ,initialize: function () {
-      // FIXME: This should be leveraging `lateralusEvents`.
-      this.lateralus.rekapi.on('addActor', this.onRekapiAddActor.bind(this));
-    }
-
-    /**
-     * @param {Rekapi} rekapi
-     * @param {Rekapi.Actor} actor
-     */
-    ,onRekapiAddActor: function (rekapi, actor) {
-      this.addActorToCollection(actor);
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.Actor} actor
+       */
+      'rekapi:addActor': function (rekapi, actor) {
+        this.addActorToCollection(actor);
+      }
     }
 
     /**

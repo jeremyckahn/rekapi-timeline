@@ -19,6 +19,16 @@ define([
   var ControlBarComponentView = Base.extend({
     template: template
 
+    ,lateralusEvents: {
+      'rekapi:playStateChange': function () {
+        if (this.lateralus.rekapi.isPlaying()) {
+          this.$el.addClass('playing');
+        } else {
+          this.$el.removeClass('playing');
+        }
+      }
+    }
+
     ,events: {
       'click .play': function () {
         this.play();
@@ -46,18 +56,6 @@ define([
       // FIXME: This value should be `collectOne`-ed.
       if (this.lateralus.rekapi.isPlaying()) {
         this.$el.addClass('playing');
-      }
-
-      // FIXME: This should be abstracted into a `lateralusEvent`.
-      this.lateralus.rekapi.on(
-          'playStateChange', this.onRekapiPlayStateChanged.bind(this));
-    }
-
-    ,onRekapiPlayStateChanged: function () {
-      if (this.lateralus.rekapi.isPlaying()) {
-        this.$el.addClass('playing');
-      } else {
-        this.$el.removeClass('playing');
       }
     }
 

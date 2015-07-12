@@ -26,6 +26,18 @@ define([
       keyframeProperty: Rekapi.KeyframeProperty
     }
 
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.KeyframeProperty} keyframeProperty
+       */
+      'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
+        if (keyframeProperty === this.attributes) {
+          this.destroy();
+        }
+      }
+    }
+
     /**
      * @param {Object} attributes
      *   @param {Rekapi.KeyframeProperty} keyframeProperty
@@ -35,21 +47,7 @@ define([
       // Rekapi.KeyframeProperty instance.
       this.attributes = this.attributes.keyframeProperty;
 
-      // FIXME: Abstract this to be `lateralusEvents` event.
-      this.lateralus.rekapi.on('removeKeyframeProperty',
-        this.onRekapiRemoveKeyframeProperty.bind(this));
-
       this.id = this.attributes.id;
-    }
-
-    /**
-     * @param {Rekapi} rekapi
-     * @param {Rekapi.KeyframeProperty} keyframeProperty
-     */
-    ,onRekapiRemoveKeyframeProperty: function (rekapi, keyframeProperty) {
-      if (keyframeProperty === this.attributes) {
-        this.destroy();
-      }
     }
 
     /**
