@@ -8,7 +8,6 @@ define([
 
   ,'rekapi-timeline/utils'
   ,'rekapi-timeline/model'
-  ,'rekapi-timeline/constant'
   ,'rekapi-timeline/collections/actor'
 
   // Silent dependency
@@ -24,7 +23,6 @@ define([
 
   ,utils
   ,RekapiTimelineModel
-  ,constant
   ,ActorCollection
 
 ) {
