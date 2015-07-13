@@ -53,15 +53,9 @@ define([
     this.containerComponent = this.addComponent(ContainerComponent, {
       el: el
     });
-
-    _.defer(this.deferredInitialize.bind(this));
   }, {
     Model: RekapiTimelineModel
   });
-
-  RekapiTimeline.prototype.deferredInitialize = function () {
-    this.model.set('hasBooted', true);
-  };
 
   // Decorate the Rekapi prototype with an init method.
   /**

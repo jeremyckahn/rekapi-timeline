@@ -29,7 +29,7 @@ define([
        */
       addKeyframeProperty: function (newKeyframeProperty) {
         if (newKeyframeProperty.get('name') === this.model.get('trackName')) {
-          this.addKeyframePropertyComponent(newKeyframeProperty);
+          this.addKeyframePropertyComponent(newKeyframeProperty, true);
         }
       }
     }
@@ -53,8 +53,10 @@ define([
 
     /**
      * @param {KeyframePropertyModel} keyframePropertyModel
+     * @param {boolean=} doImmediatelyFocus
      */
-    ,addKeyframePropertyComponent: function (keyframePropertyModel) {
+    ,addKeyframePropertyComponent:
+      function (keyframePropertyModel, doImmediatelyFocus) {
       // It's important to build the DOM before initializing the View in this
       // case, the initialization logic in KeyframePropertyView is way easier
       // that way.
@@ -64,8 +66,9 @@ define([
       var keyframePropertyComponent = this.addComponent(
           KeyframePropertyComponent, {
         el: keyframePropertyEl
-        ,keyframePropertyTrackComponentView: this
         ,model: keyframePropertyModel
+        ,keyframePropertyTrackComponentView: this
+        ,doImmediatelyFocus: !!doImmediatelyFocus
       });
 
       this.keyframePropertyComponents.push(keyframePropertyComponent);

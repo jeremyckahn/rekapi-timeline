@@ -50,7 +50,7 @@ define([
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      *   @param {KeyframePropertyTrackComponentView}
      *   keyframePropertyTrackComponentView
-     *   @param {boolean=} preventInitialFocus
+     *   @param {boolean=} doImmediatelyFocus
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
@@ -63,7 +63,7 @@ define([
         ,dragEnd: this.onDragEnd.bind(this)
       });
 
-      if (this.lateralus.model.get('hasBooted')) {
+      if (this.doImmediatelyFocus) {
         this.$handle.focus();
       }
     }
