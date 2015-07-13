@@ -66,8 +66,8 @@ define([
     }
 
     ,onScrubberDrag: function () {
-      var millisecond = this.lateralus.getTimelineMillisecondForHandle(
-          this.$scrubberHandle) / this.lateralus.model.get('timelineScale');
+      var millisecond =
+        this.collectOne('timelineMillisecondForHandle', this.$scrubberHandle);
       this.lateralus.rekapi.update(millisecond);
     }
 

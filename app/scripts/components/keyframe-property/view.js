@@ -103,8 +103,7 @@ define([
      */
     ,updateKeyframeProperty: function () {
       var scaledValue =
-          this.lateralus.getTimelineMillisecondForHandle(this.$el) /
-          this.lateralus.model.get('timelineScale');
+        this.collectOne('timelineMillisecondForHandle', this.$el);
 
       this.model.set('millisecond', Math.round(scaledValue));
       this.lateralus.update();
