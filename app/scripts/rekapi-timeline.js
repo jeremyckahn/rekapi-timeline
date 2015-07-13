@@ -55,7 +55,6 @@ define([
     });
 
     this.model.set('hasRendered', true);
-    this.emit('initialDOMRender');
 
     _.defer(this.deferredInitialize.bind(this));
   }, {
