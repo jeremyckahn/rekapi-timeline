@@ -54,8 +54,6 @@ define([
       el: el
     });
 
-    this.model.set('hasRendered', true);
-
     _.defer(this.deferredInitialize.bind(this));
   }, {
     Model: RekapiTimelineModel

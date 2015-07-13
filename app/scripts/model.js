@@ -17,8 +17,7 @@ define([
 
   var RekapiTimelineModel = Lateralus.Model.extend({
     defaults: {
-      hasRendered: false
-      ,hasBooted: false
+      hasBooted: false
       ,timelineScale: constant.DEFAULT_TIMELINE_SCALE
     }
   });
