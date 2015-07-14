@@ -23,9 +23,10 @@ define([
 
     ,events: {
       'change .scrubber-scale': function () {
-        // FIXME: Needs validation to prevent negative values.
-        this.lateralus.model.set(
-          'timelineScale', (this.$scrubberScale.val() / 100));
+        if (this.$scrubberScale[0].validity.valid) {
+          this.lateralus.model.set(
+            'timelineScale', (this.$scrubberScale.val() / 100));
+        }
       }
     }
 
