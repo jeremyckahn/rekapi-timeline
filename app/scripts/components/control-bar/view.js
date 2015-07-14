@@ -49,20 +49,17 @@ define([
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
 
-      // FIXME: This value should be `collectOne`-ed.
-      if (this.lateralus.rekapi.isPlaying()) {
+      if (this.lateralus.isPlaying()) {
         this.$el.addClass('playing');
       }
     }
 
     ,play: function () {
-      // FIXME: This should be `emit`-ed.
-      this.lateralus.rekapi.playFromCurrent();
+      this.lateralus.playFromCurrent();
     }
 
     ,pause: function () {
-      // FIXME: This should be `emit`-ed.
-      this.lateralus.rekapi.pause();
+      this.lateralus.pause();
     }
   });
 
