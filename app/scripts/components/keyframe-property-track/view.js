@@ -72,9 +72,6 @@ define([
       });
 
       this.keyframePropertyComponents.push(keyframePropertyComponent);
-
-      // FIXME: Is this line still necessary?
-      keyframePropertyComponent.view.render();
     }
   });
 

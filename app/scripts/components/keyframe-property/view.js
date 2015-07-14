@@ -54,6 +54,7 @@ define([
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
+      this.render();
     }
 
     ,deferredInitialize: function () {
