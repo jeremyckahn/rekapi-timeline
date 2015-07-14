@@ -55,6 +55,14 @@ define([
     Model: RekapiTimelineModel
   });
 
+  _.extend(RekapiTimeline.prototype, {
+    lateralusEvents: {
+      stopAnimation: function () {
+        this.stop().update(0);
+      }
+    }
+  });
+
   // Decorate the Rekapi prototype with an init method.
   /**
    * @param {HTMLElement} el The element to contain the widget.

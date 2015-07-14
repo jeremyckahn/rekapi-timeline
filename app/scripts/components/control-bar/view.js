@@ -39,11 +39,7 @@ define([
       }
 
       ,'click .stop': function () {
-        // FIXME: This should be an emitted event, Rekapi should not be called
-        // directly here.
-        this.lateralus.rekapi
-          .stop()
-          .update(0);
+        this.emit('stopAnimation');
       }
     }
 
