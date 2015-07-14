@@ -25,7 +25,7 @@ define([
        * @param {Rekapi} rekapi
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
-      'rekapi:addKeyframeProperty': function (rekapi, keyframeProperty) {
+      'rekapi:keyframePropertyAdded': function (rekapi, keyframeProperty) {
         if (keyframeProperty.actor === this.actorModel.getActor()) {
           this.addKeyframePropertyToCollection(keyframeProperty);
         }
@@ -62,7 +62,8 @@ define([
         keyframeProperty: keyframeProperty
       });
 
-      return this.add(keyframePropertyModel);
+      this.emit('keyframePropertyAdded', this.add(keyframePropertyModel));
+      return keyframePropertyModel;
     }
 
     /**

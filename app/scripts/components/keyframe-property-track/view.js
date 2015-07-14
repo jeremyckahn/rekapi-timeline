@@ -27,7 +27,7 @@ define([
       /**
        * @param {KeyframePropertyModel} newKeyframeProperty
        */
-      addKeyframeProperty: function (newKeyframeProperty) {
+      keyframePropertyAdded: function (newKeyframeProperty) {
         if (newKeyframeProperty.get('name') === this.model.get('trackName')) {
           this.addKeyframePropertyComponent(newKeyframeProperty, true);
         }

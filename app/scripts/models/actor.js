@@ -55,10 +55,6 @@ define([
         ,{ actorModel: this }
       );
 
-      // FIXME: This should be leveraging `lateralusEvents`.
-      this.listenTo(this.keyframePropertyCollection, 'add',
-        this.onAddKeyframeProperty.bind(this));
-
       // Backfill the collection with any keyframeProperties the actor may
       // already have.
       this.getTrackNames().forEach(function (trackName) {
@@ -66,13 +62,6 @@ define([
           this.keyframePropertyCollection.addKeyframePropertyToCollection,
           this.keyframePropertyCollection);
       }, this);
-    }
-
-    /**
-     * @param {RekapiTimelineKeyframePropertyModel} model
-     */
-    ,onAddKeyframeProperty: function (model) {
-      this.emit('addKeyframeProperty', model);
     }
 
     /**
