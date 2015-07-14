@@ -25,7 +25,7 @@ define([
 
     ,lateralusEvents: {
       'rekapi:timelineModified': function () {
-        this.$timelineWrapper.css('width', this.getPixelWidthForTracks());
+        this.updateWrapperWidth();
       }
     }
 
@@ -40,6 +40,7 @@ define([
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
+      this.updateWrapperWidth();
     }
 
     /**
@@ -55,6 +56,10 @@ define([
       // lengthening of the animation tracks by the user.
       return (constant.PIXELS_PER_SECOND * animationSeconds) +
         this.$el.width();
+    }
+
+    ,updateWrapperWidth: function () {
+      this.$timelineWrapper.css('width', this.getPixelWidthForTracks());
     }
   });
 
