@@ -68,7 +68,7 @@ define([
      * @param {string} trackName
      */
     ,addKeyframePropertyTrack: function (trackName) {
-      this.emit('addKeyframePropertyTrack', trackName);
+      this.emit('keyframePropertyTrackAdded', trackName);
     }
 
     /**

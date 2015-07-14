@@ -27,7 +27,7 @@ define([
       /**
        * @param {string} newTrackName
        */
-      addKeyframePropertyTrack: function (newTrackName) {
+      keyframePropertyTrackAdded: function (newTrackName) {
         this.addKeyframePropertyTrackComponent(newTrackName);
       }
     }
