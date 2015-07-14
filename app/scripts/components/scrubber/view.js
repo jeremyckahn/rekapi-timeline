@@ -35,6 +35,10 @@ define([
       ,'rekapi:afterUpdate': function () {
         this.render();
       }
+
+      ,'rekapi:addKeyframePropertyTrack': function () {
+        this.resizeScrubberGuide();
+      }
     }
 
     /**
@@ -42,11 +46,6 @@ define([
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
-
-      // This may be problematic.  See
-      // https://github.com/jeremyckahn/rekapi-timeline/blob/16cb67620dddef8bf89184d064b5c7200ff8a8aa/app/scripts/views/container.js#L79-L84
-      this.listenTo(this.lateralus.rekapi, 'addKeyframePropertyTrack',
-          this.resizeScrubberGuide.bind(this));
 
       this.syncContainerToTimelineLength();
 
