@@ -48,12 +48,14 @@ define([
       // that hed before RekapiTimeline was initialized
       this.actorModel.keyframePropertyCollection
         .where({ name: trackName })
-        .forEach(this.addKeyframePropertyComponent, this);
+        .forEach(function (keyframePropertyModel) {
+          this.addKeyframePropertyComponent(keyframePropertyModel, false);
+        }.bind(this));
     }
 
     /**
      * @param {KeyframePropertyModel} keyframePropertyModel
-     * @param {boolean=} doImmediatelyFocus
+     * @param {boolean} doImmediatelyFocus
      */
     ,addKeyframePropertyComponent:
       function (keyframePropertyModel, doImmediatelyFocus) {
