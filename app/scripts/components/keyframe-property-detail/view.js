@@ -29,14 +29,14 @@ define([
 
     ,lateralusEvents: {
       /**
-       * @param {jQuery.Event} evt
+       * @param {KeyframePropertyComponentView} keyframePropertyView
        */
-      userFocusedKeyframeProperty: function (evt) {
+      userFocusedKeyframeProperty: function (keyframePropertyView) {
         if (this.keyframePropertyModel) {
           this.stopListening(this.keyframePropertyModel);
         }
 
-        this.keyframePropertyModel = evt.targetView.model;
+        this.keyframePropertyModel = keyframePropertyView.model;
         this.listenTo(this.keyframePropertyModel, 'change',
           this.render.bind(this));
 

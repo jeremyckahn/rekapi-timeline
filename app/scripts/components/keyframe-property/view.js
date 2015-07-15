@@ -24,9 +24,8 @@ define([
     template: template
 
     ,events: {
-      'focus button':  function (evt) {
-        evt.targetView = this;
-        this.emit('userFocusedKeyframeProperty', evt);
+      'focus button':  function () {
+        this.emit('userFocusedKeyframeProperty', this);
       }
     }
 
