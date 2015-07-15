@@ -67,10 +67,9 @@ define([
     }
 
     /**
-     * FIXME: Try to obviate this.
      * @return {RekapiTimelineActorModel}
      */
-    ,getActorModel: function () {
+    ,getOwnerActor: function () {
       return this.collection.actorModel;
     }
 

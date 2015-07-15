@@ -111,7 +111,7 @@ define([
       }
 
       var activeKeyframePropertyModel = this.activeKeyframePropertyModel;
-      var actorModel = activeKeyframePropertyModel.getActorModel();
+      var actor = activeKeyframePropertyModel.getOwnerActor();
 
       var targetMillisecond =
           activeKeyframePropertyModel.get('millisecond') +
@@ -120,7 +120,7 @@ define([
       keyframeObject[activeKeyframePropertyModel.get('name')] =
           activeKeyframePropertyModel.get('value');
 
-      actorModel.keyframe(
+      actor.keyframe(
           targetMillisecond
           ,keyframeObject
           ,activeKeyframePropertyModel.get('easing'));
@@ -132,7 +132,7 @@ define([
       }
 
       var activeKeyframePropertyModel = this.activeKeyframePropertyModel;
-      activeKeyframePropertyModel.getActorModel().removeKeyframeProperty(
+      activeKeyframePropertyModel.getOwnerActor().removeKeyframeProperty(
           activeKeyframePropertyModel.get('name')
           ,activeKeyframePropertyModel.get('millisecond'));
     }
