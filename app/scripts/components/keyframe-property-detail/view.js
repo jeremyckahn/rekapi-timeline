@@ -32,13 +32,13 @@ define([
        * @param {jQuery.Event} evt
        */
       userFocusedKeyframeProperty: function (evt) {
-        if (this.activeKeyframePropertyModel) {
-          this.stopListening(this.activeKeyframePropertyModel);
+        if (this.keyframePropertyModel) {
+          this.stopListening(this.keyframePropertyModel);
         }
 
-        this.activeKeyframePropertyModel = evt.targetView.model;
-        this.listenTo(this.activeKeyframePropertyModel, 'change',
-            this.render.bind(this));
+        this.keyframePropertyModel = evt.targetView.model;
+        this.listenTo(this.keyframePropertyModel, 'change',
+          this.render.bind(this));
 
         var inputs = [];
         _.each(Tweenable.prototype.formula, function (formula, name) {
@@ -49,7 +49,7 @@ define([
 
         this.$propertyEasing.children().remove();
         this.$propertyEasing.append(inputs).val(
-            this.activeKeyframePropertyModel.get('easing'));
+          this.keyframePropertyModel.get('easing'));
 
         this.render();
       }
@@ -76,18 +76,17 @@ define([
     }
 
     ,render: function () {
-      this.$propertyName.text(this.activeKeyframePropertyModel.get('name'));
+      this.$propertyName.text(this.keyframePropertyModel.get('name'));
       this.$propertyMillisecond.val(
-          this.activeKeyframePropertyModel.get('millisecond'));
-      this.$propertyValue.val(
-          this.activeKeyframePropertyModel.get('value'));
+        this.keyframePropertyModel.get('millisecond'));
+      this.$propertyValue.val(this.keyframePropertyModel.get('value'));
     }
 
     /**
      * @param {jQuery.Event} evt
      */
     ,onChangeInput: function (evt) {
-      if (!this.activeKeyframePropertyModel) {
+      if (!this.keyframePropertyModel) {
         return;
       }
 
@@ -101,40 +100,40 @@ define([
       // jshint eqeqeq: false
       var coercedVal = val == +val ? +val : val;
 
-      this.activeKeyframePropertyModel.set($target.attr('name'), coercedVal);
+      this.keyframePropertyModel.set($target.attr('name'), coercedVal);
       this.lateralus.update();
     }
 
     ,addNewKeyframeProperty: function () {
-      if (!this.activeKeyframePropertyModel) {
+      if (!this.keyframePropertyModel) {
         return;
       }
 
-      var activeKeyframePropertyModel = this.activeKeyframePropertyModel;
-      var actor = activeKeyframePropertyModel.getOwnerActor();
+      var keyframePropertyModel = this.keyframePropertyModel;
+      var actor = keyframePropertyModel.getOwnerActor();
 
       var targetMillisecond =
-          activeKeyframePropertyModel.get('millisecond') +
-          constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
+        keyframePropertyModel.get('millisecond') +
+        constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
       var keyframeObject = {};
-      keyframeObject[activeKeyframePropertyModel.get('name')] =
-          activeKeyframePropertyModel.get('value');
+      keyframeObject[keyframePropertyModel.get('name')] =
+        keyframePropertyModel.get('value');
 
       actor.keyframe(
-          targetMillisecond
-          ,keyframeObject
-          ,activeKeyframePropertyModel.get('easing'));
+        targetMillisecond
+        ,keyframeObject
+        ,keyframePropertyModel.get('easing'));
     }
 
     ,deleteCurrentKeyframeProperty: function () {
-      if (!this.activeKeyframePropertyModel) {
+      if (!this.keyframePropertyModel) {
         return;
       }
 
-      var activeKeyframePropertyModel = this.activeKeyframePropertyModel;
-      activeKeyframePropertyModel.getOwnerActor().removeKeyframeProperty(
-          activeKeyframePropertyModel.get('name')
-          ,activeKeyframePropertyModel.get('millisecond'));
+      var keyframePropertyModel = this.keyframePropertyModel;
+      keyframePropertyModel.getOwnerActor().removeKeyframeProperty(
+        keyframePropertyModel.get('name')
+        ,keyframePropertyModel.get('millisecond'));
     }
   });
 
