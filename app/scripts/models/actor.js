@@ -70,13 +70,6 @@ define([
     ,addKeyframePropertyTrack: function (trackName) {
       this.emit('keyframePropertyTrackAdded', trackName);
     }
-
-    /**
-     * @return {Rekapi.Actor}
-     */
-    ,getActor: function () {
-      return this.attributes;
-    }
   });
 
   utils.proxy(Rekapi.Actor, ActorModel, {

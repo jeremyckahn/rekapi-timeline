@@ -26,7 +26,7 @@ define([
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       'rekapi:addKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.actor === this.actorModel.getActor()) {
+        if (keyframeProperty.actor.id === this.actorModel.get('id')) {
           this.addKeyframePropertyToCollection(keyframeProperty);
         }
       }
@@ -36,7 +36,7 @@ define([
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       ,'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.actor === this.actorModel.getActor()) {
+        if (keyframeProperty.actor.id === this.actorModel.get('id')) {
           this.removeKeyframePropertyFromCollection(keyframeProperty);
         }
       }

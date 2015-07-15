@@ -68,14 +68,6 @@ define([
 
     /**
      * FIXME: Try to obviate this.
-     * @return {Rekapi.Actor}
-     */
-    ,getActor: function () {
-      return this.attributes.actor;
-    }
-
-    /**
-     * FIXME: Try to obviate this.
      * @return {RekapiTimelineActorModel}
      */
     ,getActorModel: function () {
