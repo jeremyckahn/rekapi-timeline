@@ -60,6 +60,22 @@ define([
       stopAnimation: function () {
         this.stop().update(0);
       }
+
+      ,'rekapi:removeKeyframeProperty': function () {
+        if (!this.isPlaying()) {
+          // This operation needs to be deferred because Rekapi's
+          // removeKeyframeProperty event is fired at point in the keyframe
+          // removal process where calling update() would not reflect the new
+          // state of the timeline.  However, this only needs to be done if the
+          // animation is not already playing.
+          //
+          // TODO: Perhaps change how this event works in Rekapi so that the
+          // _.defer is not necessary?
+          _.defer(function () {
+            this.update();
+          }.bind(this));
+        }
+      }
     }
   });
 
