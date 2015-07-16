@@ -39,9 +39,9 @@ define([
       baseProto.initialize.apply(this, arguments);
       this.keyframePropertyTrackComponents = [];
 
-      // Create views for any keyframes that were already defined
+      // Backfill any preexisting tracks
       this.model.getTrackNames().forEach(
-          this.addKeyframePropertyTrackComponent, this);
+        this.addKeyframePropertyTrackComponent, this);
     }
 
     /**
@@ -49,7 +49,7 @@ define([
      */
     ,addKeyframePropertyTrackComponent: function (trackName) {
       var keyframePropertyTrackComponent = this.addComponent(
-          KeyframePropertyTrackComponent, {
+        KeyframePropertyTrackComponent, {
         actorModel: this.model
       }, {
         modelAttributes: {

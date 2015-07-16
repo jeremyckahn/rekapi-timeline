@@ -28,7 +28,7 @@ define([
        * Gets the Rekapi timeline millisecond value for a slider handle-like
        * element.  This is used for converting the position of keyframe DOM
        * elements and the timeline scrubber position into the value it
-       * represents in the animation.
+       * represents in the animation timeline.
        * @param {jQuery} $handle The handle element to retrieve the millisecond
        * value for.
        * @return {number}

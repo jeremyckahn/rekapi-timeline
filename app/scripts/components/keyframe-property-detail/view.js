@@ -60,11 +60,36 @@ define([
       ,'change select': 'onChangeInput'
 
       ,'click .add': function () {
-        this.addNewKeyframeProperty();
+        if (!this.keyframePropertyModel) {
+          return;
+        }
+
+        var keyframePropertyModel = this.keyframePropertyModel;
+        var actorModel = keyframePropertyModel.getOwnerActor();
+
+        var targetMillisecond =
+          keyframePropertyModel.get('millisecond') +
+          constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
+
+        var keyframeObject = {};
+        keyframeObject[keyframePropertyModel.get('name')] =
+          keyframePropertyModel.get('value');
+
+        actorModel.keyframe(
+          targetMillisecond
+          ,keyframeObject
+          ,keyframePropertyModel.get('easing'));
       }
 
       ,'click .delete': function () {
-        this.deleteCurrentKeyframeProperty();
+        if (!this.keyframePropertyModel) {
+          return;
+        }
+
+        var keyframePropertyModel = this.keyframePropertyModel;
+        keyframePropertyModel.getOwnerActor().removeKeyframeProperty(
+          keyframePropertyModel.get('name')
+          ,keyframePropertyModel.get('millisecond'));
       }
     }
 
@@ -76,6 +101,8 @@ define([
     }
 
     ,render: function () {
+      // TODO: It would be nice if the template could be declaratively bound to
+      // the model, rather than having to make DOM updates imperatively here.
       this.$propertyName.text(this.keyframePropertyModel.get('name'));
       this.$propertyMillisecond.val(
         this.keyframePropertyModel.get('millisecond'));
@@ -102,38 +129,6 @@ define([
 
       this.keyframePropertyModel.set($target.attr('name'), coercedVal);
       this.lateralus.update();
-    }
-
-    ,addNewKeyframeProperty: function () {
-      if (!this.keyframePropertyModel) {
-        return;
-      }
-
-      var keyframePropertyModel = this.keyframePropertyModel;
-      var actor = keyframePropertyModel.getOwnerActor();
-
-      var targetMillisecond =
-        keyframePropertyModel.get('millisecond') +
-        constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
-      var keyframeObject = {};
-      keyframeObject[keyframePropertyModel.get('name')] =
-        keyframePropertyModel.get('value');
-
-      actor.keyframe(
-        targetMillisecond
-        ,keyframeObject
-        ,keyframePropertyModel.get('easing'));
-    }
-
-    ,deleteCurrentKeyframeProperty: function () {
-      if (!this.keyframePropertyModel) {
-        return;
-      }
-
-      var keyframePropertyModel = this.keyframePropertyModel;
-      keyframePropertyModel.getOwnerActor().removeKeyframeProperty(
-        keyframePropertyModel.get('name')
-        ,keyframePropertyModel.get('millisecond'));
     }
   });
 
