@@ -32,7 +32,7 @@ define([
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       'rekapi:addKeyframePropertyTrack': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.actor === this.attributes) {
+        if (keyframeProperty.actor.id === this.id) {
           this.addKeyframePropertyTrack(keyframeProperty.name);
         }
       }
@@ -47,20 +47,23 @@ define([
       // Rekapi.Actor instance.
       this.attributes = this.attributes.actor;
 
+      this.id = this.attributes.id;
       this.getTrackNames().forEach(this.addKeyframePropertyTrack, this);
 
-      this.keyframePropertyCollection = this.initCollection(
+      var keyframePropertyCollection = this.initCollection(
         KeyframePropertyCollection
         ,null
         ,{ actorModel: this }
       );
 
+      this.keyframePropertyCollection = keyframePropertyCollection;
+
       // Backfill the collection with any keyframeProperties the actor may
       // already have.
       this.getTrackNames().forEach(function (trackName) {
         this.getPropertiesInTrack(trackName).forEach(
-          this.keyframePropertyCollection.addKeyframePropertyToCollection,
-          this.keyframePropertyCollection);
+          keyframePropertyCollection.addKeyframePropertyToCollection,
+          keyframePropertyCollection);
       }, this);
     }
 

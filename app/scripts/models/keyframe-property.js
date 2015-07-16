@@ -32,7 +32,7 @@ define([
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty === this.attributes) {
+        if (keyframeProperty.id === this.id) {
           this.destroy();
         }
       }
@@ -74,7 +74,7 @@ define([
     }
 
     /**
-     * Overrides the standard Backbone.Model#destroy behavior, as there is no
+     * Override the standard Backbone.Model#destroy behavior, as there is no
      * server data that this model is tied to.
      * @override
      */
