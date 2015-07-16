@@ -26,8 +26,8 @@ define([
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       'rekapi:addKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.actor.id === this.actorModel.get('id')) {
-          this.addKeyframePropertyToCollection(keyframeProperty);
+        if (keyframeProperty.actor.id === this.actorModel.id) {
+          this.addKeyframeProperty(keyframeProperty);
         }
       }
 
@@ -36,8 +36,8 @@ define([
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       ,'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.actor.id === this.actorModel.get('id')) {
-          this.removeKeyframePropertyFromCollection(keyframeProperty);
+        if (keyframeProperty.actor.id === this.actorModel.id) {
+          this.removeKeyframeProperty(keyframeProperty);
         }
       }
     }
@@ -54,22 +54,19 @@ define([
 
     /**
      * @param {Rekapi.KeyframeProperty} keyframeProperty
-     * @return {KeyframePropertyModel} The keyframe property model that was
-     * added.
      */
-    ,addKeyframePropertyToCollection: function (keyframeProperty) {
+    ,addKeyframeProperty: function (keyframeProperty) {
       var keyframePropertyModel = this.initModel(KeyframePropertyModel, {
         keyframeProperty: keyframeProperty
       });
 
       this.emit('keyframePropertyAdded', this.add(keyframePropertyModel));
-      return keyframePropertyModel;
     }
 
     /**
      * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
-    ,removeKeyframePropertyFromCollection: function (keyframeProperty) {
+    ,removeKeyframeProperty: function (keyframeProperty) {
       this.remove(keyframeProperty.id);
     }
   });

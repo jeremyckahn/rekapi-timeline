@@ -42,6 +42,7 @@ define([
     }
 
     ,initialize: function () {
+      // Backfill any existing actors into the collection.
       _.each(this.lateralus.getAllActors(), this.addActor, this);
     }
 

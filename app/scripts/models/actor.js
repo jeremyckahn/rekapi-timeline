@@ -62,7 +62,7 @@ define([
       // already have.
       this.getTrackNames().forEach(function (trackName) {
         this.getPropertiesInTrack(trackName).forEach(
-          keyframePropertyCollection.addKeyframePropertyToCollection,
+          keyframePropertyCollection.addKeyframeProperty,
           keyframePropertyCollection);
       }, this);
     }
