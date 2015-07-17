@@ -48,7 +48,7 @@ define([
      * @return {number}
      */
     ,getPixelWidthForTracks: function () {
-      var animationLength = this.lateralus.rekapi.getAnimationLength();
+      var animationLength = this.lateralus.getAnimationLength();
       var animationSeconds = (animationLength / 1000);
 
       // The width of the tracks container should always be the pixel width of
