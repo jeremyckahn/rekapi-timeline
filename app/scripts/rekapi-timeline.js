@@ -76,6 +76,18 @@ define([
           }.bind(this));
         }
       }
+
+      ,'rekapi:timelineModified': function () {
+        if (!this.isPlaying()) {
+          var animationLength = this.getAnimationLength();
+          var lastMillisecondUpdated =
+            this.getLastPositionUpdated() * animationLength;
+
+          if (lastMillisecondUpdated > animationLength) {
+            this.update(animationLength);
+          }
+        }
+      }
     }
   });
 
