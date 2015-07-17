@@ -27,6 +27,16 @@ define([
       'focus button':  function () {
         this.emit('userFocusedKeyframeProperty', this);
       }
+
+      ,drag: function () {
+        this.updateKeyframeProperty();
+      }
+
+      // In Firefox, completing a $.fn.dragon drag does not focus the element,
+      // so it must be done explicitly.
+      ,dragEnd: function () {
+        this.$handle.focus();
+      }
     }
 
     ,modelEvents: {
@@ -47,8 +57,6 @@ define([
 
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     *   @param {KeyframePropertyTrackComponentView}
-     *   keyframePropertyTrackComponentView
      *   @param {boolean=} doImmediatelyFocus
      */
     ,initialize: function () {
@@ -58,9 +66,7 @@ define([
 
     ,deferredInitialize: function () {
       this.$el.dragon({
-        within: this.keyframePropertyTrackComponentView.$el
-        ,drag: this.onDrag.bind(this)
-        ,dragEnd: this.onDragEnd.bind(this)
+        within: this.$el.parent()
       });
 
       if (this.doImmediatelyFocus) {
@@ -75,27 +81,12 @@ define([
       }
 
       var scaledXCoordinate = (
-          constant.PIXELS_PER_SECOND * this.model.get('millisecond')) /
-          1000 * this.lateralus.model.get('timelineScale');
+        constant.PIXELS_PER_SECOND * this.model.get('millisecond')) /
+        1000 * this.lateralus.model.get('timelineScale');
 
       this.$el.css({
         left: scaledXCoordinate
       });
-
-      var model = this.model;
-      this.$handle
-          .attr('data-millisecond', model.get('millisecond'))
-          .attr('data-value', model.get('value'));
-    }
-
-    ,onDrag: function () {
-      this.updateKeyframeProperty();
-    }
-
-    // In Firefox, completing a $.fn.dragon drag does not focus the element, so
-    // it must be done explicitly.
-    ,onDragEnd: function () {
-      this.$handle.focus();
     }
 
     /**

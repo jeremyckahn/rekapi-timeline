@@ -64,7 +64,6 @@ define([
       var keyframePropertyComponent = this.addComponent(
           KeyframePropertyComponent, {
         model: keyframePropertyModel
-        ,keyframePropertyTrackComponentView: this
         ,doImmediatelyFocus: !!doImmediatelyFocus
       });
 
