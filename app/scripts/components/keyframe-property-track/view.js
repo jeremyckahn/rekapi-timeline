@@ -42,10 +42,11 @@ define([
       baseProto.initialize.apply(this, arguments);
       this.keyframePropertyComponents = [];
       var trackName = this.model.get('trackName');
+
+      // Is displayed to the user with CSS
       this.$el.attr('data-track-name', trackName);
 
-      // Retroactively create views for any keyframeProperties that the actor
-      // that hed before RekapiTimeline was initialized
+      // Backfill components for any preexisting keyframeProperties
       this.actorModel.keyframePropertyCollection
         .where({ name: trackName })
         .forEach(function (keyframePropertyModel) {
@@ -59,20 +60,15 @@ define([
      */
     ,addKeyframePropertyComponent:
       function (keyframePropertyModel, doImmediatelyFocus) {
-      // It's important to build the DOM before initializing the View in this
-      // case, the initialization logic in KeyframePropertyView is way easier
-      // that way.
-      var keyframePropertyEl = document.createElement('div');
-      this.$el.append(keyframePropertyEl);
 
       var keyframePropertyComponent = this.addComponent(
           KeyframePropertyComponent, {
-        el: keyframePropertyEl
-        ,model: keyframePropertyModel
+        model: keyframePropertyModel
         ,keyframePropertyTrackComponentView: this
         ,doImmediatelyFocus: !!doImmediatelyFocus
       });
 
+      this.$el.append(keyframePropertyComponent.view.$el);
       this.keyframePropertyComponents.push(keyframePropertyComponent);
     }
   });
