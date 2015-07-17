@@ -53,6 +53,17 @@ define([
 
         this.render();
       }
+
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.KeyframeProperty} keyframeProperty
+       */
+      ,'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
+        if (keyframeProperty.id === this.keyframePropertyModel.id) {
+          this.keyframePropertyModel = null;
+          this.reset();
+        }
+      }
     }
 
     ,events: {
@@ -98,6 +109,7 @@ define([
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
+      this.propertyNameDefaultText = this.$propertyName.text();
     }
 
     ,render: function () {
@@ -129,6 +141,12 @@ define([
 
       this.keyframePropertyModel.set($target.attr('name'), coercedVal);
       this.lateralus.update();
+    }
+
+    ,reset: function () {
+      this.$propertyName.text(this.propertyNameDefaultText);
+      this.$propertyMillisecond.val('');
+      this.$propertyValue.val('');
     }
   });
 
