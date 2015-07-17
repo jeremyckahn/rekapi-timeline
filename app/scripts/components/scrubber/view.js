@@ -41,6 +41,14 @@ define([
       }
     }
 
+    ,events: {
+      'drag .scrubber-handle': function () {
+        var millisecond =
+          this.collectOne('timelineMillisecondForHandle', this.$scrubberHandle);
+        this.lateralus.update(millisecond);
+      }
+    }
+
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
@@ -51,7 +59,6 @@ define([
 
       this.$scrubberHandle.dragon({
         within: this.$scrubberWrapper
-        ,drag: this.onScrubberDrag.bind(this)
       });
     }
 
@@ -62,12 +69,6 @@ define([
     ,render: function () {
       this.syncContainerToTimelineLength();
       this.syncHandleToTimelineLength();
-    }
-
-    ,onScrubberDrag: function () {
-      var millisecond =
-        this.collectOne('timelineMillisecondForHandle', this.$scrubberHandle);
-      this.lateralus.rekapi.update(millisecond);
     }
 
     ,syncContainerToTimelineLength: function () {
@@ -82,9 +83,11 @@ define([
 
     ,syncHandleToTimelineLength: function () {
       var lastMillisecondUpdated =
-        this.lateralus.rekapi.getLastPositionUpdated() *
-        this.lateralus.rekapi.getAnimationLength();
-      var scaledLeftValue = lastMillisecondUpdated *
+        this.lateralus.getLastPositionUpdated() *
+        this.lateralus.getAnimationLength();
+
+      var scaledLeftValue =
+        lastMillisecondUpdated *
         (constant.PIXELS_PER_SECOND / 1000) *
         this.lateralus.model.get('timelineScale');
 
