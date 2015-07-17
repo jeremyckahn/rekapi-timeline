@@ -78,7 +78,7 @@ define('rekapi-timeline.component.container/view',[
        * Gets the Rekapi timeline millisecond value for a slider handle-like
        * element.  This is used for converting the position of keyframe DOM
        * elements and the timeline scrubber position into the value it
-       * represents in the animation.
+       * represents in the animation timeline.
        * @param {jQuery} $handle The handle element to retrieve the millisecond
        * value for.
        * @return {number}
@@ -317,7 +317,7 @@ define('rekapi-timeline.component.timeline/view',[
      * @return {number}
      */
     ,getPixelWidthForTracks: function () {
-      var animationLength = this.lateralus.rekapi.getAnimationLength();
+      var animationLength = this.lateralus.getAnimationLength();
       var animationSeconds = (animationLength / 1000);
 
       // The width of the tracks container should always be the pixel width of
@@ -409,6 +409,14 @@ define('rekapi-timeline.component.scrubber/view',[
       }
     }
 
+    ,events: {
+      'drag .scrubber-handle': function () {
+        var millisecond =
+          this.collectOne('timelineMillisecondForHandle', this.$scrubberHandle);
+        this.lateralus.update(millisecond);
+      }
+    }
+
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
@@ -419,7 +427,6 @@ define('rekapi-timeline.component.scrubber/view',[
 
       this.$scrubberHandle.dragon({
         within: this.$scrubberWrapper
-        ,drag: this.onScrubberDrag.bind(this)
       });
     }
 
@@ -430,12 +437,6 @@ define('rekapi-timeline.component.scrubber/view',[
     ,render: function () {
       this.syncContainerToTimelineLength();
       this.syncHandleToTimelineLength();
-    }
-
-    ,onScrubberDrag: function () {
-      var millisecond =
-        this.collectOne('timelineMillisecondForHandle', this.$scrubberHandle);
-      this.lateralus.rekapi.update(millisecond);
     }
 
     ,syncContainerToTimelineLength: function () {
@@ -450,9 +451,11 @@ define('rekapi-timeline.component.scrubber/view',[
 
     ,syncHandleToTimelineLength: function () {
       var lastMillisecondUpdated =
-        this.lateralus.rekapi.getLastPositionUpdated() *
-        this.lateralus.rekapi.getAnimationLength();
-      var scaledLeftValue = lastMillisecondUpdated *
+        this.lateralus.getLastPositionUpdated() *
+        this.lateralus.getAnimationLength();
+
+      var scaledLeftValue =
+        lastMillisecondUpdated *
         (constant.PIXELS_PER_SECOND / 1000) *
         this.lateralus.model.get('timelineScale');
 
@@ -629,7 +632,7 @@ define('rekapi-timeline.component.keyframe-property/model',[
 });
 
 
-define('text!rekapi-timeline.component.keyframe-property/template.mustache',[],function () { return '<button class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" data-value="{{keyframeProperty.value}}" data-millisecond="{{keyframeProperty.millisecond}}">&nbsp;</button>\n';});
+define('text!rekapi-timeline.component.keyframe-property/template.mustache',[],function () { return '<button class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" >&nbsp;</button>\n';});
 
 define('rekapi-timeline.component.keyframe-property/view',[
 
@@ -660,6 +663,16 @@ define('rekapi-timeline.component.keyframe-property/view',[
       'focus button':  function () {
         this.emit('userFocusedKeyframeProperty', this);
       }
+
+      ,drag: function () {
+        this.updateKeyframeProperty();
+      }
+
+      // In Firefox, completing a $.fn.dragon drag does not focus the element,
+      // so it must be done explicitly.
+      ,dragEnd: function () {
+        this.$handle.focus();
+      }
     }
 
     ,modelEvents: {
@@ -680,8 +693,6 @@ define('rekapi-timeline.component.keyframe-property/view',[
 
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     *   @param {KeyframePropertyTrackComponentView}
-     *   keyframePropertyTrackComponentView
      *   @param {boolean=} doImmediatelyFocus
      */
     ,initialize: function () {
@@ -691,9 +702,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
 
     ,deferredInitialize: function () {
       this.$el.dragon({
-        within: this.keyframePropertyTrackComponentView.$el
-        ,drag: this.onDrag.bind(this)
-        ,dragEnd: this.onDragEnd.bind(this)
+        within: this.$el.parent()
       });
 
       if (this.doImmediatelyFocus) {
@@ -708,27 +717,12 @@ define('rekapi-timeline.component.keyframe-property/view',[
       }
 
       var scaledXCoordinate = (
-          constant.PIXELS_PER_SECOND * this.model.get('millisecond')) /
-          1000 * this.lateralus.model.get('timelineScale');
+        constant.PIXELS_PER_SECOND * this.model.get('millisecond')) /
+        1000 * this.lateralus.model.get('timelineScale');
 
       this.$el.css({
         left: scaledXCoordinate
       });
-
-      var model = this.model;
-      this.$handle
-          .attr('data-millisecond', model.get('millisecond'))
-          .attr('data-value', model.get('value'));
-    }
-
-    ,onDrag: function () {
-      this.updateKeyframeProperty();
-    }
-
-    // In Firefox, completing a $.fn.dragon drag does not focus the element, so
-    // it must be done explicitly.
-    ,onDragEnd: function () {
-      this.$handle.focus();
     }
 
     /**
@@ -823,10 +817,11 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
       baseProto.initialize.apply(this, arguments);
       this.keyframePropertyComponents = [];
       var trackName = this.model.get('trackName');
+
+      // Is displayed to the user with CSS
       this.$el.attr('data-track-name', trackName);
 
-      // Retroactively create views for any keyframeProperties that the actor
-      // that hed before RekapiTimeline was initialized
+      // Backfill components for any preexisting keyframeProperties
       this.actorModel.keyframePropertyCollection
         .where({ name: trackName })
         .forEach(function (keyframePropertyModel) {
@@ -840,20 +835,14 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
      */
     ,addKeyframePropertyComponent:
       function (keyframePropertyModel, doImmediatelyFocus) {
-      // It's important to build the DOM before initializing the View in this
-      // case, the initialization logic in KeyframePropertyView is way easier
-      // that way.
-      var keyframePropertyEl = document.createElement('div');
-      this.$el.append(keyframePropertyEl);
 
       var keyframePropertyComponent = this.addComponent(
           KeyframePropertyComponent, {
-        el: keyframePropertyEl
-        ,model: keyframePropertyModel
-        ,keyframePropertyTrackComponentView: this
+        model: keyframePropertyModel
         ,doImmediatelyFocus: !!doImmediatelyFocus
       });
 
+      this.$el.append(keyframePropertyComponent.view.$el);
       this.keyframePropertyComponents.push(keyframePropertyComponent);
     }
   });
@@ -935,9 +924,9 @@ define('rekapi-timeline.component.actor-tracks/view',[
       baseProto.initialize.apply(this, arguments);
       this.keyframePropertyTrackComponents = [];
 
-      // Create views for any keyframes that were already defined
+      // Backfill any preexisting tracks
       this.model.getTrackNames().forEach(
-          this.addKeyframePropertyTrackComponent, this);
+        this.addKeyframePropertyTrackComponent, this);
     }
 
     /**
@@ -945,7 +934,7 @@ define('rekapi-timeline.component.actor-tracks/view',[
      */
     ,addKeyframePropertyTrackComponent: function (trackName) {
       var keyframePropertyTrackComponent = this.addComponent(
-          KeyframePropertyTrackComponent, {
+        KeyframePropertyTrackComponent, {
         actorModel: this.model
       }, {
         modelAttributes: {
@@ -1410,6 +1399,17 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
 
         this.render();
       }
+
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.KeyframeProperty} keyframeProperty
+       */
+      ,'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
+        if (keyframeProperty.id === this.keyframePropertyModel.id) {
+          this.keyframePropertyModel = null;
+          this.reset();
+        }
+      }
     }
 
     ,events: {
@@ -1417,11 +1417,36 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
       ,'change select': 'onChangeInput'
 
       ,'click .add': function () {
-        this.addNewKeyframeProperty();
+        if (!this.keyframePropertyModel) {
+          return;
+        }
+
+        var keyframePropertyModel = this.keyframePropertyModel;
+        var actorModel = keyframePropertyModel.getOwnerActor();
+
+        var targetMillisecond =
+          keyframePropertyModel.get('millisecond') +
+          constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
+
+        var keyframeObject = {};
+        keyframeObject[keyframePropertyModel.get('name')] =
+          keyframePropertyModel.get('value');
+
+        actorModel.keyframe(
+          targetMillisecond
+          ,keyframeObject
+          ,keyframePropertyModel.get('easing'));
       }
 
       ,'click .delete': function () {
-        this.deleteCurrentKeyframeProperty();
+        if (!this.keyframePropertyModel) {
+          return;
+        }
+
+        var keyframePropertyModel = this.keyframePropertyModel;
+        keyframePropertyModel.getOwnerActor().removeKeyframeProperty(
+          keyframePropertyModel.get('name')
+          ,keyframePropertyModel.get('millisecond'));
       }
     }
 
@@ -1430,9 +1455,12 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
+      this.propertyNameDefaultText = this.$propertyName.text();
     }
 
     ,render: function () {
+      // TODO: It would be nice if the template could be declaratively bound to
+      // the model, rather than having to make DOM updates imperatively here.
       this.$propertyName.text(this.keyframePropertyModel.get('name'));
       this.$propertyMillisecond.val(
         this.keyframePropertyModel.get('millisecond'));
@@ -1461,36 +1489,10 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
       this.lateralus.update();
     }
 
-    ,addNewKeyframeProperty: function () {
-      if (!this.keyframePropertyModel) {
-        return;
-      }
-
-      var keyframePropertyModel = this.keyframePropertyModel;
-      var actor = keyframePropertyModel.getOwnerActor();
-
-      var targetMillisecond =
-        keyframePropertyModel.get('millisecond') +
-        constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
-      var keyframeObject = {};
-      keyframeObject[keyframePropertyModel.get('name')] =
-        keyframePropertyModel.get('value');
-
-      actor.keyframe(
-        targetMillisecond
-        ,keyframeObject
-        ,keyframePropertyModel.get('easing'));
-    }
-
-    ,deleteCurrentKeyframeProperty: function () {
-      if (!this.keyframePropertyModel) {
-        return;
-      }
-
-      var keyframePropertyModel = this.keyframePropertyModel;
-      keyframePropertyModel.getOwnerActor().removeKeyframeProperty(
-        keyframePropertyModel.get('name')
-        ,keyframePropertyModel.get('millisecond'));
+    ,reset: function () {
+      this.$propertyName.text(this.propertyNameDefaultText);
+      this.$propertyMillisecond.val('');
+      this.$propertyValue.val('');
     }
   });
 
@@ -1740,7 +1742,7 @@ define('rekapi-timeline/models/keyframe-property',[
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty === this.attributes) {
+        if (keyframeProperty.id === this.id) {
           this.destroy();
         }
       }
@@ -1782,7 +1784,7 @@ define('rekapi-timeline/models/keyframe-property',[
     }
 
     /**
-     * Overrides the standard Backbone.Model#destroy behavior, as there is no
+     * Override the standard Backbone.Model#destroy behavior, as there is no
      * server data that this model is tied to.
      * @override
      */
@@ -1824,8 +1826,8 @@ define('rekapi-timeline/collections/keyframe-property',[
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       'rekapi:addKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.actor.id === this.actorModel.get('id')) {
-          this.addKeyframePropertyToCollection(keyframeProperty);
+        if (keyframeProperty.actor.id === this.actorModel.id) {
+          this.addKeyframeProperty(keyframeProperty);
         }
       }
 
@@ -1834,8 +1836,8 @@ define('rekapi-timeline/collections/keyframe-property',[
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       ,'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.actor.id === this.actorModel.get('id')) {
-          this.removeKeyframePropertyFromCollection(keyframeProperty);
+        if (keyframeProperty.actor.id === this.actorModel.id) {
+          this.removeKeyframeProperty(keyframeProperty);
         }
       }
     }
@@ -1852,22 +1854,19 @@ define('rekapi-timeline/collections/keyframe-property',[
 
     /**
      * @param {Rekapi.KeyframeProperty} keyframeProperty
-     * @return {KeyframePropertyModel} The keyframe property model that was
-     * added.
      */
-    ,addKeyframePropertyToCollection: function (keyframeProperty) {
+    ,addKeyframeProperty: function (keyframeProperty) {
       var keyframePropertyModel = this.initModel(KeyframePropertyModel, {
         keyframeProperty: keyframeProperty
       });
 
       this.emit('keyframePropertyAdded', this.add(keyframePropertyModel));
-      return keyframePropertyModel;
     }
 
     /**
      * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
-    ,removeKeyframePropertyFromCollection: function (keyframeProperty) {
+    ,removeKeyframeProperty: function (keyframeProperty) {
       this.remove(keyframeProperty.id);
     }
   });
@@ -1909,7 +1908,7 @@ define('rekapi-timeline/models/actor',[
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       'rekapi:addKeyframePropertyTrack': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.actor === this.attributes) {
+        if (keyframeProperty.actor.id === this.id) {
           this.addKeyframePropertyTrack(keyframeProperty.name);
         }
       }
@@ -1924,20 +1923,23 @@ define('rekapi-timeline/models/actor',[
       // Rekapi.Actor instance.
       this.attributes = this.attributes.actor;
 
+      this.id = this.attributes.id;
       this.getTrackNames().forEach(this.addKeyframePropertyTrack, this);
 
-      this.keyframePropertyCollection = this.initCollection(
+      var keyframePropertyCollection = this.initCollection(
         KeyframePropertyCollection
         ,null
         ,{ actorModel: this }
       );
 
+      this.keyframePropertyCollection = keyframePropertyCollection;
+
       // Backfill the collection with any keyframeProperties the actor may
       // already have.
       this.getTrackNames().forEach(function (trackName) {
         this.getPropertiesInTrack(trackName).forEach(
-          this.keyframePropertyCollection.addKeyframePropertyToCollection,
-          this.keyframePropertyCollection);
+          keyframePropertyCollection.addKeyframeProperty,
+          keyframePropertyCollection);
       }, this);
     }
 
@@ -2002,6 +2004,7 @@ define('rekapi-timeline/collections/actor',[
     }
 
     ,initialize: function () {
+      // Backfill any existing actors into the collection.
       _.each(this.lateralus.getAllActors(), this.addActor, this);
     }
 
@@ -2078,6 +2081,34 @@ define('rekapi-timeline/rekapi-timeline',[
     lateralusEvents: {
       stopAnimation: function () {
         this.stop().update(0);
+      }
+
+      ,'rekapi:removeKeyframeProperty': function () {
+        if (!this.isPlaying()) {
+          // This operation needs to be deferred because Rekapi's
+          // removeKeyframeProperty event is fired at point in the keyframe
+          // removal process where calling update() would not reflect the new
+          // state of the timeline.  However, this only needs to be done if the
+          // animation is not already playing.
+          //
+          // TODO: Perhaps change how this event works in Rekapi so that the
+          // _.defer is not necessary?
+          _.defer(function () {
+            this.update();
+          }.bind(this));
+        }
+      }
+
+      ,'rekapi:timelineModified': function () {
+        if (!this.isPlaying()) {
+          var animationLength = this.getAnimationLength();
+          var lastMillisecondUpdated =
+            this.getLastPositionUpdated() * animationLength;
+
+          if (lastMillisecondUpdated > animationLength) {
+            this.update(animationLength);
+          }
+        }
       }
     }
   });
