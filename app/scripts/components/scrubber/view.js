@@ -28,7 +28,7 @@ define([
         this.render();
       }
 
-      ,'rekapi:timelineModified': function () {
+      ,'change:timelineDuration': function () {
         this.render();
       }
 

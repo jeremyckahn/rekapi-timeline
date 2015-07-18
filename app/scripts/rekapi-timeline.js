@@ -32,11 +32,16 @@ define([
    * @param {Element} el
    * @param {Rekapi} rekapi The Rekapi instance that this widget represents.
    * @extends {Lateralus}
-   * @constuctor
+   * @constructor
    */
   var RekapiTimeline = Lateralus.beget(function (el, rekapi) {
     Lateralus.apply(this, arguments);
     this.rekapi = rekapi;
+
+    // This must happen in the RekapiTimelineModel constructor, rather than in
+    // RekapiTimelineModel's initialize method, as this.lateralus.rekapi is not
+    // setup when that method executes.
+    this.model.set('timelineDuration', this.getAnimationLength());
 
     // Amplify all Rekapi events to "rekapi:" lateralusEvents.
     this.getEventNames().forEach(function (eventName) {
@@ -87,6 +92,8 @@ define([
             this.update(animationLength);
           }
         }
+
+        this.model.set('timelineDuration', this.getAnimationLength());
       }
     }
   });
