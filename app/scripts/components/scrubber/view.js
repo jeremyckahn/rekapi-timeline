@@ -73,7 +73,7 @@ define([
 
     ,syncContainerToTimelineLength: function () {
       var scaledContainerWidth =
-        this.lateralus.getAnimationLength() *
+        this.lateralus.model.get('timelineDuration') *
         (constant.PIXELS_PER_SECOND / 1000) *
         this.lateralus.model.get('timelineScale');
 
@@ -84,7 +84,7 @@ define([
     ,syncHandleToTimelineLength: function () {
       var lastMillisecondUpdated =
         this.lateralus.getLastPositionUpdated() *
-        this.lateralus.getAnimationLength();
+        this.lateralus.model.get('timelineDuration');
 
       var scaledLeftValue =
         lastMillisecondUpdated *

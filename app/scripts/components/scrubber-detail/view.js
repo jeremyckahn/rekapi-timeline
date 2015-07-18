@@ -58,7 +58,7 @@ define([
     }
 
     ,renderAnimationLength: function () {
-      this.$animationLength.text(this.lateralus.getAnimationLength());
+      this.$animationLength.text(this.lateralus.model.get('timelineDuration'));
     }
   });
 

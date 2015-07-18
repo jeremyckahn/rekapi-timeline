@@ -84,12 +84,12 @@ define([
 
       ,'rekapi:timelineModified': function () {
         if (!this.isPlaying()) {
-          var animationLength = this.getAnimationLength();
+          var timelineDuration = this.model.get('timelineDuration');
           var lastMillisecondUpdated =
-            this.getLastPositionUpdated() * animationLength;
+            this.getLastPositionUpdated() * timelineDuration;
 
-          if (lastMillisecondUpdated > animationLength) {
-            this.update(animationLength);
+          if (lastMillisecondUpdated > timelineDuration) {
+            this.update(timelineDuration);
           }
         }
 
