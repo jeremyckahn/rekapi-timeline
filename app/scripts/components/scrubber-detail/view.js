@@ -21,6 +21,12 @@ define([
   var ScrubberDetailComponentView = Base.extend({
     template: template
 
+    ,lateralusEvents: {
+      'rekapi:timelineModified': function () {
+        this.renderAnimationLength();
+      }
+    }
+
     ,events: {
       'change .scrubber-scale input': function () {
         if (this.$scrubberScale[0].validity.valid) {
@@ -35,6 +41,7 @@ define([
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
+      this.renderAnimationLength();
     }
 
     /**
@@ -48,6 +55,10 @@ define([
       });
 
       return renderData;
+    }
+
+    ,renderAnimationLength: function () {
+      this.$animationLength.text(this.lateralus.getAnimationLength());
     }
   });
 
