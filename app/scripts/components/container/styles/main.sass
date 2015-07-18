@@ -18,7 +18,10 @@
     border: none
     color: #ddd
     font-size: 0.8em
+    height: 10px
     padding: 4px
+    position: relative
+    top: -1px
 
     &:invalid
       background-color: $INPUT_ERROR_BACKGROUND_COLOR
@@ -41,48 +44,14 @@
     right: 0
     top: 0
 
-
-  label.row
-    float: left
-    clear: both
-    margin-bottom: 12px
-
-
-  label.row,
-  .field-button
-    cursor: pointer
-
-
-  .field-button
-    background: #222
-    border-radius: 2px
-    border: solid 1px #888
-    color: #ddd
-    font-size: 0.7em
-    margin: 0 6px 0 4px
-    padding: 5px 12px
-
-
-  .label-input-pair
-    float: left
-    font-size: 12px
-    overflow: auto
-
-    p,
-    input
-      float: left
-      height: 12px
-      line-height: 12px
-      width: 80px
-
-      &.select-container p
-        height: 20px
-        line-height: 20px
-
-    select
-      width: 115px
-
     p
       line-height: 18px
       margin: 0
       padding: 2px 0
+
+  .label-input-pair
+    font-size: 12px
+
+    p
+      display: inline
+      padding-right: $CHROME_PANEL_PADDING

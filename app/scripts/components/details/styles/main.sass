@@ -1,10 +1,49 @@
 @import styles/variables
 
 .details-view
-  background: #353535
+  background: $CONTROL_PANEL_BACKGROUND_COLOR
   bottom: 0
   position: absolute
-  padding: $KEYFRAME_PROPERTY_PANEL_PADDING
+  padding: $CHROME_PANEL_PADDING
   right: 0
   top: 0
   width: $KEYFRAME_PROPERTY_DETAIL_INNER_WIDTH
+
+  label.row
+    float: left
+    clear: both
+    margin-bottom: 12px
+
+
+  label.row,
+  .field-button
+    cursor: pointer
+
+
+  .field-button
+    background: #222
+    border-radius: 2px
+    border: solid 1px #888
+    color: #ddd
+    font-size: 0.7em
+    margin: 0 6px 0 4px
+    padding: 5px 12px
+
+
+  .label-input-pair
+    float: left
+
+    p,
+    input
+      float: left
+      height: 12px
+      line-height: 12px
+      width: 72px
+
+      &.select-container p
+        height: 20px
+        line-height: 20px
+
+    select
+      width: 115px
+

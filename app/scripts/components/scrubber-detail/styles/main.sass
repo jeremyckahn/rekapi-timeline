@@ -1,9 +1,12 @@
 @import styles/variables
 
 .scrubber-detail-view
-  height: 20px
+  background: $CONTROL_PANEL_BACKGROUND_COLOR
+  bottom: 0
+  left: $PLAYBACK_CONTROL_BAR_WIDTH
+  padding: $CHROME_PANEL_PADDING
   position: absolute
-  top: 4px
+  right: $KEYFRAME_PROPERTY_DETAIL_OUTER_WIDTH
   z-index: 20
 
   label
@@ -17,4 +20,6 @@
       padding-left: 4px
 
   .scrubber-scale
-    width: 50px
+
+    input
+      width: 40px

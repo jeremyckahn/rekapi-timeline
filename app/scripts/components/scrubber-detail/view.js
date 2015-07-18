@@ -22,7 +22,7 @@ define([
     template: template
 
     ,events: {
-      'change .scrubber-scale': function () {
+      'change .scrubber-scale input': function () {
         if (this.$scrubberScale[0].validity.valid) {
           this.lateralus.model.set(
             'timelineScale', (this.$scrubberScale.val() / 100));

@@ -9,6 +9,7 @@ define([
   ,'rekapi-timeline.component.control-bar'
   ,'rekapi-timeline.component.timeline'
   ,'rekapi-timeline.component.details'
+  ,'rekapi-timeline.component.scrubber-detail'
 
 ], function (
 
@@ -21,6 +22,7 @@ define([
   ,ControlBarComponent
   ,TimelineComponent
   ,DetailsComponent
+  ,ScrubberDetailComponent
 
 ) {
   'use strict';
@@ -44,6 +46,11 @@ define([
 
       this.detailsComponent = this.addComponent(DetailsComponent, {
         el: this.view.$details[0]
+      });
+
+      this.scrubberDetailComponent =
+        this.addComponent(ScrubberDetailComponent, {
+        el: this.view.$scrubberDetail[0]
       });
     }
   });
