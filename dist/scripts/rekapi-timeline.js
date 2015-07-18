@@ -28,7 +28,7 @@
 
 define('text',{load: function(id){throw new Error("Dynamic load not allowed: " + id);}});
 
-define('text!rekapi-timeline.component.container/template.mustache',[],function () { return '<div class="$controlBar"></div>\n<div class="$timeline"></div>\n<div class="$details"></div>\n';});
+define('text!rekapi-timeline.component.container/template.mustache',[],function () { return '<div class="$controlBar"></div>\n<div class="$timeline fill"></div>\n<div class="$details"></div>\n<div class="$scrubberDetail"></div>\n';});
 
 define('rekapi-timeline/constant',[],function () {
   'use strict';
@@ -1159,7 +1159,7 @@ define('rekapi-timeline.component.details/model',[
 });
 
 
-define('text!rekapi-timeline.component.details/template.mustache',[],function () { return '<div class="$scrubberDetail"></div>\n<div class="$keyframePropertyDetail fill"></div>\n';});
+define('text!rekapi-timeline.component.details/template.mustache',[],function () { return '<div class="$keyframePropertyDetail fill"></div>\n';});
 
 define('rekapi-timeline.component.details/view',[
 
@@ -1192,126 +1192,6 @@ define('rekapi-timeline.component.details/view',[
 
   return DetailsComponentView;
 });
-
-define('rekapi-timeline.component.scrubber-detail/model',[
-
-  'lateralus'
-
-], function (
-
-  Lateralus
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.Model;
-  var baseProto = Base.prototype;
-
-  var ScrubberDetailComponentModel = Base.extend({
-    /**
-     * Parameters are the same as http://backbonejs.org/#Model-constructor
-     * @param {Object} [attributes]
-     * @param {Object} [options]
-     */
-    initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
-
-  return ScrubberDetailComponentModel;
-});
-
-
-define('text!rekapi-timeline.component.scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row">\n  <p>Zoom:</p>\n  <input type="number" class="$scrubberScale scrubber-scale" value="{{initialZoom}}" min="0">\n</label>\n';});
-
-define('rekapi-timeline.component.scrubber-detail/view',[
-
-  'underscore'
-  ,'lateralus'
-
-  ,'text!./template.mustache'
-
-], function (
-
-  _
-  ,Lateralus
-
-  ,template
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.View;
-  var baseProto = Base.prototype;
-
-  var ScrubberDetailComponentView = Base.extend({
-    template: template
-
-    ,events: {
-      'change .scrubber-scale': function () {
-        if (this.$scrubberScale[0].validity.valid) {
-          this.lateralus.model.set(
-            'timelineScale', (this.$scrubberScale.val() / 100));
-        }
-      }
-    }
-
-    /**
-     * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     */
-    ,initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-
-    /**
-     * @override
-     */
-    ,getTemplateRenderData: function () {
-      var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
-
-      _.extend(renderData, {
-        initialZoom: this.lateralus.model.get('timelineScale') * 100
-      });
-
-      return renderData;
-    }
-  });
-
-  return ScrubberDetailComponentView;
-});
-
-define('rekapi-timeline.component.scrubber-detail/main',[
-
-  'lateralus'
-
-  ,'./model'
-  ,'./view'
-  ,'text!./template.mustache'
-
-], function (
-
-  Lateralus
-
-  ,Model
-  ,View
-  ,template
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component;
-
-  var ScrubberDetailComponent = Base.extend({
-    name: 'scrubber-detail'
-    ,Model: Model
-    ,View: View
-    ,template: template
-  });
-
-  return ScrubberDetailComponent;
-});
-
-define('rekapi-timeline.component.scrubber-detail', ['rekapi-timeline.component.scrubber-detail/main'], function (main) { return main; });
 
 define('rekapi-timeline.component.keyframe-property-detail/model',[
 
@@ -1540,7 +1420,6 @@ define('rekapi-timeline.component.details/main',[
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.scrubber-detail'
   ,'rekapi-timeline.component.keyframe-property-detail'
 
 ], function (
@@ -1551,7 +1430,6 @@ define('rekapi-timeline.component.details/main',[
   ,View
   ,template
 
-  ,ScrubberDetailComponent
   ,KeyframePropertyDetailComponent
 
 ) {
@@ -1566,11 +1444,6 @@ define('rekapi-timeline.component.details/main',[
     ,template: template
 
     ,initialize: function () {
-      this.scrubberDetailComponent =
-        this.addComponent(ScrubberDetailComponent, {
-        el: this.view.$scrubberDetail[0]
-      });
-
       this.keyframePropertyDetailComponent =
         this.addComponent(KeyframePropertyDetailComponent, {
         el: this.view.$keyframePropertyDetail[0]
@@ -1583,6 +1456,137 @@ define('rekapi-timeline.component.details/main',[
 
 define('rekapi-timeline.component.details', ['rekapi-timeline.component.details/main'], function (main) { return main; });
 
+define('rekapi-timeline.component.scrubber-detail/model',[
+
+  'lateralus'
+
+], function (
+
+  Lateralus
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.Model;
+  var baseProto = Base.prototype;
+
+  var ScrubberDetailComponentModel = Base.extend({
+    /**
+     * Parameters are the same as http://backbonejs.org/#Model-constructor
+     * @param {Object} [attributes]
+     * @param {Object} [options]
+     */
+    initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+    }
+  });
+
+  return ScrubberDetailComponentModel;
+});
+
+
+define('text!rekapi-timeline.component.scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row scrubber-scale">\n  <p>Zoom:</p>\n  <input type="number" class="$scrubberScale" value="{{initialZoom}}" min="0">\n</label>\n<p class="animation-length-display">Animation length: <span class="$animationLength"></span>ms</p>\n';});
+
+define('rekapi-timeline.component.scrubber-detail/view',[
+
+  'underscore'
+  ,'lateralus'
+
+  ,'text!./template.mustache'
+
+], function (
+
+  _
+  ,Lateralus
+
+  ,template
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.View;
+  var baseProto = Base.prototype;
+
+  var ScrubberDetailComponentView = Base.extend({
+    template: template
+
+    ,lateralusEvents: {
+      'rekapi:timelineModified': function () {
+        this.renderAnimationLength();
+      }
+    }
+
+    ,events: {
+      'change .scrubber-scale input': function () {
+        if (this.$scrubberScale[0].validity.valid) {
+          this.lateralus.model.set(
+            'timelineScale', (this.$scrubberScale.val() / 100));
+        }
+      }
+    }
+
+    /**
+     * @param {Object} [options] See http://backbonejs.org/#View-constructor
+     */
+    ,initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+      this.renderAnimationLength();
+    }
+
+    /**
+     * @override
+     */
+    ,getTemplateRenderData: function () {
+      var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
+
+      _.extend(renderData, {
+        initialZoom: this.lateralus.model.get('timelineScale') * 100
+      });
+
+      return renderData;
+    }
+
+    ,renderAnimationLength: function () {
+      this.$animationLength.text(this.lateralus.getAnimationLength());
+    }
+  });
+
+  return ScrubberDetailComponentView;
+});
+
+define('rekapi-timeline.component.scrubber-detail/main',[
+
+  'lateralus'
+
+  ,'./model'
+  ,'./view'
+  ,'text!./template.mustache'
+
+], function (
+
+  Lateralus
+
+  ,Model
+  ,View
+  ,template
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component;
+
+  var ScrubberDetailComponent = Base.extend({
+    name: 'scrubber-detail'
+    ,Model: Model
+    ,View: View
+    ,template: template
+  });
+
+  return ScrubberDetailComponent;
+});
+
+define('rekapi-timeline.component.scrubber-detail', ['rekapi-timeline.component.scrubber-detail/main'], function (main) { return main; });
+
 define('rekapi-timeline.component.container/main',[
 
   'lateralus'
@@ -1594,6 +1598,7 @@ define('rekapi-timeline.component.container/main',[
   ,'rekapi-timeline.component.control-bar'
   ,'rekapi-timeline.component.timeline'
   ,'rekapi-timeline.component.details'
+  ,'rekapi-timeline.component.scrubber-detail'
 
 ], function (
 
@@ -1606,6 +1611,7 @@ define('rekapi-timeline.component.container/main',[
   ,ControlBarComponent
   ,TimelineComponent
   ,DetailsComponent
+  ,ScrubberDetailComponent
 
 ) {
   'use strict';
@@ -1629,6 +1635,11 @@ define('rekapi-timeline.component.container/main',[
 
       this.detailsComponent = this.addComponent(DetailsComponent, {
         el: this.view.$details[0]
+      });
+
+      this.scrubberDetailComponent =
+        this.addComponent(ScrubberDetailComponent, {
+        el: this.view.$scrubberDetail[0]
       });
     }
   });
