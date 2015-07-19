@@ -1,4 +1,5 @@
 @import styles/variables
+@import 'compass/css3/transform'
 
 .scrubber-view
   background: #000
@@ -7,8 +8,9 @@
   width: 100%
 
   .scrubber-wrapper
-    background: #555
-    border-bottom: solid 10px #555
+    background: $SCRUBBER_BACKGROUND_COLOR
+    border-bottom: solid 10px $SCRUBBER_BACKGROUND_COLOR
+    border-right: solid 1px $SCRUBBER_BACKGROUND_COLOR
     height: $SCRUBBER_HANDLE_DIMENSIONS
 
   .scrubber-handle
@@ -16,7 +18,11 @@
     float: left
     font-size: $SCRUBBER_HANDLE_DIMENSIONS
     height: $SCRUBBER_HANDLE_DIMENSIONS
-    width: $SCRUBBER_HANDLE_DIMENSIONS
+    width: 0
+
+  i.glyphicon.scrubber-icon,
+  .scrubber-guide
+    +transform(translateX(-$SCRUBBER_HANDLE_DIMENSIONS / 2))
 
   i.glyphicon.scrubber-icon
     color: #eee
@@ -29,4 +35,4 @@
     margin: 0
     position: absolute
     top: $SCRUBBER_HANDLE_DIMENSIONS
-    width: 1px
+    width: 2px
