@@ -1,4 +1,12 @@
 <h1 class="$propertyName keyframe-property-name">Detail</h1>
+<div class="add-delete-wrapper">
+  <button class="icon-button" title="Add a new keyframe to the current track">
+    <i class="glyphicon glyphicon-plus add"></i>
+  </button>
+  <button class="icon-button" title="Remove the currently selected keyframe">
+    <i class="glyphicon glyphicon-minus delete"></i>
+  </button>
+</div>
 <label class="label-input-pair row keyframe-property-millisecond">
   <p>Millisecond:</p>
   <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond">
@@ -11,5 +19,3 @@
   <p>Easing:</p>
   <select class="$propertyEasing" name="easing"></select>
 </label>
-<button class="field-button add">Add a new keyframe</button>
-<button class="field-button delete">Remove this keyframe</button>
