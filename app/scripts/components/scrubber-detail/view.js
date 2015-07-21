@@ -25,6 +25,10 @@ define([
       'change:timelineDuration': function () {
         this.renderAnimationLength();
       }
+
+      ,'rekapi:afterUpdate': function () {
+        this.renderCurrentPosition();
+      }
     }
 
     ,events: {
@@ -59,6 +63,14 @@ define([
 
     ,renderAnimationLength: function () {
       this.$animationLength.text(this.lateralus.model.get('timelineDuration'));
+    }
+
+    ,renderCurrentPosition: function () {
+      var lateralus = this.lateralus;
+      var currentPosition =
+        lateralus.getLastPositionUpdated() *
+        lateralus.model.get('timelineDuration');
+      this.$currentPosition.text(Math.floor(currentPosition));
     }
   });
 
