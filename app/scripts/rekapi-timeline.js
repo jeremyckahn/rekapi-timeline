@@ -77,7 +77,18 @@ define([
           // TODO: Perhaps change how this event works in Rekapi so that the
           // _.defer is not necessary?
           _.defer(function () {
-            this.update();
+            var timelineDuration = this.model.get('timelineDuration');
+            var lastMillisecondUpdated = this.getLastMillisecondUpdated();
+
+            // Passing undefined to Rekapi#update causes a re-render of the
+            // previously rendered frame.  If the previously rendered frame is
+            // greater than the length of the timeline (possible in this case
+            // because this executes within the rekapi:removeKeyframeProperty
+            // event handler), update to the last frame in the timeline.
+            var updateMillisecond = lastMillisecondUpdated > timelineDuration ?
+                timelineDuration : undefined;
+
+            this.update(updateMillisecond);
           }.bind(this));
         }
       }
@@ -85,16 +96,22 @@ define([
       ,'rekapi:timelineModified': function () {
         if (!this.isPlaying()) {
           var timelineDuration = this.model.get('timelineDuration');
-          var lastMillisecondUpdated =
-            this.getLastPositionUpdated() * timelineDuration;
 
-          if (lastMillisecondUpdated > timelineDuration) {
+          if (this.getLastMillisecondUpdated() > timelineDuration) {
             this.update(timelineDuration);
           }
         }
 
         this.model.set('timelineDuration', this.getAnimationLength());
       }
+    }
+
+    /**
+     * TODO: Make this a Rekapi method.
+     * @return {number}
+     */
+    ,getLastMillisecondUpdated: function () {
+      return this.getLastPositionUpdated() * this.model.get('timelineDuration');
     }
   });
 
