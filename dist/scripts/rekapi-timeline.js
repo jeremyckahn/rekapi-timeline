@@ -133,7 +133,7 @@ define('rekapi-timeline.component.control-bar/model',[
 });
 
 
-define('text!rekapi-timeline.component.control-bar/template.mustache',[],function () { return '<i class="glyphicon glyphicon-play play"></i>\n<i class="glyphicon glyphicon-pause pause"></i>\n<i class="glyphicon glyphicon-stop stop"></i>\n';});
+define('text!rekapi-timeline.component.control-bar/template.mustache',[],function () { return '<button class="icon-button play">\n  <i class="glyphicon glyphicon-play"></i>\n</button>\n<button class="icon-button pause">\n  <i class="glyphicon glyphicon-pause"></i>\n</button>\n<button class="icon-button stop">\n  <i class="glyphicon glyphicon-stop"></i>\n</button>\n';});
 
 define('rekapi-timeline.component.control-bar/view',[
 
@@ -293,7 +293,7 @@ define('rekapi-timeline.component.timeline/view',[
     template: template
 
     ,lateralusEvents: {
-      'rekapi:timelineModified': function () {
+      'change:timelineDuration': function () {
         this.updateWrapperWidth();
       }
     }
@@ -317,7 +317,7 @@ define('rekapi-timeline.component.timeline/view',[
      * @return {number}
      */
     ,getPixelWidthForTracks: function () {
-      var animationLength = this.lateralus.getAnimationLength();
+      var animationLength = this.lateralus.model.get('timelineDuration');
       var animationSeconds = (animationLength / 1000);
 
       // The width of the tracks container should always be the pixel width of
@@ -396,7 +396,7 @@ define('rekapi-timeline.component.scrubber/view',[
         this.render();
       }
 
-      ,'rekapi:timelineModified': function () {
+      ,'change:timelineDuration': function () {
         this.render();
       }
 
@@ -441,7 +441,7 @@ define('rekapi-timeline.component.scrubber/view',[
 
     ,syncContainerToTimelineLength: function () {
       var scaledContainerWidth =
-        this.lateralus.getAnimationLength() *
+        this.lateralus.model.get('timelineDuration') *
         (constant.PIXELS_PER_SECOND / 1000) *
         this.lateralus.model.get('timelineScale');
 
@@ -452,7 +452,7 @@ define('rekapi-timeline.component.scrubber/view',[
     ,syncHandleToTimelineLength: function () {
       var lastMillisecondUpdated =
         this.lateralus.getLastPositionUpdated() *
-        this.lateralus.getAnimationLength();
+        this.lateralus.model.get('timelineDuration');
 
       var scaledLeftValue =
         lastMillisecondUpdated *
@@ -1222,7 +1222,7 @@ define('rekapi-timeline.component.keyframe-property-detail/model',[
 });
 
 
-define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n<button class="field-button add">Add a new keyframe</button>\n<button class="field-button delete">Remove this keyframe</button>\n';});
+define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus add"></i>\n  </button>\n  <button class="icon-button" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus delete"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
 
 define('rekapi-timeline.component.keyframe-property-detail/view',[
 
@@ -1485,7 +1485,7 @@ define('rekapi-timeline.component.scrubber-detail/model',[
 });
 
 
-define('text!rekapi-timeline.component.scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row scrubber-scale">\n  <p>Zoom:</p>\n  <input type="number" class="$scrubberScale" value="{{initialZoom}}" min="0">\n</label>\n<p class="animation-length-display">Animation length: <span class="$animationLength"></span>ms</p>\n';});
+define('text!rekapi-timeline.component.scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row scrubber-scale">\n  <p>Timeline zoom:</p>\n  <input type="number" class="$scrubberScale" value="{{initialZoom}}" min="0">\n</label>\n<p class="position-monitor">\n  <span class="$currentPosition"></span>ms / <span class="$animationLength"></span>ms\n</p>\n';});
 
 define('rekapi-timeline.component.scrubber-detail/view',[
 
@@ -1511,8 +1511,12 @@ define('rekapi-timeline.component.scrubber-detail/view',[
     template: template
 
     ,lateralusEvents: {
-      'rekapi:timelineModified': function () {
+      'change:timelineDuration': function () {
         this.renderAnimationLength();
+      }
+
+      ,'rekapi:afterUpdate': function () {
+        this.renderCurrentPosition();
       }
     }
 
@@ -1547,7 +1551,15 @@ define('rekapi-timeline.component.scrubber-detail/view',[
     }
 
     ,renderAnimationLength: function () {
-      this.$animationLength.text(this.lateralus.getAnimationLength());
+      this.$animationLength.text(this.lateralus.model.get('timelineDuration'));
+    }
+
+    ,renderCurrentPosition: function () {
+      var lateralus = this.lateralus;
+      var currentPosition =
+        lateralus.getLastPositionUpdated() *
+        lateralus.model.get('timelineDuration');
+      this.$currentPosition.text(Math.floor(currentPosition));
     }
   });
 
@@ -1713,6 +1725,7 @@ define('rekapi-timeline/model',[
   var RekapiTimelineModel = Lateralus.Model.extend({
     defaults: {
       timelineScale: constant.DEFAULT_TIMELINE_SCALE
+      ,timelineDuration: 0
     }
   });
 
@@ -2065,11 +2078,16 @@ define('rekapi-timeline/rekapi-timeline',[
    * @param {Element} el
    * @param {Rekapi} rekapi The Rekapi instance that this widget represents.
    * @extends {Lateralus}
-   * @constuctor
+   * @constructor
    */
   var RekapiTimeline = Lateralus.beget(function (el, rekapi) {
     Lateralus.apply(this, arguments);
     this.rekapi = rekapi;
+
+    // This must happen in the RekapiTimelineModel constructor, rather than in
+    // RekapiTimelineModel's initialize method, as this.lateralus.rekapi is not
+    // setup when that method executes.
+    this.model.set('timelineDuration', this.getAnimationLength());
 
     // Amplify all Rekapi events to "rekapi:" lateralusEvents.
     this.getEventNames().forEach(function (eventName) {
@@ -2105,22 +2123,41 @@ define('rekapi-timeline/rekapi-timeline',[
           // TODO: Perhaps change how this event works in Rekapi so that the
           // _.defer is not necessary?
           _.defer(function () {
-            this.update();
+            var timelineDuration = this.model.get('timelineDuration');
+            var lastMillisecondUpdated = this.getLastMillisecondUpdated();
+
+            // Passing undefined to Rekapi#update causes a re-render of the
+            // previously rendered frame.  If the previously rendered frame is
+            // greater than the length of the timeline (possible in this case
+            // because this executes within the rekapi:removeKeyframeProperty
+            // event handler), update to the last frame in the timeline.
+            var updateMillisecond = lastMillisecondUpdated > timelineDuration ?
+                timelineDuration : undefined;
+
+            this.update(updateMillisecond);
           }.bind(this));
         }
       }
 
       ,'rekapi:timelineModified': function () {
         if (!this.isPlaying()) {
-          var animationLength = this.getAnimationLength();
-          var lastMillisecondUpdated =
-            this.getLastPositionUpdated() * animationLength;
+          var timelineDuration = this.model.get('timelineDuration');
 
-          if (lastMillisecondUpdated > animationLength) {
-            this.update(animationLength);
+          if (this.getLastMillisecondUpdated() > timelineDuration) {
+            this.update(timelineDuration);
           }
         }
+
+        this.model.set('timelineDuration', this.getAnimationLength());
       }
+    }
+
+    /**
+     * TODO: Make this a Rekapi method.
+     * @return {number}
+     */
+    ,getLastMillisecondUpdated: function () {
+      return this.getLastPositionUpdated() * this.model.get('timelineDuration');
     }
   });
 
