@@ -24,8 +24,9 @@ define([
     template: template
 
     ,events: {
-      'focus button':  function () {
+      'mousedown .keyframe-property':  function () {
         this.emit('userFocusedKeyframeProperty', this);
+        this.$handle.addClass('active');
       }
 
       ,drag: function () {
@@ -52,6 +53,10 @@ define([
     ,lateralusEvents: {
       'change:timelineScale': function () {
         this.render();
+      }
+
+      ,userFocusedKeyframeProperty: function () {
+        this.$handle.removeClass('active');
       }
     }
 

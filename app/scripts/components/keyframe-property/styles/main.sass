@@ -8,6 +8,7 @@
   width: $KEYFRAME_PROPERTY_DIMENSION
 
   .keyframe-property
+    background-color: $KEYFRAME_PROPERTY_SLIDER_COLOR
     border: none
     cursor: move
     height: 100%
@@ -17,6 +18,6 @@
     width: 100%
     +border-radius($KEYFRAME_PROPERTY_DIMENSION / 2)
 
-    &:focus
+    &.active
       opacity: 0.75
       outline: none
