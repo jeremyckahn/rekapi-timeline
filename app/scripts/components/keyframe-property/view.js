@@ -25,18 +25,11 @@ define([
 
     ,events: {
       'mousedown .keyframe-property':  function () {
-        this.emit('userFocusedKeyframeProperty', this);
-        this.$handle.addClass('active');
+        this.activate();
       }
 
       ,drag: function () {
         this.updateKeyframeProperty();
-      }
-
-      // In Firefox, completing a $.fn.dragon drag does not focus the element,
-      // so it must be done explicitly.
-      ,dragEnd: function () {
-        this.$handle.focus();
       }
     }
 
@@ -56,7 +49,7 @@ define([
       }
 
       ,userFocusedKeyframeProperty: function () {
-        this.$handle.removeClass('active');
+        this.setActiveClass(false);
       }
     }
 
@@ -75,7 +68,7 @@ define([
       });
 
       if (this.doImmediatelyFocus) {
-        this.$handle.focus();
+        this.activate();
       }
     }
 
@@ -92,6 +85,18 @@ define([
       this.$el.css({
         left: scaledXCoordinate
       });
+    }
+
+    ,activate: function () {
+      this.emit('userFocusedKeyframeProperty', this);
+      this.setActiveClass(true);
+    }
+
+    /**
+     * @param {boolean} isActive
+     */
+    ,setActiveClass: function (isActive) {
+      this.$handle[isActive ? 'addClass' : 'removeClass']('active');
     }
 
     /**
