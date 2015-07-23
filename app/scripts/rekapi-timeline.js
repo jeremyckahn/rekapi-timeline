@@ -107,6 +107,27 @@ define([
     }
 
     /**
+     * @param {number=} opt_millisecond Same as Rekapi#update
+     * @param {boolean=} opt_doResetLaterFnKeyframes Same as Rekapi#update
+     * @return {Rekapi}
+     */
+    ,update: function () {
+      var rekapi = this.rekapi;
+
+      try {
+        rekapi.update.apply(rekapi, arguments);
+      } catch (e) {
+        if (e.name === 'TypeError') {
+          this.warn('Keyframe property format mismatch detected');
+        } else {
+          this.warn(e);
+        }
+      }
+
+      return this.rekapi;
+    }
+
+    /**
      * TODO: Make this a Rekapi method.
      * @return {number}
      */
@@ -124,7 +145,7 @@ define([
   };
 
   utils.proxy(Rekapi, RekapiTimeline, {
-    blacklistedMethodNames: ['on', 'off']
+    blacklistedMethodNames: ['on', 'off', 'update']
     ,subject: function () {
       return this.rekapi;
     }
