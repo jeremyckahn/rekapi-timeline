@@ -632,7 +632,7 @@ define('rekapi-timeline.component.keyframe-property/model',[
 });
 
 
-define('text!rekapi-timeline.component.keyframe-property/template.mustache',[],function () { return '<button class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" >&nbsp;</button>\n';});
+define('text!rekapi-timeline.component.keyframe-property/template.mustache',[],function () { return '<div class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" >&nbsp;</div>\n';});
 
 define('rekapi-timeline.component.keyframe-property/view',[
 
@@ -660,18 +660,12 @@ define('rekapi-timeline.component.keyframe-property/view',[
     template: template
 
     ,events: {
-      'focus button':  function () {
-        this.emit('userFocusedKeyframeProperty', this);
+      'mousedown .keyframe-property':  function () {
+        this.activate();
       }
 
       ,drag: function () {
         this.updateKeyframeProperty();
-      }
-
-      // In Firefox, completing a $.fn.dragon drag does not focus the element,
-      // so it must be done explicitly.
-      ,dragEnd: function () {
-        this.$handle.focus();
       }
     }
 
@@ -686,8 +680,23 @@ define('rekapi-timeline.component.keyframe-property/view',[
     }
 
     ,lateralusEvents: {
-      'change:timelineScale': function () {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.KeyframeProperty} keyframeProperty
+       */
+      'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
+        var nextProperty = this.model.get('nextProperty');
+        if (nextProperty && nextProperty.id === keyframeProperty.id) {
+          this.activate();
+        }
+      }
+
+      ,'change:timelineScale': function () {
         this.render();
+      }
+
+      ,userFocusedKeyframeProperty: function () {
+        this.setActiveClass(false);
       }
     }
 
@@ -706,7 +715,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
       });
 
       if (this.doImmediatelyFocus) {
-        this.$handle.focus();
+        this.activate();
       }
     }
 
@@ -723,6 +732,18 @@ define('rekapi-timeline.component.keyframe-property/view',[
       this.$el.css({
         left: scaledXCoordinate
       });
+    }
+
+    ,activate: function () {
+      this.emit('userFocusedKeyframeProperty', this);
+      this.setActiveClass(true);
+    }
+
+    /**
+     * @param {boolean} isActive
+     */
+    ,setActiveClass: function (isActive) {
+      this.$handle[isActive ? 'addClass' : 'removeClass']('active');
     }
 
     /**
@@ -1222,7 +1243,7 @@ define('rekapi-timeline.component.keyframe-property-detail/model',[
 });
 
 
-define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus add"></i>\n  </button>\n  <button class="icon-button" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus delete"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
+define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
 
 define('rekapi-timeline.component.keyframe-property-detail/view',[
 
@@ -2153,6 +2174,27 @@ define('rekapi-timeline/rekapi-timeline',[
     }
 
     /**
+     * @param {number=} opt_millisecond Same as Rekapi#update
+     * @param {boolean=} opt_doResetLaterFnKeyframes Same as Rekapi#update
+     * @return {Rekapi}
+     */
+    ,update: function () {
+      var rekapi = this.rekapi;
+
+      try {
+        rekapi.update.apply(rekapi, arguments);
+      } catch (e) {
+        if (e.name === 'TypeError') {
+          this.warn('Keyframe property format mismatch detected');
+        } else {
+          this.warn(e);
+        }
+      }
+
+      return this.rekapi;
+    }
+
+    /**
      * TODO: Make this a Rekapi method.
      * @return {number}
      */
@@ -2170,7 +2212,7 @@ define('rekapi-timeline/rekapi-timeline',[
   };
 
   utils.proxy(Rekapi, RekapiTimeline, {
-    blacklistedMethodNames: ['on', 'off']
+    blacklistedMethodNames: ['on', 'off', 'update']
     ,subject: function () {
       return this.rekapi;
     }
