@@ -44,7 +44,18 @@ define([
     }
 
     ,lateralusEvents: {
-      'change:timelineScale': function () {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.KeyframeProperty} keyframeProperty
+       */
+      'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
+        var nextProperty = this.model.get('nextProperty');
+        if (nextProperty && nextProperty.id === keyframeProperty.id) {
+          this.activate();
+        }
+      }
+
+      ,'change:timelineScale': function () {
         this.render();
       }
 
