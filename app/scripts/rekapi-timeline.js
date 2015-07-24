@@ -66,30 +66,25 @@ define([
         this.stop().update(0);
       }
 
-      ,'rekapi:removeKeyframeProperty': function () {
+      ,'rekapi:removeKeyframePropertyComplete': function () {
         if (!this.isPlaying()) {
           // This operation needs to be deferred because Rekapi's
           // removeKeyframeProperty event is fired at point in the keyframe
           // removal process where calling update() would not reflect the new
           // state of the timeline.  However, this only needs to be done if the
           // animation is not already playing.
-          //
-          // TODO: Perhaps change how this event works in Rekapi so that the
-          // _.defer is not necessary?
-          _.defer(function () {
-            var timelineDuration = this.model.get('timelineDuration');
-            var lastMillisecondUpdated = this.getLastMillisecondUpdated();
+          var timelineDuration = this.model.get('timelineDuration');
+          var lastMillisecondUpdated = this.getLastMillisecondUpdated();
 
-            // Passing undefined to Rekapi#update causes a re-render of the
-            // previously rendered frame.  If the previously rendered frame is
-            // greater than the length of the timeline (possible in this case
-            // because this executes within the rekapi:removeKeyframeProperty
-            // event handler), update to the last frame in the timeline.
-            var updateMillisecond = lastMillisecondUpdated > timelineDuration ?
-                timelineDuration : undefined;
+          // Passing undefined to Rekapi#update causes a re-render of the
+          // previously rendered frame.  If the previously rendered frame is
+          // greater than the length of the timeline (possible in this case
+          // because this executes within the rekapi:removeKeyframeProperty
+          // event handler), update to the last frame in the timeline.
+          var updateMillisecond = lastMillisecondUpdated > timelineDuration ?
+              timelineDuration : undefined;
 
-            this.update(updateMillisecond);
-          }.bind(this));
+          this.update(updateMillisecond);
         }
       }
 
