@@ -23,6 +23,21 @@ define([
   var TimelineComponentView = Base.extend({
     template: template
 
+    ,events: {
+      'click .add': function () {
+        this.addNewKeyframePropertyFromInput();
+      }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'keyup .new-track-name': function (evt) {
+        if (evt.which === 13) { // enter key
+          this.addNewKeyframePropertyFromInput();
+        }
+      }
+    }
+
     ,lateralusEvents: {
       'change:timelineDuration': function () {
         this.updateWrapperWidth();
@@ -31,7 +46,8 @@ define([
 
     ,provide: {
       timelineWrapperHeight: function () {
-        return this.$timelineWrapper.height();
+        return this.$timelineWrapper.height() -
+          this.$newTrackNameInputWrapper.outerHeight();
       }
     }
 
@@ -60,6 +76,15 @@ define([
 
     ,updateWrapperWidth: function () {
       this.$timelineWrapper.css('width', this.getPixelWidthForTracks());
+    }
+
+    ,addNewKeyframePropertyFromInput: function () {
+      var newTrackName = this.$newTrackName.val();
+      var currentActorModel = this.collectOne('currentActorModel');
+      var keyframeObject = {};
+      keyframeObject[newTrackName] = constant.DEFAULT_KEYFRAME_PROPERTY_VALUE;
+      currentActorModel.keyframe(
+        constant.DEFAULT_KEYFRAME_PROPERTY_MILLISECOND, keyframeObject);
     }
   });
 

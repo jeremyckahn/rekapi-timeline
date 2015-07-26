@@ -26,6 +26,17 @@ define([
       actor: Rekapi.Actor
     }
 
+    ,provide: {
+      /**
+       * NOTE: This won't work if rekapi-timeline ever supports multiple
+       * actors.
+       * @return {ActorModel}
+       */
+      currentActorModel: function () {
+        return this;
+      }
+    }
+
     ,lateralusEvents: {
       /**
        * @param {Rekapi} rekapi

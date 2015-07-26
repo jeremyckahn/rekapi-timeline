@@ -11,6 +11,9 @@ define(function () {
     ,NEW_KEYFRAME_PROPERTY_BUFFER_MS: 500
 
     ,DEFAULT_TIMELINE_SCALE: 1
+
+    ,DEFAULT_KEYFRAME_PROPERTY_VALUE: 0
+    ,DEFAULT_KEYFRAME_PROPERTY_MILLISECOND: 0
   };
 
   return rekapiTimelineConstants;
