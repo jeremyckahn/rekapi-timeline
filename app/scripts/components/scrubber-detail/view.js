@@ -70,7 +70,9 @@ define([
       var currentPosition =
         lateralus.getLastPositionUpdated() *
         lateralus.model.get('timelineDuration');
-      this.$currentPosition.text(Math.floor(currentPosition));
+
+      // Default the rendered value to 0, as currentPosition may be NaN.
+      this.$currentPosition.text(Math.floor(currentPosition) || 0);
     }
   });
 
