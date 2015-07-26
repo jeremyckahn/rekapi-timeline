@@ -1,6 +1,7 @@
 define([
 
-  'lateralus'
+  'underscore'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
@@ -8,7 +9,8 @@ define([
 
 ], function (
 
-  Lateralus
+  _
+  ,Lateralus
 
   ,template
 
@@ -38,6 +40,14 @@ define([
 
       ,'rekapi:addKeyframePropertyTrack': function () {
         this.resizeScrubberGuide();
+      }
+
+      ,'rekapi:removeKeyframePropertyTrack': function () {
+        // Defer this operation so that the relevant
+        // KeyframePropertyTrackComponent has a chance to remove itself from
+        // the DOM, which needs to happen before the DOM calculation in
+        // resizeScrubberGuide occurs.
+        _.defer(this.resizeScrubberGuide.bind(this));
       }
     }
 
