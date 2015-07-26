@@ -24,6 +24,18 @@ define([
     ,Model: Model
     ,View: View
     ,template: template
+
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {string} trackName
+       */
+      'rekapi:removeKeyframePropertyTrack': function (rekapi, trackName) {
+        if (trackName === this.model.get('trackName')) {
+          this.dispose();
+        }
+      }
+    }
   });
 
   return KeyframePropertyTrackComponent;
