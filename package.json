@@ -1,6 +1,6 @@
 {
   "name": "rekapi-timeline",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "dependencies": {},
   "devDependencies": {
     "connect-livereload": "~0.3.2",

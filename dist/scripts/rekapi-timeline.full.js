@@ -21336,7 +21336,7 @@ var Tweenable = (function () {
 
 }).call(null);
 
-/*! rekapi - v1.4.7 - 2015-07-21 - http://rekapi.com */
+/*! rekapi - v1.4.9 - 2015-07-25 - http://rekapi.com */
 /*!
  * Rekapi - Rewritten Kapi.
  * http://rekapi.com/
@@ -21637,7 +21637,9 @@ var rekapiCore = function (root, _, Tweenable) {
       ,'removeActor': []
       ,'addKeyframeProperty': []
       ,'removeKeyframeProperty': []
+      ,'removeKeyframePropertyComplete': []
       ,'addKeyframePropertyTrack': []
+      ,'removeKeyframePropertyTrack': []
       ,'timelineModified': []
       ,'animationLooped': []
     };
@@ -21968,6 +21970,14 @@ var rekapiCore = function (root, _, Tweenable) {
   };
 
   /**
+   * @method getLastMillisecondUpdated
+   * @return {number} The millisecond that was last rendered.
+   */
+  Rekapi.prototype.getLastMillisecondUpdated = function () {
+    return this._lastUpdatedMillisecond;
+  };
+
+  /**
    * @method getAnimationLength
    * @return {number} The length of the animation timeline, in milliseconds.
    */
@@ -22001,8 +22011,17 @@ var rekapiCore = function (root, _, Tweenable) {
    *   `opt_data` is the {{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}}
    *   that was added.
    * - __removeKeyframeProperty__: Fires when a {{#crossLink
-   *   "Rekapi.KeyframeProperty"}}{{/crossLink}} is removed.  `opt_data` is the
-   *   {{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}} that was removed.
+   *   "Rekapi.KeyframeProperty"}}{{/crossLink}} is removed.  This event is
+   *   fired _before_ the internal state of the timeline has been updated to
+   *   reflect the keyframe property removal (this is in contrast to
+   *   `removeKeyframePropertyComplete`).  `opt_data` is the {{#crossLink
+   *   "Rekapi.KeyframeProperty"}}{{/crossLink}} that was removed.
+   * - __removeKeyframePropertyComplete__: Fires when a {{#crossLink
+   *   "Rekapi.KeyframeProperty"}}{{/crossLink}} has finished being removed
+   *   from the timeline.  Unlike `removeKeyframeProperty`, this is fired
+   *   _after_ the internal state of Rekapi has been updated to reflect the
+   *   removal of the keyframe property. `opt_data` is the {{#crossLink
+   *   "Rekapi.KeyframeProperty"}}{{/crossLink}} that was removed.
    * - __addKeyframePropertyTrack__: Fires when the a keyframe is added to an
    *   actor that creates a new keyframe property track.  `opt_data` is the
    *   {{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}}
@@ -22010,6 +22029,11 @@ var rekapiCore = function (root, _, Tweenable) {
    *   that the keyframe property is associated with can be accessed via
    *   `opt_data.actor` and the track name that was added can be determined via
    *   `opt_data.name`.
+   * - __removeKeyframePropertyTrack__: Fires when the last keyframe property
+   *   in an actor's keyframe property track is removed.  Rekapi automatically
+   *   removes property tracks when they are emptied out, which causes this
+   *   event to be fired.  `opt_data` is the name of the track that was
+   *   removed.
    * - __timelineModified__: Fires when a keyframe is added, modified or
    *   removed.
    * - __animationLooped__: Fires when an animation loop ends and a new one
@@ -22182,10 +22206,11 @@ rekapiModules.push(function (context) {
   /*!
    * @param {Rekapi.Actor} actor
    * @param {string} event
+   * @param {any=} opt_data
    */
-  function fireRekapiEventForActor (actor, event) {
+  function fireRekapiEventForActor (actor, event, opt_data) {
     if (actor.rekapi) {
-      fireEvent(actor.rekapi, event, _);
+      fireEvent(actor.rekapi, event, _, opt_data);
     }
   }
 
@@ -22349,6 +22374,27 @@ rekapiModules.push(function (context) {
 
     // Re-link the linked list of keyframeProperties
     linkTrackedProperties(actor);
+  }
+
+  /*!
+   * Remove any property tracks that are empty.
+   *
+   * @param {Rekapi.Actor} actor
+   */
+  function removeEmptyPropertyTracks (actor) {
+    var trackNameRemovalList = [];
+    var propertyTracks = actor._propertyTracks;
+
+    _.each(propertyTracks, function (propertyTrack, trackName) {
+      if (!propertyTrack.length) {
+        trackNameRemovalList.push(trackName);
+      }
+    });
+
+    _.each(trackNameRemovalList, function (trackName) {
+      delete propertyTracks[trackName];
+      fireRekapiEventForActor(actor, 'removeKeyframePropertyTrack', trackName);
+    });
   }
 
   /*!
@@ -22723,6 +22769,7 @@ rekapiModules.push(function (context) {
         propertyTracks[propertyName] = _.without(
           propertyTrack, keyframeProperty);
         keyframeProperty.detach();
+        removeEmptyPropertyTracks(this);
       }
     }, this);
 
@@ -22740,6 +22787,12 @@ rekapiModules.push(function (context) {
    * Remove all `{{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}}`s set
    * on the actor.
    *
+   * **NOTE**: This method does _not_ fire the `removeKeyframePropertyComplete`
+   * event.  This method is a bulk operation that is more efficient than
+   * calling `{{#crossLink
+   * "Rekapi.Actor/removeKeyframeProperty:method"}}{{/crossLink}}` many times
+   * individually, but foregoes firing that event.
+   *
    * __[Example](../../../../docs/examples/actor_remove_all_keyframes.html)__
    * @method removeAllKeyframes
    * @chainable
@@ -22751,6 +22804,7 @@ rekapiModules.push(function (context) {
 
     _.each(this._keyframeProperties, function (keyframeProperty) {
       keyframeProperty.detach();
+      removeEmptyPropertyTracks(this);
     }, this);
 
     this._keyframeProperties = {};
@@ -22823,10 +22877,12 @@ rekapiModules.push(function (context) {
     if (typeof propertyTracks[property] !== 'undefined') {
       var keyframeProperty = this.getKeyframeProperty(property, millisecond);
       propertyTracks[property] =
-      _.without(propertyTracks[property], keyframeProperty);
+        _.without(propertyTracks[property], keyframeProperty);
       keyframeProperty.detach();
 
+      removeEmptyPropertyTracks(this);
       cleanupAfterKeyframeModification(this);
+      fireEvent(this.rekapi, 'removeKeyframePropertyComplete', _, keyframeProperty);
 
       return keyframeProperty;
     }
@@ -25462,6 +25518,9 @@ define('rekapi-timeline/constant',[],function () {
     ,NEW_KEYFRAME_PROPERTY_BUFFER_MS: 500
 
     ,DEFAULT_TIMELINE_SCALE: 1
+
+    ,DEFAULT_KEYFRAME_PROPERTY_VALUE: 0
+    ,DEFAULT_KEYFRAME_PROPERTY_MILLISECOND: 0
   };
 
   return rekapiTimelineConstants;
@@ -25684,7 +25743,7 @@ define('rekapi-timeline.component.timeline/model',[
 });
 
 
-define('text!rekapi-timeline.component.timeline/template.mustache',[],function () { return '<div class="$timelineWrapper timeline-wrapper">\n  <div class="$scrubber"></div>\n  <div class="$animationTracks"></div>\n</div>\n';});
+define('text!rekapi-timeline.component.timeline/template.mustache',[],function () { return '<div class="$timelineWrapper timeline-wrapper">\n  <div class="$scrubber"></div>\n  <div class="$animationTracks"></div>\n  <div class="$newTrackNameInputWrapper new-track-name-input-wrapper">\n    <button class="icon-button add" title="Add a new property to animate">\n      <i class="glyphicon glyphicon-plus"></i>\n    </button>\n    <input class="$newTrackName new-track-name" value="newProperty"></input>\n  </div>\n</div>\n';});
 
 define('rekapi-timeline.component.timeline/view',[
 
@@ -25711,6 +25770,21 @@ define('rekapi-timeline.component.timeline/view',[
   var TimelineComponentView = Base.extend({
     template: template
 
+    ,events: {
+      'click .add': function () {
+        this.addNewKeyframePropertyFromInput();
+      }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'keyup .new-track-name': function (evt) {
+        if (evt.which === 13) { // enter key
+          this.addNewKeyframePropertyFromInput();
+        }
+      }
+    }
+
     ,lateralusEvents: {
       'change:timelineDuration': function () {
         this.updateWrapperWidth();
@@ -25719,7 +25793,8 @@ define('rekapi-timeline.component.timeline/view',[
 
     ,provide: {
       timelineWrapperHeight: function () {
-        return this.$timelineWrapper.height();
+        return this.$timelineWrapper.height() -
+          this.$newTrackNameInputWrapper.outerHeight();
       }
     }
 
@@ -25748,6 +25823,15 @@ define('rekapi-timeline.component.timeline/view',[
 
     ,updateWrapperWidth: function () {
       this.$timelineWrapper.css('width', this.getPixelWidthForTracks());
+    }
+
+    ,addNewKeyframePropertyFromInput: function () {
+      var newTrackName = this.$newTrackName.val();
+      var currentActorModel = this.collectOne('currentActorModel');
+      var keyframeObject = {};
+      keyframeObject[newTrackName] = constant.DEFAULT_KEYFRAME_PROPERTY_VALUE;
+      currentActorModel.keyframe(
+        constant.DEFAULT_KEYFRAME_PROPERTY_MILLISECOND, keyframeObject);
     }
   });
 
@@ -25787,7 +25871,8 @@ define('text!rekapi-timeline.component.scrubber/template.mustache',[],function (
 
 define('rekapi-timeline.component.scrubber/view',[
 
-  'lateralus'
+  'underscore'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
@@ -25795,7 +25880,8 @@ define('rekapi-timeline.component.scrubber/view',[
 
 ], function (
 
-  Lateralus
+  _
+  ,Lateralus
 
   ,template
 
@@ -25825,6 +25911,14 @@ define('rekapi-timeline.component.scrubber/view',[
 
       ,'rekapi:addKeyframePropertyTrack': function () {
         this.resizeScrubberGuide();
+      }
+
+      ,'rekapi:removeKeyframePropertyTrack': function () {
+        // Defer this operation so that the relevant
+        // KeyframePropertyTrackComponent has a chance to remove itself from
+        // the DOM, which needs to happen before the DOM calculation in
+        // resizeScrubberGuide occurs.
+        _.defer(this.resizeScrubberGuide.bind(this));
       }
     }
 
@@ -26316,6 +26410,18 @@ define('rekapi-timeline.component.keyframe-property-track/main',[
     ,Model: Model
     ,View: View
     ,template: template
+
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {string} trackName
+       */
+      'rekapi:removeKeyframePropertyTrack': function (rekapi, trackName) {
+        if (trackName === this.model.get('trackName')) {
+          this.dispose();
+        }
+      }
+    }
   });
 
   return KeyframePropertyTrackComponent;
@@ -26999,7 +27105,9 @@ define('rekapi-timeline.component.scrubber-detail/view',[
       var currentPosition =
         lateralus.getLastPositionUpdated() *
         lateralus.model.get('timelineDuration');
-      this.$currentPosition.text(Math.floor(currentPosition));
+
+      // Default the rendered value to 0, as currentPosition may be NaN.
+      this.$currentPosition.text(Math.floor(currentPosition) || 0);
     }
   });
 
@@ -27364,6 +27472,17 @@ define('rekapi-timeline/models/actor',[
   var ActorModel = Base.extend({
     defaults: {
       actor: Rekapi.Actor
+    }
+
+    ,provide: {
+      /**
+       * NOTE: This won't work if rekapi-timeline ever supports multiple
+       * actors.
+       * @return {ActorModel}
+       */
+      currentActorModel: function () {
+        return this;
+      }
     }
 
     ,lateralusEvents: {
@@ -27928,30 +28047,25 @@ define('rekapi-timeline/rekapi-timeline',[
         this.stop().update(0);
       }
 
-      ,'rekapi:removeKeyframeProperty': function () {
+      ,'rekapi:removeKeyframePropertyComplete': function () {
         if (!this.isPlaying()) {
           // This operation needs to be deferred because Rekapi's
           // removeKeyframeProperty event is fired at point in the keyframe
           // removal process where calling update() would not reflect the new
           // state of the timeline.  However, this only needs to be done if the
           // animation is not already playing.
-          //
-          // TODO: Perhaps change how this event works in Rekapi so that the
-          // _.defer is not necessary?
-          _.defer(function () {
-            var timelineDuration = this.model.get('timelineDuration');
-            var lastMillisecondUpdated = this.getLastMillisecondUpdated();
+          var timelineDuration = this.model.get('timelineDuration');
+          var lastMillisecondUpdated = this.getLastMillisecondUpdated();
 
-            // Passing undefined to Rekapi#update causes a re-render of the
-            // previously rendered frame.  If the previously rendered frame is
-            // greater than the length of the timeline (possible in this case
-            // because this executes within the rekapi:removeKeyframeProperty
-            // event handler), update to the last frame in the timeline.
-            var updateMillisecond = lastMillisecondUpdated > timelineDuration ?
-                timelineDuration : undefined;
+          // Passing undefined to Rekapi#update causes a re-render of the
+          // previously rendered frame.  If the previously rendered frame is
+          // greater than the length of the timeline (possible in this case
+          // because this executes within the rekapi:removeKeyframeProperty
+          // event handler), update to the last frame in the timeline.
+          var updateMillisecond = lastMillisecondUpdated > timelineDuration ?
+              timelineDuration : undefined;
 
-            this.update(updateMillisecond);
-          }.bind(this));
+          this.update(updateMillisecond);
         }
       }
 
