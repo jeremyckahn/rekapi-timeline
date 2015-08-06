@@ -1,6 +1,7 @@
 define([
 
-  'lateralus'
+  'jquery'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
@@ -8,7 +9,8 @@ define([
 
 ], function (
 
-  Lateralus
+  $
+  ,Lateralus
 
   ,template
 
@@ -40,6 +42,19 @@ define([
             distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
 
         return baseMillisecond / this.lateralus.model.get('timelineScale');
+      }
+    }
+
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {string} trackName
+       */
+      'rekapi:removeKeyframePropertyTrack': function (rekapi, trackName) {
+        var currentActorModel = this.collectOne('currentActorModel');
+
+        // Remove corresponding inline styles for the removed track
+        $(currentActorModel.get('context')).css(trackName, '');
       }
     }
 
