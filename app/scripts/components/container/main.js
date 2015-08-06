@@ -30,7 +30,7 @@ define([
   var Base = Lateralus.Component;
 
   var ContainerComponent = Base.extend({
-    name: 'container'
+    name: 'rekapi-timeline-container'
     ,Model: Model
     ,View: View
     ,template: template
