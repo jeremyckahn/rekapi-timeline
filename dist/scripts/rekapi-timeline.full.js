@@ -21336,7 +21336,7 @@ var Tweenable = (function () {
 
 }).call(null);
 
-/*! rekapi - v1.4.9 - 2015-07-25 - http://rekapi.com */
+/*! rekapi - v1.5.1 - 2015-08-23 - http://rekapi.com */
 /*!
  * Rekapi - Rewritten Kapi.
  * http://rekapi.com/
@@ -23699,7 +23699,10 @@ rekapiModules.push(function (context) {
     'scale',
     'scaleX',
     'scaleY',
+    'perspective',
     'rotate',
+    'rotateX',
+    'rotateY',
     'skewX',
     'skewY'];
 
@@ -24253,12 +24256,6 @@ rekapiModules.push(function (context) {
    *
    * This example and the one above it are equivalent.
    *
-   * __Note__: The decoupled form of `transform` animations is not supported in
-   * CSS `@keyframe` animations, only inline style animations.  This is due to
-   * the tightly-coupled nature of the CSS `@keyframes` spec.  If you intend to
-   * play a CSS-based `@keyframe` animation, __do not__ use the non-standard
-   * decoupled API form for `transform` properties.
-   *
    * @method setActorTransformOrder
    * @param {Rekapi.Actor} actor
    * @param {Array(string)} orderedTransforms The array of transform names.
@@ -24583,14 +24580,25 @@ rekapiModules.push(function (context) {
 
     var animationName = printf('  %sanimation-name:', [prefix]);
 
-    var tracks = actor.getTrackNames();
-
     if (combineProperties) {
       animationName += printf(' %s-keyframes;', [animName]);
     } else {
-      _.each(tracks, function (trackName) {
+      var tracks = actor.getTrackNames();
+      var transformTracksToCombine = _.intersection(tracks, transformFunctions);
+      var nonTransformTracks = _.difference(tracks, transformFunctions);
+
+      var trackNamesToPrint;
+      if (transformTracksToCombine.length) {
+        trackNamesToPrint = nonTransformTracks;
+        trackNamesToPrint.push('transform');
+      } else {
+        trackNamesToPrint = tracks;
+      }
+
+      _.each(trackNamesToPrint, function (trackName) {
         animationName += printf(' %s-%s-keyframes,', [animName, trackName]);
       });
+
       animationName = animationName.slice(0, animationName.length - 1);
       animationName += ';';
     }
@@ -24719,7 +24727,11 @@ rekapiModules.push(function (context) {
    * @return {boolean}
    */
   function canOptimizeAnyKeyframeProperties (actor) {
-    return _.any(actor._keyframeProperties, canOptimizeKeyframeProperty);
+    var keyframeProperties = actor._keyframeProperties;
+    var propertyNames = _.keys(actor._propertyTracks);
+
+    return _.any(keyframeProperties, canOptimizeKeyframeProperty) &&
+      !_.intersection(propertyNames, transformFunctions).length;
   }
 
   /*!
@@ -24954,6 +24966,35 @@ rekapiModules.push(function (context) {
     return segment;
   }
 
+  /**
+   * @param {Object} propsToSerialize
+   * @param {Array.<string>} transformNames
+   * @return {Object}
+   */
+  function combineTranfromProperties (propsToSerialize, transformNames) {
+    var transformProps =
+      _.pick.apply(_, [propsToSerialize].concat(transformFunctions));
+
+    if (_.isEmpty(transformProps)) {
+      return propsToSerialize;
+    } else {
+      var serializedProps = _.clone(propsToSerialize);
+      serializedProps[TRANSFORM_TOKEN] = [];
+
+      _.each(transformNames, function (transformFunction) {
+        if (_.has(serializedProps, transformFunction)) {
+          serializedProps[TRANSFORM_TOKEN].push(
+            transformFunction + '(' + serializedProps[transformFunction] + ')');
+          delete serializedProps[transformFunction];
+        }
+      });
+
+      serializedProps[TRANSFORM_TOKEN] = serializedProps[TRANSFORM_TOKEN].join(' ');
+
+      return serializedProps;
+    }
+  }
+
   /*!
    * @param {Rekapi.Actor} actor
    * @param {string=} opt_targetProp
@@ -24974,8 +25015,11 @@ rekapiModules.push(function (context) {
       propsToSerialize = actor.get();
     }
 
+    var combinedPropsToSerialize =
+      combineTranfromProperties(propsToSerialize, actor._transformOrder);
+
     var printVal;
-    _.each(propsToSerialize, function (val, key) {
+    _.each(combinedPropsToSerialize, function (val, key) {
       printVal = val;
       var printKey = key;
 
@@ -25003,6 +25047,7 @@ rekapiModules.push(function (context) {
       ,'generateCSSAnimationProperties': generateCSSAnimationProperties
       ,'generateActorKeyframes': generateActorKeyframes
       ,'generateActorTrackSegment': generateActorTrackSegment
+      ,'combineTranfromProperties': combineTranfromProperties
       ,'serializeActorStep': serializeActorStep
       ,'generateAnimationNameProperty': generateAnimationNameProperty
       ,'generateAnimationDurationProperty': generateAnimationDurationProperty
@@ -25018,6 +25063,7 @@ rekapiModules.push(function (context) {
       ,'canOptimizeAnyKeyframeProperties': canOptimizeAnyKeyframeProperties
       ,'generateOptimizedKeyframeSegment': generateOptimizedKeyframeSegment
       ,'getActorCSS': getActorCSS
+      ,'transformFunctions': transformFunctions
     };
   }
 });
@@ -25528,7 +25574,8 @@ define('rekapi-timeline/constant',[],function () {
 
 define('rekapi-timeline.component.container/view',[
 
-  'lateralus'
+  'jquery'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
@@ -25536,7 +25583,8 @@ define('rekapi-timeline.component.container/view',[
 
 ], function (
 
-  Lateralus
+  $
+  ,Lateralus
 
   ,template
 
@@ -25568,6 +25616,19 @@ define('rekapi-timeline.component.container/view',[
             distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
 
         return baseMillisecond / this.lateralus.model.get('timelineScale');
+      }
+    }
+
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {string} trackName
+       */
+      'rekapi:removeKeyframePropertyTrack': function (rekapi, trackName) {
+        var currentActorModel = this.collectOne('currentActorModel');
+
+        // Remove corresponding inline styles for the removed track
+        $(currentActorModel.get('context')).css(trackName, '');
       }
     }
 
@@ -26770,6 +26831,123 @@ define('rekapi-timeline.component.keyframe-property-detail/model',[
 
 define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
 
+
+define('text!aenima.component.curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
+
+define('aenima.constant',[],function () {
+  'use strict';
+
+  return {
+    CUSTOM_CURVE_PREFIX: 'customCurve'
+    ,NEW_KEYFRAME_MS_INCREASE: 1000
+    ,NEW_KEYFRAME_X_INCREASE: 200
+  };
+});
+
+define('aenima.component.curve-selector/view',[
+
+  'underscore'
+  ,'lateralus'
+  ,'shifty'
+
+  ,'text!./template.mustache'
+
+  ,'aenima.constant'
+
+], function (
+
+  _
+  ,Lateralus
+  ,Tweenable
+
+  ,template
+
+  ,aenimaConstant
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.View;
+  var baseProto = Base.prototype;
+
+  var CurveSelectorComponentView = Base.extend({
+    template: template
+
+    ,lateralusEvents: {
+      tweenableCurveCreated: function () {
+        this.render();
+      }
+    }
+
+    /**
+     * @param {Object} [options] See http://backbonejs.org/#View-constructor
+     * @param {boolean=} [options.onlyShowCustomCurves]
+     */
+    ,initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+    }
+
+    ,render: function () {
+      var currentValue = this.$el.val();
+      this.renderTemplate();
+      this.$el.val(currentValue);
+    }
+
+    ,getTemplateRenderData: function () {
+      var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
+
+      _.extend(renderData, {
+        curves: this.getCurveList()
+      });
+
+      return renderData;
+    }
+
+    /**
+     * @param {Array.<string>}
+     */
+    ,getCurveList: function () {
+      var fullList = Object.keys(Tweenable.prototype.formula);
+      return this.onlyShowCustomCurves ?
+        fullList.filter(function (curve) {
+          return curve.match(aenimaConstant.CUSTOM_CURVE_PREFIX);
+        }) : fullList;
+    }
+  });
+
+  return CurveSelectorComponentView;
+});
+
+define('aenima.component.curve-selector/main',[
+
+  'lateralus'
+
+  ,'./view'
+  ,'text!./template.mustache'
+
+], function (
+
+  Lateralus
+
+  ,View
+  ,template
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component;
+
+  var CurveSelectorComponent = Base.extend({
+    name: 'curve-selector'
+    ,View: View
+    ,template: template
+  });
+
+  return CurveSelectorComponent;
+});
+
+define('aenima.component.curve-selector', ['aenima.component.curve-selector/main'], function (main) { return main; });
+
 define('rekapi-timeline.component.keyframe-property-detail/view',[
 
   'underscore'
@@ -26777,6 +26955,8 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
   ,'shifty'
 
   ,'text!./template.mustache'
+
+  ,'aenima.component.curve-selector'
 
   ,'rekapi-timeline/constant'
 
@@ -26787,6 +26967,8 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
   ,Tweenable
 
   ,template
+
+  ,CurveSelector
 
   ,constant
 
@@ -26818,10 +27000,6 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           option.innerHTML = name;
           inputs.push(option);
         }, this);
-
-        this.$propertyEasing.children().remove();
-        this.$propertyEasing.append(inputs).val(
-          this.keyframePropertyModel.get('easing'));
 
         this.render();
       }
@@ -26882,6 +27060,10 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.propertyNameDefaultText = this.$propertyName.text();
+
+      this.addSubview(CurveSelector.View, {
+        el: this.$propertyEasing
+      });
     }
 
     ,render: function () {
@@ -26891,6 +27073,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
       this.$propertyMillisecond.val(
         this.keyframePropertyModel.get('millisecond'));
       this.$propertyValue.val(this.keyframePropertyModel.get('value'));
+      this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
     }
 
     /**
@@ -27179,7 +27362,7 @@ define('rekapi-timeline.component.container/main',[
   var Base = Lateralus.Component;
 
   var ContainerComponent = Base.extend({
-    name: 'container'
+    name: 'rekapi-timeline-container'
     ,Model: Model
     ,View: View
     ,template: template
