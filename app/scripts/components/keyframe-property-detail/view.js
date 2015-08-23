@@ -6,6 +6,8 @@ define([
 
   ,'text!./template.mustache'
 
+  ,'aenima.component.curve-selector'
+
   ,'rekapi-timeline/constant'
 
 ], function (
@@ -15,6 +17,8 @@ define([
   ,Tweenable
 
   ,template
+
+  ,CurveSelector
 
   ,constant
 
@@ -46,10 +50,6 @@ define([
           option.innerHTML = name;
           inputs.push(option);
         }, this);
-
-        this.$propertyEasing.children().remove();
-        this.$propertyEasing.append(inputs).val(
-          this.keyframePropertyModel.get('easing'));
 
         this.render();
       }
@@ -110,6 +110,10 @@ define([
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.propertyNameDefaultText = this.$propertyName.text();
+
+      this.addSubview(CurveSelector.View, {
+        el: this.$propertyEasing
+      });
     }
 
     ,render: function () {
@@ -119,6 +123,7 @@ define([
       this.$propertyMillisecond.val(
         this.keyframePropertyModel.get('millisecond'));
       this.$propertyValue.val(this.keyframePropertyModel.get('value'));
+      this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
     }
 
     /**

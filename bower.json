@@ -7,9 +7,11 @@
     "lateralus": "~0.8.0",
     "rekapi": "~1.4.9",
     "jquery-dragon": "~0.4.5",
-    "jquery": "2.1.4"
+    "jquery": "2.1.4",
+    "aenima": "~0.0.4"
   },
   "resolutions": {
-    "jquery": "2.1.4"
+    "jquery": "2.1.4",
+    "lateralus": "~0.8.0"
   }
 }
