@@ -49,6 +49,10 @@ define([
         // resizeScrubberGuide occurs.
         _.defer(this.resizeScrubberGuide.bind(this));
       }
+
+      ,'rekapi:timelineModified': function () {
+        this.syncContainerToTimelineLength();
+      }
     }
 
     ,events: {
@@ -77,7 +81,6 @@ define([
     }
 
     ,render: function () {
-      this.syncContainerToTimelineLength();
       this.syncHandleToTimelineLength();
     }
 
