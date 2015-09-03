@@ -47,6 +47,12 @@ define([
           this.addKeyframePropertyTrack(keyframeProperty.name);
         }
       }
+
+      ,'rekapi:removeActor': function (rekapi, actor) {
+        if (actor.id === this.id) {
+          this.dispose();
+        }
+      }
     }
 
     /**
