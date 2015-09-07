@@ -18087,7 +18087,7 @@ define('lateralus/lateralus.model',[
    * @param {Lateralus} lateralus
    * @param {Object} [attributes]
    * @param {Object} [options]
-   * @extends {Backbone.Model}
+   * @extends Backbone.Model
    * @uses Lateralus.mixins
    * @constructor
    */
@@ -19093,6 +19093,9 @@ define('lateralus/lateralus.component.model',[
 ) {
   'use strict';
 
+  var Base = Backbone.Model;
+  var baseProto = Base.prototype;
+
   var fn = {
     /**
      * The constructor for this class should not be called by application code,
@@ -19126,11 +19129,50 @@ define('lateralus/lateralus.component.model',[
       this.delegateLateralusEvents();
       Backbone.Model.call(this, attributes, options);
     }
+
+    /**
+     * Lateralus-compatible override for
+     * [Backbone.Model#destroy](http://backbonejs.org/#Model-destroy).
+     * @param {Object} [options] This object is also passed to
+     * [Backbone.Model.#destroy](http://backbonejs.org/#Model-destroy).
+     * @param {boolean} [options.dispose] If true, call `{{#crossLink
+     * "Lateralus.Component.Model/dispose:method"}}{{/crossLink}}` after
+     * `destroy` operations are complete.
+     * @method destroy
+     * @override
+     */
+    ,destroy: function (options) {
+      options = options || {};
+      var dispose = options.dispose;
+      options.dispose = false;
+
+      baseProto.destroy.apply(this, arguments);
+
+      if (dispose) {
+        this.dispose();
+      }
+    }
+
+    /**
+     * Remove this `{{#crossLink "Lateralus.Component.Model"}}{{/crossLink}}`
+     * from memory.  Also remove this `{{#crossLink
+     * "Lateralus.Component.Model"}}{{/crossLink}}` from the `{{#crossLink
+     * "Lateralus.Component.Collection"}}{{/crossLink}}` to which it belongs,
+     * if any.
+     * @method dispose
+     */
+    ,dispose: function () {
+      _(this).lateralusDispose(_.bind(function () {
+        if (this.collection) {
+          this.collection.remove(this);
+        }
+      }, this));
+    }
   };
 
   _.extend(fn, mixins);
 
-  var ComponentModel = Backbone.Model.extend(fn);
+  var ComponentModel = Base.extend(fn);
 
   /**
    * @method toString
@@ -19193,6 +19235,29 @@ define('lateralus/lateralus.component.collection',[
     });
 
     return baseProto.set.call(this, models, augmentedOptions);
+  };
+
+  /**
+   * Remove a `{{#crossLink "Lateralus.Component.Model"}}{{/crossLink}}` or
+   * array of `{{#crossLink "Lateralus.Component.Model"}}{{/crossLink}}`s from
+   * this collection.
+   * @param {Array.(Lateralus.Component.Model)|Lateralus.Component.Model} models
+   * @param {Object} [options] This object is also passed to
+   * [Backbone.Collection.#remove](http://backbonejs.org/#Collection-remove).
+   * @param {boolean} [options.dispose] If true, call `{{#crossLink
+   * "Lateralus.Component.Model/dispose:method"}}{{/crossLink}}` after removing
+   * `models`.
+   * @method remove
+   * @override
+   */
+  fn.remove = function (models, options) {
+    options = options || {};
+    baseProto.remove.apply(this, arguments);
+
+    if (options.dispose) {
+      models = _.isArray(models) ? models : [models];
+      _.invoke(models, 'dispose');
+    }
   };
 
   _.extend(fn, mixins);
@@ -19437,32 +19502,26 @@ define('lateralus/lateralus.component',[
    * memory.  Also remove any nested components added by `{{#crossLink
    * "Lateralus.mixins/addComponent"}}{{/crossLink}}`.
    * @method dispose
-   * @chainable
    */
   fn.dispose = function () {
-    this.trigger('beforeDispose');
+    _(this).lateralusDispose(_.bind(function () {
+      if (this.view) {
+        this.view.dispose();
+      }
 
-    if (this.view) {
-      this.view.dispose();
-    }
+      if (this.components) {
+        _.invoke(this.components, 'dispose');
+      }
 
-    if (this.components) {
-      _.invoke(this.components, 'dispose');
-    }
+      var parentComponent = this.parentComponent;
+      if (parentComponent) {
+        removePropertyFromObject(this, parentComponent.components);
+      }
 
-    var parentComponent = this.parentComponent;
-    if (parentComponent) {
-      removePropertyFromObject(this, parentComponent.components);
-    }
-
-    if (_.contains(this.lateralus.components, this)) {
-      removePropertyFromObject(this, this.lateralus);
-    }
-
-    this.stopListening();
-    _(this).lateralusEmptyObject();
-
-    return this;
+      if (_.contains(this.lateralus.components, this)) {
+        removePropertyFromObject(this, this.lateralus);
+      }
+    }, this));
   };
 
   /**
@@ -19524,7 +19583,23 @@ define('lateralus/lateralus',[
         }
       }
     }
-  });
+
+    /**
+     * Perform general-purpose memory cleanup for a Lateralus/Backbone Object.
+     * @param {Object} obj
+     * @param {Fuction=} customDisposeLogic
+     */
+    ,lateralusDispose: function (obj, customDisposeLogic) {
+      obj.trigger('beforeDispose');
+
+      if (customDisposeLogic) {
+        customDisposeLogic();
+      }
+
+      obj.stopListening();
+      _(obj).lateralusEmptyObject();
+    }
+  }, { chain: false });
 
   /**
    * You should not need to call the Lateralus constructor directly, use
@@ -19689,12 +19764,11 @@ define('lateralus/lateralus',[
    * @method dispose
    */
   fn.dispose = function () {
-    if (this.components) {
-      _.invoke(this.components, 'dispose');
-    }
-
-    this.stopListening();
-    _(this).lateralusEmptyObject();
+    _(this).lateralusDispose(_.bind(function () {
+      if (this.components) {
+        _.invoke(this.components, 'dispose');
+      }
+    }, this));
   };
   fn.spiralOut = fn.dispose;
 
@@ -19717,9 +19791,9 @@ define('lateralus/lateralus',[
 
 define('lateralus', ['lateralus/lateralus'], function (main) { return main; });
 
-/*! shifty - v1.5.0 - 2015-05-31 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.5.1 - 2015-08-28 - http://jeremyckahn.github.io/shifty */
 ;(function () {
-  var root = this;
+  var root = this || Function('return this')();
 
 /*!
  * Shifty Core
@@ -19913,27 +19987,30 @@ var Tweenable = (function () {
     timeoutHandler_offset = duration - (
       timeoutHandler_endTime - timeoutHandler_currentTime);
 
-    if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
-      tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
-
-      applyFilter(tweenable, 'beforeTween');
-
-      // If the animation has not yet reached the start point (e.g., there was
-      // delay that has not yet completed), just interpolate the starting
-      // position of the tween.
-      if (timeoutHandler_currentTime < (timestamp + delay)) {
-        tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+    if (tweenable.isPlaying()) {
+      if (timeoutHandler_isEnded) {
+        step(targetState, tweenable._attachment, timeoutHandler_offset);
+        tweenable.stop(true);
       } else {
-        tweenProps(timeoutHandler_currentTime, currentState, originalState,
-          targetState, duration, timestamp + delay, easing);
+        tweenable._scheduleId =
+          schedule(tweenable._timeoutHandler, UPDATE_TIME);
+
+        applyFilter(tweenable, 'beforeTween');
+
+        // If the animation has not yet reached the start point (e.g., there was
+        // delay that has not yet completed), just interpolate the starting
+        // position of the tween.
+        if (timeoutHandler_currentTime < (timestamp + delay)) {
+          tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+        } else {
+          tweenProps(timeoutHandler_currentTime, currentState, originalState,
+            targetState, duration, timestamp + delay, easing);
+        }
+
+        applyFilter(tweenable, 'afterTween');
+
+        step(currentState, tweenable._attachment, timeoutHandler_offset);
       }
-
-      applyFilter(tweenable, 'afterTween');
-
-      step(currentState, tweenable._attachment, timeoutHandler_offset);
-    } else if (tweenable.isPlaying() && timeoutHandler_isEnded) {
-      step(targetState, tweenable._attachment, timeoutHandler_offset);
-      tweenable.stop(true);
     }
   }
 
@@ -21336,7 +21413,7 @@ var Tweenable = (function () {
 
 }).call(null);
 
-/*! rekapi - v1.5.1 - 2015-08-23 - http://rekapi.com */
+/*! rekapi - v1.5.2 - 2015-09-05 - http://rekapi.com */
 /*!
  * Rekapi - Rewritten Kapi.
  * http://rekapi.com/
@@ -22105,7 +22182,8 @@ var rekapiCore = function (root, _, Tweenable) {
       })
       .each(function (curve) {
         curves[curve.displayName] = _.pick(curve, 'x1', 'y1', 'x2', 'y2');
-      });
+      })
+      .value();
 
     exportData.curves = curves;
 
@@ -25981,6 +26059,10 @@ define('rekapi-timeline.component.scrubber/view',[
         // resizeScrubberGuide occurs.
         _.defer(this.resizeScrubberGuide.bind(this));
       }
+
+      ,'rekapi:timelineModified': function () {
+        this.syncContainerToTimelineLength();
+      }
     }
 
     ,events: {
@@ -26009,7 +26091,6 @@ define('rekapi-timeline.component.scrubber/view',[
     }
 
     ,render: function () {
-      this.syncContainerToTimelineLength();
       this.syncHandleToTimelineLength();
     }
 
@@ -26280,7 +26361,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
-      this.render();
+      this.$el.css('visibility', 'hidden');
     }
 
     ,deferredInitialize: function () {
@@ -26291,6 +26372,9 @@ define('rekapi-timeline.component.keyframe-property/view',[
       if (this.doImmediatelyFocus) {
         this.activate();
       }
+
+      this.render();
+      this.$el.css('visibility', '');
     }
 
     ,render: function () {
@@ -26521,6 +26605,10 @@ define('rekapi-timeline.component.actor-tracks/view',[
        */
       keyframePropertyTrackAdded: function (newTrackName) {
         this.addKeyframePropertyTrackComponent(newTrackName);
+      }
+
+      ,beforeDispose: function () {
+        this.component.dispose();
       }
     }
 
@@ -27678,6 +27766,12 @@ define('rekapi-timeline/models/actor',[
           this.addKeyframePropertyTrack(keyframeProperty.name);
         }
       }
+
+      ,'rekapi:removeActor': function (rekapi, actor) {
+        if (actor.id === this.id) {
+          this.dispose();
+        }
+      }
     }
 
     /**
@@ -27815,6 +27909,9 @@ define('rekapi-timeline/collections/actor',[
    * Options:
    *
    *   @param {boolean} noCursor Prevents the drag cursor from being "move"
+   *   @param {boolean} noInitialPosition Prevent setting the initial inline
+   *   styles for top, left, and position (they are set once the user begins
+   *   dragging regardless).  False by default.
    *   @param {string} axis The axis to constrain dragging to.  Either 'x' or
    *     'y'.  Disabled by default.
    *   @param {jQuery} within The jQuery'ed element's bounds to constrain the
@@ -27877,18 +27974,22 @@ define('rekapi-timeline/collections/actor',[
 
     $els.each(function (i, el) {
       var $el = $(el);
-      var position = $el.position();
-      var top = position.top;
-      var left = position.left;
 
       $el.data('isDragonEnabled', true);
 
+      if (!opts.noInitialPosition) {
+        var position = $el.position();
+        var top = position.top;
+        var left = position.left;
+
+        $el.css({
+          top: top
+          ,left: left
+          ,position: 'absolute'
+        });
+      }
+
       $el
-        .css({
-          'top': top
-          ,'left': left
-          ,'position': 'absolute'
-        })
         .data('dragon', {})
         .data('dragon-opts', opts);
 
@@ -28014,6 +28115,7 @@ define('rekapi-timeline/collections/actor',[
     // Remove the "draggable" attribute so that text within the element can be
     // selected when the element is not being dragged.
     $el.attr('draggable', 'false');
+    $el.removeClass('is-dragging');
 
     if (isTouch) {
       $doc.off('touchend', data.onTouchEnd)
@@ -28113,6 +28215,7 @@ define('rekapi-timeline/collections/actor',[
     }
 
     $el
+      .addClass('is-dragging')
       .css(ZERO_OUT_RIGHT_AND_BOTTOM)
       .offset(newCoords);
     fire('drag', $el, evt);

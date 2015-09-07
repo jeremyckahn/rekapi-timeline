@@ -460,6 +460,10 @@ define('rekapi-timeline.component.scrubber/view',[
         // resizeScrubberGuide occurs.
         _.defer(this.resizeScrubberGuide.bind(this));
       }
+
+      ,'rekapi:timelineModified': function () {
+        this.syncContainerToTimelineLength();
+      }
     }
 
     ,events: {
@@ -488,7 +492,6 @@ define('rekapi-timeline.component.scrubber/view',[
     }
 
     ,render: function () {
-      this.syncContainerToTimelineLength();
       this.syncHandleToTimelineLength();
     }
 
@@ -759,7 +762,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
-      this.render();
+      this.$el.css('visibility', 'hidden');
     }
 
     ,deferredInitialize: function () {
@@ -770,6 +773,9 @@ define('rekapi-timeline.component.keyframe-property/view',[
       if (this.doImmediatelyFocus) {
         this.activate();
       }
+
+      this.render();
+      this.$el.css('visibility', '');
     }
 
     ,render: function () {
@@ -1000,6 +1006,10 @@ define('rekapi-timeline.component.actor-tracks/view',[
        */
       keyframePropertyTrackAdded: function (newTrackName) {
         this.addKeyframePropertyTrackComponent(newTrackName);
+      }
+
+      ,beforeDispose: function () {
+        this.component.dispose();
       }
     }
 
@@ -2155,6 +2165,12 @@ define('rekapi-timeline/models/actor',[
       'rekapi:addKeyframePropertyTrack': function (rekapi, keyframeProperty) {
         if (keyframeProperty.actor.id === this.id) {
           this.addKeyframePropertyTrack(keyframeProperty.name);
+        }
+      }
+
+      ,'rekapi:removeActor': function (rekapi, actor) {
+        if (actor.id === this.id) {
+          this.dispose();
         }
       }
     }
