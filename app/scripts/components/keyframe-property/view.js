@@ -70,7 +70,7 @@ define([
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
-      this.render();
+      this.$el.css('visibility', 'hidden');
     }
 
     ,deferredInitialize: function () {
@@ -81,6 +81,9 @@ define([
       if (this.doImmediatelyFocus) {
         this.activate();
       }
+
+      this.render();
+      this.$el.css('visibility', '');
     }
 
     ,render: function () {
