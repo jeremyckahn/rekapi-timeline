@@ -30,6 +30,10 @@ define([
       keyframePropertyTrackAdded: function (newTrackName) {
         this.addKeyframePropertyTrackComponent(newTrackName);
       }
+
+      ,beforeDispose: function () {
+        this.component.dispose();
+      }
     }
 
     /**
