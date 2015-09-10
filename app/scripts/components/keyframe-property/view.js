@@ -31,6 +31,10 @@ define([
       ,drag: function () {
         this.updateKeyframeProperty();
       }
+
+      ,dragEnd: function () {
+        this.emit('keyframePropertyDragEnd');
+      }
     }
 
     ,modelEvents: {

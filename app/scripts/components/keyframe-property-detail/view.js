@@ -64,6 +64,10 @@ define([
           this.reset();
         }
       }
+
+      ,keyframePropertyDragEnd: function () {
+        this.$propertyValue.select();
+      }
     }
 
     ,events: {
@@ -122,8 +126,11 @@ define([
       this.$propertyName.text(this.keyframePropertyModel.get('name'));
       this.$propertyMillisecond.val(
         this.keyframePropertyModel.get('millisecond'));
-      this.$propertyValue.val(this.keyframePropertyModel.get('value'));
       this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
+
+      this.$propertyValue
+        .val(this.keyframePropertyModel.get('value'))
+        .select();
     }
 
     /**
