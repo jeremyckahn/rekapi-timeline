@@ -114,7 +114,6 @@ define([
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.propertyNameDefaultText = this.$propertyName.text();
-      this.lastRenderedVal = '';
 
       this.addSubview(CurveSelector.View, {
         el: this.$propertyEasing
@@ -129,10 +128,8 @@ define([
         this.keyframePropertyModel.get('millisecond'));
       this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
 
-      this.lastRenderedVal = this.keyframePropertyModel.get('value');
-
       this.$propertyValue
-        .val(this.lastRenderedVal)
+        .val(this.keyframePropertyModel.get('value'))
         .select();
     }
 
@@ -148,7 +145,7 @@ define([
       var val = $target.val();
 
       if ($.trim(val) === '') {
-        $target.val(this.lastRenderedVal);
+        $target.val(this.keyframePropertyModel.get('value'));
         return;
       }
 
@@ -166,8 +163,7 @@ define([
     ,reset: function () {
       this.$propertyName.text(this.propertyNameDefaultText);
       this.$propertyMillisecond.val('');
-      this.lastRenderedVal = '';
-      this.$propertyValue.val(this.lastRenderedVal);
+      this.$propertyValue.val('');
     }
   });
 
