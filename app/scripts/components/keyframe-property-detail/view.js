@@ -137,7 +137,9 @@ define([
      * @param {jQuery.Event} evt
      */
     ,onChangeInput: function (evt) {
-      if (!this.keyframePropertyModel) {
+      var keyframePropertyModel = this.keyframePropertyModel;
+
+      if (!keyframePropertyModel) {
         return;
       }
 
@@ -145,7 +147,8 @@ define([
       var val = $target.val();
 
       if ($.trim(val) === '') {
-        $target.val(this.keyframePropertyModel.get('value'));
+        this.$propertyValue.val(keyframePropertyModel.get('value'));
+        this.$propertyMillisecond.val(keyframePropertyModel.get('millisecond'));
         return;
       }
 
@@ -156,7 +159,7 @@ define([
       // jshint eqeqeq: false
       var coercedVal = val == +val ? +val : val;
 
-      this.keyframePropertyModel.set($target.attr('name'), coercedVal);
+      keyframePropertyModel.set($target.attr('name'), coercedVal);
       this.lateralus.update();
     }
 
