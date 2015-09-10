@@ -121,6 +121,8 @@ define([
     }
 
     ,render: function () {
+      var activeElement = document.activeElement;
+
       // TODO: It would be nice if the template could be declaratively bound to
       // the model, rather than having to make DOM updates imperatively here.
       this.$propertyName.text(this.keyframePropertyModel.get('name'));
@@ -131,6 +133,12 @@ define([
       this.$propertyValue
         .val(this.keyframePropertyModel.get('value'))
         .select();
+
+      // Prevent $propertyMillisecond from losing focus, thereby enabling
+      // browser-standard keyup/keydown functionality to mostly work
+      if (activeElement === this.$propertyMillisecond[0]) {
+        this.$propertyMillisecond.focus();
+      }
     }
 
     /**
