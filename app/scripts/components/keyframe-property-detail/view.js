@@ -114,6 +114,7 @@ define([
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.propertyNameDefaultText = this.$propertyName.text();
+      this.lastRenderedVal = '';
 
       this.addSubview(CurveSelector.View, {
         el: this.$propertyEasing
@@ -128,8 +129,10 @@ define([
         this.keyframePropertyModel.get('millisecond'));
       this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
 
+      this.lastRenderedVal = this.keyframePropertyModel.get('value');
+
       this.$propertyValue
-        .val(this.keyframePropertyModel.get('value'))
+        .val(this.lastRenderedVal)
         .select();
     }
 
@@ -143,6 +146,11 @@ define([
 
       var $target = $(evt.target);
       var val = $target.val();
+
+      if ($.trim(val) === '') {
+        $target.val(this.lastRenderedVal);
+        return;
+      }
 
       // If the inputted value string can be coerced into an equivalent Number,
       // do it.  Keyframe property values are initially set up as numbers, and
@@ -158,7 +166,8 @@ define([
     ,reset: function () {
       this.$propertyName.text(this.propertyNameDefaultText);
       this.$propertyMillisecond.val('');
-      this.$propertyValue.val('');
+      this.lastRenderedVal = '';
+      this.$propertyValue.val(this.lastRenderedVal);
     }
   });
 
