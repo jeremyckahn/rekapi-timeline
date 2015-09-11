@@ -18087,7 +18087,7 @@ define('lateralus/lateralus.model',[
    * @param {Lateralus} lateralus
    * @param {Object} [attributes]
    * @param {Object} [options]
-   * @extends {Backbone.Model}
+   * @extends Backbone.Model
    * @uses Lateralus.mixins
    * @constructor
    */
@@ -19093,6 +19093,9 @@ define('lateralus/lateralus.component.model',[
 ) {
   'use strict';
 
+  var Base = Backbone.Model;
+  var baseProto = Base.prototype;
+
   var fn = {
     /**
      * The constructor for this class should not be called by application code,
@@ -19126,11 +19129,50 @@ define('lateralus/lateralus.component.model',[
       this.delegateLateralusEvents();
       Backbone.Model.call(this, attributes, options);
     }
+
+    /**
+     * Lateralus-compatible override for
+     * [Backbone.Model#destroy](http://backbonejs.org/#Model-destroy).
+     * @param {Object} [options] This object is also passed to
+     * [Backbone.Model.#destroy](http://backbonejs.org/#Model-destroy).
+     * @param {boolean} [options.dispose] If true, call `{{#crossLink
+     * "Lateralus.Component.Model/dispose:method"}}{{/crossLink}}` after
+     * `destroy` operations are complete.
+     * @method destroy
+     * @override
+     */
+    ,destroy: function (options) {
+      options = options || {};
+      var dispose = options.dispose;
+      options.dispose = false;
+
+      baseProto.destroy.apply(this, arguments);
+
+      if (dispose) {
+        this.dispose();
+      }
+    }
+
+    /**
+     * Remove this `{{#crossLink "Lateralus.Component.Model"}}{{/crossLink}}`
+     * from memory.  Also remove this `{{#crossLink
+     * "Lateralus.Component.Model"}}{{/crossLink}}` from the `{{#crossLink
+     * "Lateralus.Component.Collection"}}{{/crossLink}}` to which it belongs,
+     * if any.
+     * @method dispose
+     */
+    ,dispose: function () {
+      _(this).lateralusDispose(_.bind(function () {
+        if (this.collection) {
+          this.collection.remove(this);
+        }
+      }, this));
+    }
   };
 
   _.extend(fn, mixins);
 
-  var ComponentModel = Backbone.Model.extend(fn);
+  var ComponentModel = Base.extend(fn);
 
   /**
    * @method toString
@@ -19193,6 +19235,29 @@ define('lateralus/lateralus.component.collection',[
     });
 
     return baseProto.set.call(this, models, augmentedOptions);
+  };
+
+  /**
+   * Remove a `{{#crossLink "Lateralus.Component.Model"}}{{/crossLink}}` or
+   * array of `{{#crossLink "Lateralus.Component.Model"}}{{/crossLink}}`s from
+   * this collection.
+   * @param {Array.(Lateralus.Component.Model)|Lateralus.Component.Model} models
+   * @param {Object} [options] This object is also passed to
+   * [Backbone.Collection.#remove](http://backbonejs.org/#Collection-remove).
+   * @param {boolean} [options.dispose] If true, call `{{#crossLink
+   * "Lateralus.Component.Model/dispose:method"}}{{/crossLink}}` after removing
+   * `models`.
+   * @method remove
+   * @override
+   */
+  fn.remove = function (models, options) {
+    options = options || {};
+    baseProto.remove.apply(this, arguments);
+
+    if (options.dispose) {
+      models = _.isArray(models) ? models : [models];
+      _.invoke(models, 'dispose');
+    }
   };
 
   _.extend(fn, mixins);
@@ -19437,32 +19502,26 @@ define('lateralus/lateralus.component',[
    * memory.  Also remove any nested components added by `{{#crossLink
    * "Lateralus.mixins/addComponent"}}{{/crossLink}}`.
    * @method dispose
-   * @chainable
    */
   fn.dispose = function () {
-    this.trigger('beforeDispose');
+    _(this).lateralusDispose(_.bind(function () {
+      if (this.view) {
+        this.view.dispose();
+      }
 
-    if (this.view) {
-      this.view.dispose();
-    }
+      if (this.components) {
+        _.invoke(this.components, 'dispose');
+      }
 
-    if (this.components) {
-      _.invoke(this.components, 'dispose');
-    }
+      var parentComponent = this.parentComponent;
+      if (parentComponent) {
+        removePropertyFromObject(this, parentComponent.components);
+      }
 
-    var parentComponent = this.parentComponent;
-    if (parentComponent) {
-      removePropertyFromObject(this, parentComponent.components);
-    }
-
-    if (_.contains(this.lateralus.components, this)) {
-      removePropertyFromObject(this, this.lateralus);
-    }
-
-    this.stopListening();
-    _(this).lateralusEmptyObject();
-
-    return this;
+      if (_.contains(this.lateralus.components, this)) {
+        removePropertyFromObject(this, this.lateralus);
+      }
+    }, this));
   };
 
   /**
@@ -19524,7 +19583,23 @@ define('lateralus/lateralus',[
         }
       }
     }
-  });
+
+    /**
+     * Perform general-purpose memory cleanup for a Lateralus/Backbone Object.
+     * @param {Object} obj
+     * @param {Fuction=} customDisposeLogic
+     */
+    ,lateralusDispose: function (obj, customDisposeLogic) {
+      obj.trigger('beforeDispose');
+
+      if (customDisposeLogic) {
+        customDisposeLogic();
+      }
+
+      obj.stopListening();
+      _(obj).lateralusEmptyObject();
+    }
+  }, { chain: false });
 
   /**
    * You should not need to call the Lateralus constructor directly, use
@@ -19689,12 +19764,11 @@ define('lateralus/lateralus',[
    * @method dispose
    */
   fn.dispose = function () {
-    if (this.components) {
-      _.invoke(this.components, 'dispose');
-    }
-
-    this.stopListening();
-    _(this).lateralusEmptyObject();
+    _(this).lateralusDispose(_.bind(function () {
+      if (this.components) {
+        _.invoke(this.components, 'dispose');
+      }
+    }, this));
   };
   fn.spiralOut = fn.dispose;
 
@@ -19717,9 +19791,9 @@ define('lateralus/lateralus',[
 
 define('lateralus', ['lateralus/lateralus'], function (main) { return main; });
 
-/*! shifty - v1.5.0 - 2015-05-31 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.5.1 - 2015-08-28 - http://jeremyckahn.github.io/shifty */
 ;(function () {
-  var root = this;
+  var root = this || Function('return this')();
 
 /*!
  * Shifty Core
@@ -19913,27 +19987,30 @@ var Tweenable = (function () {
     timeoutHandler_offset = duration - (
       timeoutHandler_endTime - timeoutHandler_currentTime);
 
-    if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
-      tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
-
-      applyFilter(tweenable, 'beforeTween');
-
-      // If the animation has not yet reached the start point (e.g., there was
-      // delay that has not yet completed), just interpolate the starting
-      // position of the tween.
-      if (timeoutHandler_currentTime < (timestamp + delay)) {
-        tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+    if (tweenable.isPlaying()) {
+      if (timeoutHandler_isEnded) {
+        step(targetState, tweenable._attachment, timeoutHandler_offset);
+        tweenable.stop(true);
       } else {
-        tweenProps(timeoutHandler_currentTime, currentState, originalState,
-          targetState, duration, timestamp + delay, easing);
+        tweenable._scheduleId =
+          schedule(tweenable._timeoutHandler, UPDATE_TIME);
+
+        applyFilter(tweenable, 'beforeTween');
+
+        // If the animation has not yet reached the start point (e.g., there was
+        // delay that has not yet completed), just interpolate the starting
+        // position of the tween.
+        if (timeoutHandler_currentTime < (timestamp + delay)) {
+          tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
+        } else {
+          tweenProps(timeoutHandler_currentTime, currentState, originalState,
+            targetState, duration, timestamp + delay, easing);
+        }
+
+        applyFilter(tweenable, 'afterTween');
+
+        step(currentState, tweenable._attachment, timeoutHandler_offset);
       }
-
-      applyFilter(tweenable, 'afterTween');
-
-      step(currentState, tweenable._attachment, timeoutHandler_offset);
-    } else if (tweenable.isPlaying() && timeoutHandler_isEnded) {
-      step(targetState, tweenable._attachment, timeoutHandler_offset);
-      tweenable.stop(true);
     }
   }
 
@@ -21336,7 +21413,7 @@ var Tweenable = (function () {
 
 }).call(null);
 
-/*! rekapi - v1.4.9 - 2015-07-25 - http://rekapi.com */
+/*! rekapi - v1.5.2 - 2015-09-05 - http://rekapi.com */
 /*!
  * Rekapi - Rewritten Kapi.
  * http://rekapi.com/
@@ -22105,7 +22182,8 @@ var rekapiCore = function (root, _, Tweenable) {
       })
       .each(function (curve) {
         curves[curve.displayName] = _.pick(curve, 'x1', 'y1', 'x2', 'y2');
-      });
+      })
+      .value();
 
     exportData.curves = curves;
 
@@ -23699,7 +23777,10 @@ rekapiModules.push(function (context) {
     'scale',
     'scaleX',
     'scaleY',
+    'perspective',
     'rotate',
+    'rotateX',
+    'rotateY',
     'skewX',
     'skewY'];
 
@@ -24253,12 +24334,6 @@ rekapiModules.push(function (context) {
    *
    * This example and the one above it are equivalent.
    *
-   * __Note__: The decoupled form of `transform` animations is not supported in
-   * CSS `@keyframe` animations, only inline style animations.  This is due to
-   * the tightly-coupled nature of the CSS `@keyframes` spec.  If you intend to
-   * play a CSS-based `@keyframe` animation, __do not__ use the non-standard
-   * decoupled API form for `transform` properties.
-   *
    * @method setActorTransformOrder
    * @param {Rekapi.Actor} actor
    * @param {Array(string)} orderedTransforms The array of transform names.
@@ -24583,14 +24658,25 @@ rekapiModules.push(function (context) {
 
     var animationName = printf('  %sanimation-name:', [prefix]);
 
-    var tracks = actor.getTrackNames();
-
     if (combineProperties) {
       animationName += printf(' %s-keyframes;', [animName]);
     } else {
-      _.each(tracks, function (trackName) {
+      var tracks = actor.getTrackNames();
+      var transformTracksToCombine = _.intersection(tracks, transformFunctions);
+      var nonTransformTracks = _.difference(tracks, transformFunctions);
+
+      var trackNamesToPrint;
+      if (transformTracksToCombine.length) {
+        trackNamesToPrint = nonTransformTracks;
+        trackNamesToPrint.push('transform');
+      } else {
+        trackNamesToPrint = tracks;
+      }
+
+      _.each(trackNamesToPrint, function (trackName) {
         animationName += printf(' %s-%s-keyframes,', [animName, trackName]);
       });
+
       animationName = animationName.slice(0, animationName.length - 1);
       animationName += ';';
     }
@@ -24719,7 +24805,11 @@ rekapiModules.push(function (context) {
    * @return {boolean}
    */
   function canOptimizeAnyKeyframeProperties (actor) {
-    return _.any(actor._keyframeProperties, canOptimizeKeyframeProperty);
+    var keyframeProperties = actor._keyframeProperties;
+    var propertyNames = _.keys(actor._propertyTracks);
+
+    return _.any(keyframeProperties, canOptimizeKeyframeProperty) &&
+      !_.intersection(propertyNames, transformFunctions).length;
   }
 
   /*!
@@ -24954,6 +25044,35 @@ rekapiModules.push(function (context) {
     return segment;
   }
 
+  /**
+   * @param {Object} propsToSerialize
+   * @param {Array.<string>} transformNames
+   * @return {Object}
+   */
+  function combineTranfromProperties (propsToSerialize, transformNames) {
+    var transformProps =
+      _.pick.apply(_, [propsToSerialize].concat(transformFunctions));
+
+    if (_.isEmpty(transformProps)) {
+      return propsToSerialize;
+    } else {
+      var serializedProps = _.clone(propsToSerialize);
+      serializedProps[TRANSFORM_TOKEN] = [];
+
+      _.each(transformNames, function (transformFunction) {
+        if (_.has(serializedProps, transformFunction)) {
+          serializedProps[TRANSFORM_TOKEN].push(
+            transformFunction + '(' + serializedProps[transformFunction] + ')');
+          delete serializedProps[transformFunction];
+        }
+      });
+
+      serializedProps[TRANSFORM_TOKEN] = serializedProps[TRANSFORM_TOKEN].join(' ');
+
+      return serializedProps;
+    }
+  }
+
   /*!
    * @param {Rekapi.Actor} actor
    * @param {string=} opt_targetProp
@@ -24974,8 +25093,11 @@ rekapiModules.push(function (context) {
       propsToSerialize = actor.get();
     }
 
+    var combinedPropsToSerialize =
+      combineTranfromProperties(propsToSerialize, actor._transformOrder);
+
     var printVal;
-    _.each(propsToSerialize, function (val, key) {
+    _.each(combinedPropsToSerialize, function (val, key) {
       printVal = val;
       var printKey = key;
 
@@ -25003,6 +25125,7 @@ rekapiModules.push(function (context) {
       ,'generateCSSAnimationProperties': generateCSSAnimationProperties
       ,'generateActorKeyframes': generateActorKeyframes
       ,'generateActorTrackSegment': generateActorTrackSegment
+      ,'combineTranfromProperties': combineTranfromProperties
       ,'serializeActorStep': serializeActorStep
       ,'generateAnimationNameProperty': generateAnimationNameProperty
       ,'generateAnimationDurationProperty': generateAnimationDurationProperty
@@ -25018,6 +25141,7 @@ rekapiModules.push(function (context) {
       ,'canOptimizeAnyKeyframeProperties': canOptimizeAnyKeyframeProperties
       ,'generateOptimizedKeyframeSegment': generateOptimizedKeyframeSegment
       ,'getActorCSS': getActorCSS
+      ,'transformFunctions': transformFunctions
     };
   }
 });
@@ -25528,7 +25652,8 @@ define('rekapi-timeline/constant',[],function () {
 
 define('rekapi-timeline.component.container/view',[
 
-  'lateralus'
+  'jquery'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
@@ -25536,7 +25661,8 @@ define('rekapi-timeline.component.container/view',[
 
 ], function (
 
-  Lateralus
+  $
+  ,Lateralus
 
   ,template
 
@@ -25568,6 +25694,19 @@ define('rekapi-timeline.component.container/view',[
             distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
 
         return baseMillisecond / this.lateralus.model.get('timelineScale');
+      }
+    }
+
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {string} trackName
+       */
+      'rekapi:removeKeyframePropertyTrack': function (rekapi, trackName) {
+        var currentActorModel = this.collectOne('currentActorModel');
+
+        // Remove corresponding inline styles for the removed track
+        $(currentActorModel.get('context')).css(trackName, '');
       }
     }
 
@@ -25920,6 +26059,10 @@ define('rekapi-timeline.component.scrubber/view',[
         // resizeScrubberGuide occurs.
         _.defer(this.resizeScrubberGuide.bind(this));
       }
+
+      ,'rekapi:timelineModified': function () {
+        this.syncContainerToTimelineLength();
+      }
     }
 
     ,events: {
@@ -25948,7 +26091,6 @@ define('rekapi-timeline.component.scrubber/view',[
     }
 
     ,render: function () {
-      this.syncContainerToTimelineLength();
       this.syncHandleToTimelineLength();
     }
 
@@ -26180,6 +26322,10 @@ define('rekapi-timeline.component.keyframe-property/view',[
       ,drag: function () {
         this.updateKeyframeProperty();
       }
+
+      ,dragEnd: function () {
+        this.emit('keyframePropertyDragEnd');
+      }
     }
 
     ,modelEvents: {
@@ -26219,7 +26365,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
-      this.render();
+      this.$el.css('visibility', 'hidden');
     }
 
     ,deferredInitialize: function () {
@@ -26230,6 +26376,9 @@ define('rekapi-timeline.component.keyframe-property/view',[
       if (this.doImmediatelyFocus) {
         this.activate();
       }
+
+      this.render();
+      this.$el.css('visibility', '');
     }
 
     ,render: function () {
@@ -26460,6 +26609,10 @@ define('rekapi-timeline.component.actor-tracks/view',[
        */
       keyframePropertyTrackAdded: function (newTrackName) {
         this.addKeyframePropertyTrackComponent(newTrackName);
+      }
+
+      ,beforeDispose: function () {
+        this.component.dispose();
       }
     }
 
@@ -26770,6 +26923,123 @@ define('rekapi-timeline.component.keyframe-property-detail/model',[
 
 define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
 
+
+define('text!aenima.component.curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
+
+define('aenima.constant',[],function () {
+  'use strict';
+
+  return {
+    CUSTOM_CURVE_PREFIX: 'customCurve'
+    ,NEW_KEYFRAME_MS_INCREASE: 1000
+    ,NEW_KEYFRAME_X_INCREASE: 200
+  };
+});
+
+define('aenima.component.curve-selector/view',[
+
+  'underscore'
+  ,'lateralus'
+  ,'shifty'
+
+  ,'text!./template.mustache'
+
+  ,'aenima.constant'
+
+], function (
+
+  _
+  ,Lateralus
+  ,Tweenable
+
+  ,template
+
+  ,aenimaConstant
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.View;
+  var baseProto = Base.prototype;
+
+  var CurveSelectorComponentView = Base.extend({
+    template: template
+
+    ,lateralusEvents: {
+      tweenableCurveCreated: function () {
+        this.render();
+      }
+    }
+
+    /**
+     * @param {Object} [options] See http://backbonejs.org/#View-constructor
+     * @param {boolean=} [options.onlyShowCustomCurves]
+     */
+    ,initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+    }
+
+    ,render: function () {
+      var currentValue = this.$el.val();
+      this.renderTemplate();
+      this.$el.val(currentValue);
+    }
+
+    ,getTemplateRenderData: function () {
+      var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
+
+      _.extend(renderData, {
+        curves: this.getCurveList()
+      });
+
+      return renderData;
+    }
+
+    /**
+     * @param {Array.<string>}
+     */
+    ,getCurveList: function () {
+      var fullList = Object.keys(Tweenable.prototype.formula);
+      return this.onlyShowCustomCurves ?
+        fullList.filter(function (curve) {
+          return curve.match(aenimaConstant.CUSTOM_CURVE_PREFIX);
+        }) : fullList;
+    }
+  });
+
+  return CurveSelectorComponentView;
+});
+
+define('aenima.component.curve-selector/main',[
+
+  'lateralus'
+
+  ,'./view'
+  ,'text!./template.mustache'
+
+], function (
+
+  Lateralus
+
+  ,View
+  ,template
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component;
+
+  var CurveSelectorComponent = Base.extend({
+    name: 'curve-selector'
+    ,View: View
+    ,template: template
+  });
+
+  return CurveSelectorComponent;
+});
+
+define('aenima.component.curve-selector', ['aenima.component.curve-selector/main'], function (main) { return main; });
+
 define('rekapi-timeline.component.keyframe-property-detail/view',[
 
   'underscore'
@@ -26777,6 +27047,8 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
   ,'shifty'
 
   ,'text!./template.mustache'
+
+  ,'aenima.component.curve-selector'
 
   ,'rekapi-timeline/constant'
 
@@ -26787,6 +27059,8 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
   ,Tweenable
 
   ,template
+
+  ,CurveSelector
 
   ,constant
 
@@ -26819,10 +27093,6 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           inputs.push(option);
         }, this);
 
-        this.$propertyEasing.children().remove();
-        this.$propertyEasing.append(inputs).val(
-          this.keyframePropertyModel.get('easing'));
-
         this.render();
       }
 
@@ -26835,6 +27105,10 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           this.keyframePropertyModel = null;
           this.reset();
         }
+      }
+
+      ,keyframePropertyDragEnd: function () {
+        this.$propertyValue.select();
       }
     }
 
@@ -26882,27 +27156,51 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.propertyNameDefaultText = this.$propertyName.text();
+
+      this.addSubview(CurveSelector.View, {
+        el: this.$propertyEasing
+      });
     }
 
     ,render: function () {
+      var activeElement = document.activeElement;
+
       // TODO: It would be nice if the template could be declaratively bound to
       // the model, rather than having to make DOM updates imperatively here.
       this.$propertyName.text(this.keyframePropertyModel.get('name'));
       this.$propertyMillisecond.val(
         this.keyframePropertyModel.get('millisecond'));
-      this.$propertyValue.val(this.keyframePropertyModel.get('value'));
+      this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
+
+      this.$propertyValue
+        .val(this.keyframePropertyModel.get('value'))
+        .select();
+
+      // Prevent $propertyMillisecond from losing focus, thereby enabling
+      // browser-standard keyup/keydown functionality to mostly work
+      if (activeElement === this.$propertyMillisecond[0]) {
+        this.$propertyMillisecond.focus();
+      }
     }
 
     /**
      * @param {jQuery.Event} evt
      */
     ,onChangeInput: function (evt) {
-      if (!this.keyframePropertyModel) {
+      var keyframePropertyModel = this.keyframePropertyModel;
+
+      if (!keyframePropertyModel) {
         return;
       }
 
       var $target = $(evt.target);
       var val = $target.val();
+
+      if ($.trim(val) === '') {
+        this.$propertyValue.val(keyframePropertyModel.get('value'));
+        this.$propertyMillisecond.val(keyframePropertyModel.get('millisecond'));
+        return;
+      }
 
       // If the inputted value string can be coerced into an equivalent Number,
       // do it.  Keyframe property values are initially set up as numbers, and
@@ -26911,7 +27209,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
       // jshint eqeqeq: false
       var coercedVal = val == +val ? +val : val;
 
-      this.keyframePropertyModel.set($target.attr('name'), coercedVal);
+      keyframePropertyModel.set($target.attr('name'), coercedVal);
       this.lateralus.update();
     }
 
@@ -27179,7 +27477,7 @@ define('rekapi-timeline.component.container/main',[
   var Base = Lateralus.Component;
 
   var ContainerComponent = Base.extend({
-    name: 'container'
+    name: 'rekapi-timeline-container'
     ,Model: Model
     ,View: View
     ,template: template
@@ -27495,6 +27793,12 @@ define('rekapi-timeline/models/actor',[
           this.addKeyframePropertyTrack(keyframeProperty.name);
         }
       }
+
+      ,'rekapi:removeActor': function (rekapi, actor) {
+        if (actor.id === this.id) {
+          this.dispose();
+        }
+      }
     }
 
     /**
@@ -27632,6 +27936,9 @@ define('rekapi-timeline/collections/actor',[
    * Options:
    *
    *   @param {boolean} noCursor Prevents the drag cursor from being "move"
+   *   @param {boolean} noInitialPosition Prevent setting the initial inline
+   *   styles for top, left, and position (they are set once the user begins
+   *   dragging regardless).  False by default.
    *   @param {string} axis The axis to constrain dragging to.  Either 'x' or
    *     'y'.  Disabled by default.
    *   @param {jQuery} within The jQuery'ed element's bounds to constrain the
@@ -27694,18 +28001,22 @@ define('rekapi-timeline/collections/actor',[
 
     $els.each(function (i, el) {
       var $el = $(el);
-      var position = $el.position();
-      var top = position.top;
-      var left = position.left;
 
       $el.data('isDragonEnabled', true);
 
+      if (!opts.noInitialPosition) {
+        var position = $el.position();
+        var top = position.top;
+        var left = position.left;
+
+        $el.css({
+          top: top
+          ,left: left
+          ,position: 'absolute'
+        });
+      }
+
       $el
-        .css({
-          'top': top
-          ,'left': left
-          ,'position': 'absolute'
-        })
         .data('dragon', {})
         .data('dragon-opts', opts);
 
@@ -27831,6 +28142,7 @@ define('rekapi-timeline/collections/actor',[
     // Remove the "draggable" attribute so that text within the element can be
     // selected when the element is not being dragged.
     $el.attr('draggable', 'false');
+    $el.removeClass('is-dragging');
 
     if (isTouch) {
       $doc.off('touchend', data.onTouchEnd)
@@ -27930,6 +28242,7 @@ define('rekapi-timeline/collections/actor',[
     }
 
     $el
+      .addClass('is-dragging')
       .css(ZERO_OUT_RIGHT_AND_BOTTOM)
       .offset(newCoords);
     fire('drag', $el, evt);

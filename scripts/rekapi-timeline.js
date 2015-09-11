@@ -53,7 +53,8 @@ define('rekapi-timeline/constant',[],function () {
 
 define('rekapi-timeline.component.container/view',[
 
-  'lateralus'
+  'jquery'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
@@ -61,7 +62,8 @@ define('rekapi-timeline.component.container/view',[
 
 ], function (
 
-  Lateralus
+  $
+  ,Lateralus
 
   ,template
 
@@ -93,6 +95,19 @@ define('rekapi-timeline.component.container/view',[
             distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
 
         return baseMillisecond / this.lateralus.model.get('timelineScale');
+      }
+    }
+
+    ,lateralusEvents: {
+      /**
+       * @param {Rekapi} rekapi
+       * @param {string} trackName
+       */
+      'rekapi:removeKeyframePropertyTrack': function (rekapi, trackName) {
+        var currentActorModel = this.collectOne('currentActorModel');
+
+        // Remove corresponding inline styles for the removed track
+        $(currentActorModel.get('context')).css(trackName, '');
       }
     }
 
@@ -445,6 +460,10 @@ define('rekapi-timeline.component.scrubber/view',[
         // resizeScrubberGuide occurs.
         _.defer(this.resizeScrubberGuide.bind(this));
       }
+
+      ,'rekapi:timelineModified': function () {
+        this.syncContainerToTimelineLength();
+      }
     }
 
     ,events: {
@@ -473,7 +492,6 @@ define('rekapi-timeline.component.scrubber/view',[
     }
 
     ,render: function () {
-      this.syncContainerToTimelineLength();
       this.syncHandleToTimelineLength();
     }
 
@@ -705,6 +723,10 @@ define('rekapi-timeline.component.keyframe-property/view',[
       ,drag: function () {
         this.updateKeyframeProperty();
       }
+
+      ,dragEnd: function () {
+        this.emit('keyframePropertyDragEnd');
+      }
     }
 
     ,modelEvents: {
@@ -744,7 +766,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
-      this.render();
+      this.$el.css('visibility', 'hidden');
     }
 
     ,deferredInitialize: function () {
@@ -755,6 +777,9 @@ define('rekapi-timeline.component.keyframe-property/view',[
       if (this.doImmediatelyFocus) {
         this.activate();
       }
+
+      this.render();
+      this.$el.css('visibility', '');
     }
 
     ,render: function () {
@@ -985,6 +1010,10 @@ define('rekapi-timeline.component.actor-tracks/view',[
        */
       keyframePropertyTrackAdded: function (newTrackName) {
         this.addKeyframePropertyTrackComponent(newTrackName);
+      }
+
+      ,beforeDispose: function () {
+        this.component.dispose();
       }
     }
 
@@ -1295,6 +1324,123 @@ define('rekapi-timeline.component.keyframe-property-detail/model',[
 
 define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
 
+
+define('text!aenima.component.curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
+
+define('aenima.constant',[],function () {
+  'use strict';
+
+  return {
+    CUSTOM_CURVE_PREFIX: 'customCurve'
+    ,NEW_KEYFRAME_MS_INCREASE: 1000
+    ,NEW_KEYFRAME_X_INCREASE: 200
+  };
+});
+
+define('aenima.component.curve-selector/view',[
+
+  'underscore'
+  ,'lateralus'
+  ,'shifty'
+
+  ,'text!./template.mustache'
+
+  ,'aenima.constant'
+
+], function (
+
+  _
+  ,Lateralus
+  ,Tweenable
+
+  ,template
+
+  ,aenimaConstant
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.View;
+  var baseProto = Base.prototype;
+
+  var CurveSelectorComponentView = Base.extend({
+    template: template
+
+    ,lateralusEvents: {
+      tweenableCurveCreated: function () {
+        this.render();
+      }
+    }
+
+    /**
+     * @param {Object} [options] See http://backbonejs.org/#View-constructor
+     * @param {boolean=} [options.onlyShowCustomCurves]
+     */
+    ,initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+    }
+
+    ,render: function () {
+      var currentValue = this.$el.val();
+      this.renderTemplate();
+      this.$el.val(currentValue);
+    }
+
+    ,getTemplateRenderData: function () {
+      var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
+
+      _.extend(renderData, {
+        curves: this.getCurveList()
+      });
+
+      return renderData;
+    }
+
+    /**
+     * @param {Array.<string>}
+     */
+    ,getCurveList: function () {
+      var fullList = Object.keys(Tweenable.prototype.formula);
+      return this.onlyShowCustomCurves ?
+        fullList.filter(function (curve) {
+          return curve.match(aenimaConstant.CUSTOM_CURVE_PREFIX);
+        }) : fullList;
+    }
+  });
+
+  return CurveSelectorComponentView;
+});
+
+define('aenima.component.curve-selector/main',[
+
+  'lateralus'
+
+  ,'./view'
+  ,'text!./template.mustache'
+
+], function (
+
+  Lateralus
+
+  ,View
+  ,template
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component;
+
+  var CurveSelectorComponent = Base.extend({
+    name: 'curve-selector'
+    ,View: View
+    ,template: template
+  });
+
+  return CurveSelectorComponent;
+});
+
+define('aenima.component.curve-selector', ['aenima.component.curve-selector/main'], function (main) { return main; });
+
 define('rekapi-timeline.component.keyframe-property-detail/view',[
 
   'underscore'
@@ -1302,6 +1448,8 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
   ,'shifty'
 
   ,'text!./template.mustache'
+
+  ,'aenima.component.curve-selector'
 
   ,'rekapi-timeline/constant'
 
@@ -1312,6 +1460,8 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
   ,Tweenable
 
   ,template
+
+  ,CurveSelector
 
   ,constant
 
@@ -1344,10 +1494,6 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           inputs.push(option);
         }, this);
 
-        this.$propertyEasing.children().remove();
-        this.$propertyEasing.append(inputs).val(
-          this.keyframePropertyModel.get('easing'));
-
         this.render();
       }
 
@@ -1360,6 +1506,10 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           this.keyframePropertyModel = null;
           this.reset();
         }
+      }
+
+      ,keyframePropertyDragEnd: function () {
+        this.$propertyValue.select();
       }
     }
 
@@ -1407,27 +1557,51 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.propertyNameDefaultText = this.$propertyName.text();
+
+      this.addSubview(CurveSelector.View, {
+        el: this.$propertyEasing
+      });
     }
 
     ,render: function () {
+      var activeElement = document.activeElement;
+
       // TODO: It would be nice if the template could be declaratively bound to
       // the model, rather than having to make DOM updates imperatively here.
       this.$propertyName.text(this.keyframePropertyModel.get('name'));
       this.$propertyMillisecond.val(
         this.keyframePropertyModel.get('millisecond'));
-      this.$propertyValue.val(this.keyframePropertyModel.get('value'));
+      this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
+
+      this.$propertyValue
+        .val(this.keyframePropertyModel.get('value'))
+        .select();
+
+      // Prevent $propertyMillisecond from losing focus, thereby enabling
+      // browser-standard keyup/keydown functionality to mostly work
+      if (activeElement === this.$propertyMillisecond[0]) {
+        this.$propertyMillisecond.focus();
+      }
     }
 
     /**
      * @param {jQuery.Event} evt
      */
     ,onChangeInput: function (evt) {
-      if (!this.keyframePropertyModel) {
+      var keyframePropertyModel = this.keyframePropertyModel;
+
+      if (!keyframePropertyModel) {
         return;
       }
 
       var $target = $(evt.target);
       var val = $target.val();
+
+      if ($.trim(val) === '') {
+        this.$propertyValue.val(keyframePropertyModel.get('value'));
+        this.$propertyMillisecond.val(keyframePropertyModel.get('millisecond'));
+        return;
+      }
 
       // If the inputted value string can be coerced into an equivalent Number,
       // do it.  Keyframe property values are initially set up as numbers, and
@@ -1436,7 +1610,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
       // jshint eqeqeq: false
       var coercedVal = val == +val ? +val : val;
 
-      this.keyframePropertyModel.set($target.attr('name'), coercedVal);
+      keyframePropertyModel.set($target.attr('name'), coercedVal);
       this.lateralus.update();
     }
 
@@ -1704,7 +1878,7 @@ define('rekapi-timeline.component.container/main',[
   var Base = Lateralus.Component;
 
   var ContainerComponent = Base.extend({
-    name: 'container'
+    name: 'rekapi-timeline-container'
     ,Model: Model
     ,View: View
     ,template: template
@@ -2018,6 +2192,12 @@ define('rekapi-timeline/models/actor',[
       'rekapi:addKeyframePropertyTrack': function (rekapi, keyframeProperty) {
         if (keyframeProperty.actor.id === this.id) {
           this.addKeyframePropertyTrack(keyframeProperty.name);
+        }
+      }
+
+      ,'rekapi:removeActor': function (rekapi, actor) {
+        if (actor.id === this.id) {
+          this.dispose();
         }
       }
     }
