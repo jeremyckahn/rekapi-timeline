@@ -723,6 +723,10 @@ define('rekapi-timeline.component.keyframe-property/view',[
       ,drag: function () {
         this.updateKeyframeProperty();
       }
+
+      ,dragEnd: function () {
+        this.emit('keyframePropertyDragEnd');
+      }
     }
 
     ,modelEvents: {
@@ -1503,6 +1507,10 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           this.reset();
         }
       }
+
+      ,keyframePropertyDragEnd: function () {
+        this.$propertyValue.select();
+      }
     }
 
     ,events: {
@@ -1556,25 +1564,44 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
     }
 
     ,render: function () {
+      var activeElement = document.activeElement;
+
       // TODO: It would be nice if the template could be declaratively bound to
       // the model, rather than having to make DOM updates imperatively here.
       this.$propertyName.text(this.keyframePropertyModel.get('name'));
       this.$propertyMillisecond.val(
         this.keyframePropertyModel.get('millisecond'));
-      this.$propertyValue.val(this.keyframePropertyModel.get('value'));
       this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
+
+      this.$propertyValue
+        .val(this.keyframePropertyModel.get('value'))
+        .select();
+
+      // Prevent $propertyMillisecond from losing focus, thereby enabling
+      // browser-standard keyup/keydown functionality to mostly work
+      if (activeElement === this.$propertyMillisecond[0]) {
+        this.$propertyMillisecond.focus();
+      }
     }
 
     /**
      * @param {jQuery.Event} evt
      */
     ,onChangeInput: function (evt) {
-      if (!this.keyframePropertyModel) {
+      var keyframePropertyModel = this.keyframePropertyModel;
+
+      if (!keyframePropertyModel) {
         return;
       }
 
       var $target = $(evt.target);
       var val = $target.val();
+
+      if ($.trim(val) === '') {
+        this.$propertyValue.val(keyframePropertyModel.get('value'));
+        this.$propertyMillisecond.val(keyframePropertyModel.get('millisecond'));
+        return;
+      }
 
       // If the inputted value string can be coerced into an equivalent Number,
       // do it.  Keyframe property values are initially set up as numbers, and
@@ -1583,7 +1610,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
       // jshint eqeqeq: false
       var coercedVal = val == +val ? +val : val;
 
-      this.keyframePropertyModel.set($target.attr('name'), coercedVal);
+      keyframePropertyModel.set($target.attr('name'), coercedVal);
       this.lateralus.update();
     }
 
