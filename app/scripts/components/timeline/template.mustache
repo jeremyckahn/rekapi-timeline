@@ -5,6 +5,15 @@
     <button class="icon-button add" title="Add a new property to animate">
       <i class="glyphicon glyphicon-plus"></i>
     </button>
+    {{#supportedPropertiesAreRestricted}}
+    <select class="$newTrackName new-track-name">
+      {{#supportedProperties}}
+      <option>{{.}}</option>
+      {{/supportedProperties}}
+    </select>
+    {{/supportedPropertiesAreRestricted}}
+    {{^supportedPropertiesAreRestricted}}
     <input class="$newTrackName new-track-name" value="newProperty"></input>
+    {{/supportedPropertiesAreRestricted}}
   </div>
 </div>

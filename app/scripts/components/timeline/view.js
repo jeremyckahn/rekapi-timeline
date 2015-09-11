@@ -1,6 +1,7 @@
 define([
 
-  'lateralus'
+  'underscore'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
@@ -8,7 +9,8 @@ define([
 
 ], function (
 
-  Lateralus
+  _
+  ,Lateralus
 
   ,template
 
@@ -57,6 +59,20 @@ define([
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.updateWrapperWidth();
+    }
+
+    /**
+     * @override
+     */
+    ,getTemplateRenderData: function () {
+      var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
+
+      _.extend(renderData, {
+        supportedPropertiesAreRestricted:
+          !!this.lateralus.model.get('supportedProperties').length
+      });
+
+      return renderData;
     }
 
     /**

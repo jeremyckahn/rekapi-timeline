@@ -31,17 +31,22 @@ define([
   /**
    * @param {Element} el
    * @param {Rekapi} rekapi The Rekapi instance that this widget represents.
+   * @param {Object} config
+   * @param {Array.<string>=} [config.supportedProperties]
    * @extends {Lateralus}
    * @constructor
    */
-  var RekapiTimeline = Lateralus.beget(function (el, rekapi) {
+  var RekapiTimeline = Lateralus.beget(function (el, rekapi, config) {
     Lateralus.apply(this, arguments);
     this.rekapi = rekapi;
+    this.model.set(config);
 
     // This must happen in the RekapiTimelineModel constructor, rather than in
     // RekapiTimelineModel's initialize method, as this.lateralus.rekapi is not
-    // setup when that method executes.
+    // set up when that method executes.
     this.model.set('timelineDuration', this.getAnimationLength());
+
+    this.globalRenderData = this.model.pick('supportedProperties');
 
     // Amplify all Rekapi events to "rekapi:" lateralusEvents.
     this.getEventNames().forEach(function (eventName) {
@@ -134,9 +139,10 @@ define([
   // Decorate the Rekapi prototype with an init method.
   /**
    * @param {HTMLElement} el The element to contain the widget.
+   * @param {Object=} [config]
    */
-  Rekapi.prototype.createTimeline = function (el) {
-    return new RekapiTimeline(el, this);
+  Rekapi.prototype.createTimeline = function (el, config) {
+    return new RekapiTimeline(el, this, config || {});
   };
 
   utils.proxy(Rekapi, RekapiTimeline, {

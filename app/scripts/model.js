@@ -19,6 +19,9 @@ define([
     defaults: {
       timelineScale: constant.DEFAULT_TIMELINE_SCALE
       ,timelineDuration: 0
+
+      // @type {Array.<string>}
+      ,supportedProperties: []
     }
   });
 
