@@ -158,7 +158,7 @@ define([
       var currentValue = keyframePropertyModel.get('value');
       var currentValueStructure =
         currentValue.toString().replace(R_NUMBER_STRING, '');
-      var newValueStructure = val.toString().replace(R_NUMBER_STRING, '');
+      var newValueStructure = val.replace(R_NUMBER_STRING, '');
 
       if ($.trim(val) === '' || currentValueStructure !== newValueStructure) {
         this.$propertyValue.val(currentValue);
