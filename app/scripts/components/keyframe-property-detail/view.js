@@ -28,6 +28,8 @@ define([
   var Base = Lateralus.Component.View;
   var baseProto = Base.prototype;
 
+  var R_NUMBER_STRING = /-?\d*\.?\d*/g;
+
   var KeyframePropertyDetailComponentView = Base.extend({
     template: template
 
@@ -153,9 +155,13 @@ define([
 
       var $target = $(evt.target);
       var val = $target.val();
+      var currentValue = keyframePropertyModel.get('value');
+      var currentValueStructure =
+        currentValue.toString().replace(R_NUMBER_STRING, '');
+      var newValueStructure = val.toString().replace(R_NUMBER_STRING, '');
 
-      if ($.trim(val) === '') {
-        this.$propertyValue.val(keyframePropertyModel.get('value'));
+      if ($.trim(val) === '' || currentValueStructure !== newValueStructure) {
+        this.$propertyValue.val(currentValue);
         this.$propertyMillisecond.val(keyframePropertyModel.get('millisecond'));
         return;
       }
