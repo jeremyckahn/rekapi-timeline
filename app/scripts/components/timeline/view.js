@@ -98,7 +98,13 @@ define([
       var newTrackName = this.$newTrackName.val();
       var currentActorModel = this.collectOne('currentActorModel');
       var keyframeObject = {};
-      keyframeObject[newTrackName] = constant.DEFAULT_KEYFRAME_PROPERTY_VALUE;
+      var supportedProperties = this.lateralus.model.get('supportedProperties');
+
+      var defaultValue = supportedProperties.length ?
+        _.findWhere(supportedProperties, { name: newTrackName }).defaultValue
+        : constant.DEFAULT_KEYFRAME_PROPERTY_VALUE;
+
+      keyframeObject[newTrackName] = defaultValue;
       currentActorModel.keyframe(
         constant.DEFAULT_KEYFRAME_PROPERTY_MILLISECOND, keyframeObject);
     }
