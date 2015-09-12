@@ -25882,11 +25882,12 @@ define('rekapi-timeline.component.timeline/model',[
 });
 
 
-define('text!rekapi-timeline.component.timeline/template.mustache',[],function () { return '<div class="$timelineWrapper timeline-wrapper">\n  <div class="$scrubber"></div>\n  <div class="$animationTracks"></div>\n  <div class="$newTrackNameInputWrapper new-track-name-input-wrapper">\n    <button class="icon-button add" title="Add a new property to animate">\n      <i class="glyphicon glyphicon-plus"></i>\n    </button>\n    <input class="$newTrackName new-track-name" value="newProperty"></input>\n  </div>\n</div>\n';});
+define('text!rekapi-timeline.component.timeline/template.mustache',[],function () { return '<div class="$timelineWrapper timeline-wrapper">\n  <div class="$scrubber"></div>\n  <div class="$animationTracks"></div>\n  <div class="$newTrackNameInputWrapper new-track-name-input-wrapper">\n    <button class="icon-button add" title="Add a new property to animate">\n      <i class="glyphicon glyphicon-plus"></i>\n    </button>\n    {{#supportedPropertiesAreRestricted}}\n    <select class="$newTrackName new-track-name">\n      {{#supportedProperties}}\n      <option>{{name}}</option>\n      {{/supportedProperties}}\n    </select>\n    {{/supportedPropertiesAreRestricted}}\n    {{^supportedPropertiesAreRestricted}}\n    <input class="$newTrackName new-track-name" value="newProperty"></input>\n    {{/supportedPropertiesAreRestricted}}\n  </div>\n</div>\n';});
 
 define('rekapi-timeline.component.timeline/view',[
 
-  'lateralus'
+  'underscore'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
@@ -25894,7 +25895,8 @@ define('rekapi-timeline.component.timeline/view',[
 
 ], function (
 
-  Lateralus
+  _
+  ,Lateralus
 
   ,template
 
@@ -25946,6 +25948,20 @@ define('rekapi-timeline.component.timeline/view',[
     }
 
     /**
+     * @override
+     */
+    ,getTemplateRenderData: function () {
+      var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
+
+      _.extend(renderData, {
+        supportedPropertiesAreRestricted:
+          !!this.lateralus.model.get('supportedProperties').length
+      });
+
+      return renderData;
+    }
+
+    /**
      * Determines how wide this View's element should be, in pixels.
      * @return {number}
      */
@@ -25968,7 +25984,13 @@ define('rekapi-timeline.component.timeline/view',[
       var newTrackName = this.$newTrackName.val();
       var currentActorModel = this.collectOne('currentActorModel');
       var keyframeObject = {};
-      keyframeObject[newTrackName] = constant.DEFAULT_KEYFRAME_PROPERTY_VALUE;
+      var supportedProperties = this.lateralus.model.get('supportedProperties');
+
+      var defaultValue = supportedProperties.length ?
+        _.findWhere(supportedProperties, { name: newTrackName }).defaultValue
+        : constant.DEFAULT_KEYFRAME_PROPERTY_VALUE;
+
+      keyframeObject[newTrackName] = defaultValue;
       currentActorModel.keyframe(
         constant.DEFAULT_KEYFRAME_PROPERTY_MILLISECOND, keyframeObject);
     }
@@ -27070,6 +27092,8 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
   var Base = Lateralus.Component.View;
   var baseProto = Base.prototype;
 
+  var R_NUMBER_STRING = /-?\d*\.?\d*/g;
+
   var KeyframePropertyDetailComponentView = Base.extend({
     template: template
 
@@ -27113,8 +27137,60 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
     }
 
     ,events: {
-      'change input': 'onChangeInput'
-      ,'change select': 'onChangeInput'
+      /**
+       * @param {jQuery.Event} evt
+       */
+      'change input': function (evt) {
+        var keyframePropertyModel = this.keyframePropertyModel;
+
+        if (!keyframePropertyModel) {
+          return;
+        }
+
+        var $target = $(evt.target);
+        var val = $target.val();
+        var rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
+        var currentValue = keyframePropertyModel.get('value');
+        var currentValueStructure =
+          currentValue.toString().replace(R_NUMBER_STRING, '');
+        var newValueStructure = val.replace(R_NUMBER_STRING, '');
+
+        if (
+          $.trim(val) === '' ||
+          $.trim(rawNumberStringValue) === '' ||
+          currentValueStructure !== newValueStructure
+        ) {
+          this.$propertyValue.val(currentValue);
+          this.$propertyMillisecond.val(
+              keyframePropertyModel.get('millisecond'));
+          return;
+        }
+
+        // If the inputted value string can be coerced into an equivalent
+        // Number, do it.  Keyframe property values are initially set up as
+        // numbers, and this cast prevents the user from inadvertently setting
+        // inconsistently typed keyframe property values, thus breaking Rekapi.
+        // jshint eqeqeq: false
+        var coercedVal = val == +val ? +val : val;
+
+        keyframePropertyModel.set($target.attr('name'), coercedVal);
+        this.lateralus.update();
+      }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'change select': function (evt) {
+        var keyframePropertyModel = this.keyframePropertyModel;
+
+        if (!keyframePropertyModel) {
+          return;
+        }
+
+        var $target = $(evt.target);
+        keyframePropertyModel.set($target.attr('name'), $target.val());
+        this.lateralus.update();
+      }
 
       ,'click .add': function () {
         if (!this.keyframePropertyModel) {
@@ -27181,36 +27257,6 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
       if (activeElement === this.$propertyMillisecond[0]) {
         this.$propertyMillisecond.focus();
       }
-    }
-
-    /**
-     * @param {jQuery.Event} evt
-     */
-    ,onChangeInput: function (evt) {
-      var keyframePropertyModel = this.keyframePropertyModel;
-
-      if (!keyframePropertyModel) {
-        return;
-      }
-
-      var $target = $(evt.target);
-      var val = $target.val();
-
-      if ($.trim(val) === '') {
-        this.$propertyValue.val(keyframePropertyModel.get('value'));
-        this.$propertyMillisecond.val(keyframePropertyModel.get('millisecond'));
-        return;
-      }
-
-      // If the inputted value string can be coerced into an equivalent Number,
-      // do it.  Keyframe property values are initially set up as numbers, and
-      // this cast prevents the user from inadvertently setting inconsistently
-      // typed keyframe property values, thus breaking Rekapi.
-      // jshint eqeqeq: false
-      var coercedVal = val == +val ? +val : val;
-
-      keyframePropertyModel.set($target.attr('name'), coercedVal);
-      this.lateralus.update();
     }
 
     ,reset: function () {
@@ -27572,6 +27618,9 @@ define('rekapi-timeline/model',[
     defaults: {
       timelineScale: constant.DEFAULT_TIMELINE_SCALE
       ,timelineDuration: 0
+
+      // @type {Array.<{name: string, defaultValue: string}>}
+      ,supportedProperties: []
     }
   });
 
@@ -28325,17 +28374,22 @@ define('rekapi-timeline/rekapi-timeline',[
   /**
    * @param {Element} el
    * @param {Rekapi} rekapi The Rekapi instance that this widget represents.
+   * @param {Object} config
+   * @param {Array.<string>=} [config.supportedProperties]
    * @extends {Lateralus}
    * @constructor
    */
-  var RekapiTimeline = Lateralus.beget(function (el, rekapi) {
+  var RekapiTimeline = Lateralus.beget(function (el, rekapi, config) {
     Lateralus.apply(this, arguments);
     this.rekapi = rekapi;
+    this.model.set(config);
 
     // This must happen in the RekapiTimelineModel constructor, rather than in
     // RekapiTimelineModel's initialize method, as this.lateralus.rekapi is not
-    // setup when that method executes.
+    // set up when that method executes.
     this.model.set('timelineDuration', this.getAnimationLength());
+
+    this.globalRenderData = this.model.pick('supportedProperties');
 
     // Amplify all Rekapi events to "rekapi:" lateralusEvents.
     this.getEventNames().forEach(function (eventName) {
@@ -28428,9 +28482,10 @@ define('rekapi-timeline/rekapi-timeline',[
   // Decorate the Rekapi prototype with an init method.
   /**
    * @param {HTMLElement} el The element to contain the widget.
+   * @param {Object=} [config]
    */
-  Rekapi.prototype.createTimeline = function (el) {
-    return new RekapiTimeline(el, this);
+  Rekapi.prototype.createTimeline = function (el, config) {
+    return new RekapiTimeline(el, this, config || {});
   };
 
   utils.proxy(Rekapi, RekapiTimeline, {
