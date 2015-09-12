@@ -155,12 +155,17 @@ define([
 
       var $target = $(evt.target);
       var val = $target.val();
+      var rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
       var currentValue = keyframePropertyModel.get('value');
       var currentValueStructure =
         currentValue.toString().replace(R_NUMBER_STRING, '');
       var newValueStructure = val.replace(R_NUMBER_STRING, '');
 
-      if ($.trim(val) === '' || currentValueStructure !== newValueStructure) {
+      if (
+        $.trim(val) === '' ||
+        $.trim(rawNumberStringValue) === '' ||
+        currentValueStructure !== newValueStructure
+      ) {
         this.$propertyValue.val(currentValue);
         this.$propertyMillisecond.val(keyframePropertyModel.get('millisecond'));
         return;
