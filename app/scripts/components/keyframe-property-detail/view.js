@@ -73,8 +73,60 @@ define([
     }
 
     ,events: {
-      'change input': 'onChangeInput'
-      ,'change select': 'onChangeInput'
+      /**
+       * @param {jQuery.Event} evt
+       */
+      'change input': function (evt) {
+        var keyframePropertyModel = this.keyframePropertyModel;
+
+        if (!keyframePropertyModel) {
+          return;
+        }
+
+        var $target = $(evt.target);
+        var val = $target.val();
+        var rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
+        var currentValue = keyframePropertyModel.get('value');
+        var currentValueStructure =
+          currentValue.toString().replace(R_NUMBER_STRING, '');
+        var newValueStructure = val.replace(R_NUMBER_STRING, '');
+
+        if (
+          $.trim(val) === '' ||
+          $.trim(rawNumberStringValue) === '' ||
+          currentValueStructure !== newValueStructure
+        ) {
+          this.$propertyValue.val(currentValue);
+          this.$propertyMillisecond.val(
+              keyframePropertyModel.get('millisecond'));
+          return;
+        }
+
+        // If the inputted value string can be coerced into an equivalent
+        // Number, do it.  Keyframe property values are initially set up as
+        // numbers, and this cast prevents the user from inadvertently setting
+        // inconsistently typed keyframe property values, thus breaking Rekapi.
+        // jshint eqeqeq: false
+        var coercedVal = val == +val ? +val : val;
+
+        keyframePropertyModel.set($target.attr('name'), coercedVal);
+        this.lateralus.update();
+      }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'change select': function (evt) {
+        var keyframePropertyModel = this.keyframePropertyModel;
+
+        if (!keyframePropertyModel) {
+          return;
+        }
+
+        var $target = $(evt.target);
+        keyframePropertyModel.set($target.attr('name'), $target.val());
+        this.lateralus.update();
+      }
 
       ,'click .add': function () {
         if (!this.keyframePropertyModel) {
@@ -141,45 +193,6 @@ define([
       if (activeElement === this.$propertyMillisecond[0]) {
         this.$propertyMillisecond.focus();
       }
-    }
-
-    /**
-     * @param {jQuery.Event} evt
-     */
-    ,onChangeInput: function (evt) {
-      var keyframePropertyModel = this.keyframePropertyModel;
-
-      if (!keyframePropertyModel) {
-        return;
-      }
-
-      var $target = $(evt.target);
-      var val = $target.val();
-      var rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
-      var currentValue = keyframePropertyModel.get('value');
-      var currentValueStructure =
-        currentValue.toString().replace(R_NUMBER_STRING, '');
-      var newValueStructure = val.replace(R_NUMBER_STRING, '');
-
-      if (
-        $.trim(val) === '' ||
-        $.trim(rawNumberStringValue) === '' ||
-        currentValueStructure !== newValueStructure
-      ) {
-        this.$propertyValue.val(currentValue);
-        this.$propertyMillisecond.val(keyframePropertyModel.get('millisecond'));
-        return;
-      }
-
-      // If the inputted value string can be coerced into an equivalent Number,
-      // do it.  Keyframe property values are initially set up as numbers, and
-      // this cast prevents the user from inadvertently setting inconsistently
-      // typed keyframe property values, thus breaking Rekapi.
-      // jshint eqeqeq: false
-      var coercedVal = val == +val ? +val : val;
-
-      keyframePropertyModel.set($target.attr('name'), coercedVal);
-      this.lateralus.update();
     }
 
     ,reset: function () {
