@@ -28,6 +28,7 @@ define([
     ,lateralusEvents: {
       'change:timelineScale': function () {
         this.render();
+        this.syncContainerToTimelineLength();
       }
 
       ,'change:timelineDuration': function () {
