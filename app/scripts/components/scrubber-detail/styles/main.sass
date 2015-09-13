@@ -19,7 +19,11 @@
       line-height: 20px
       padding-left: 4px
 
-  .scrubber-scale
+  // The extra .row specificity is needed for compatibility within AEnima
+  // environments
+  .row.scrubber-scale
+    float: left
+    padding-bottom: 0
 
     input
       width: 40px
