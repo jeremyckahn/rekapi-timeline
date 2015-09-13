@@ -461,6 +461,7 @@ define('rekapi-timeline.component.scrubber/view',[
     ,lateralusEvents: {
       'change:timelineScale': function () {
         this.render();
+        this.syncContainerToTimelineLength();
       }
 
       ,'change:timelineDuration': function () {
