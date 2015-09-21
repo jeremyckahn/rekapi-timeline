@@ -1,6 +1,7 @@
 define([
 
-  'lateralus'
+  'underscore'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
@@ -8,7 +9,8 @@ define([
 
 ], function (
 
-  Lateralus
+  _
+  ,Lateralus
 
   ,template
 
@@ -32,6 +34,17 @@ define([
           this.addKeyframePropertyComponent(newKeyframeProperty, true);
         }
       }
+
+      /**
+       * @param {KeyframePropertyComponentView} keyframePropertyView
+       */
+      ,userFocusedKeyframeProperty: function (keyframePropertyView) {
+        this.setActiveClass(
+          _.contains(
+            this.component.components, keyframePropertyView.component
+          )
+        );
+      }
     }
 
     /**
@@ -40,7 +53,6 @@ define([
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
-      this.keyframePropertyComponents = [];
       var trackName = this.model.get('trackName');
 
       // Is displayed to the user with CSS
@@ -68,7 +80,13 @@ define([
       });
 
       this.$el.append(keyframePropertyComponent.view.$el);
-      this.keyframePropertyComponents.push(keyframePropertyComponent);
+    }
+
+    /**
+     * @param {boolean} isActive
+     */
+    ,setActiveClass: function (isActive) {
+      this.$el[isActive ? 'addClass' : 'removeClass']('active');
     }
   });
 
