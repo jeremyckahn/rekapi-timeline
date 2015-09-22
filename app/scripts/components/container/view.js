@@ -37,9 +37,9 @@ define([
        */
       timelineMillisecondForHandle: function ($handle) {
         var distanceFromLeft = parseInt($handle.css('left'), 10) -
-            parseInt($handle.parent().css('border-left-width'), 10);
+          parseInt($handle.parent().css('border-left-width'), 10);
         var baseMillisecond = (
-            distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
+          distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
 
         return baseMillisecond / this.lateralus.model.get('timelineScale');
       }

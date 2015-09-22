@@ -7,6 +7,8 @@ define([
 
   ,'rekapi-timeline.component.keyframe-property'
 
+  ,'rekapi-timeline/constant'
+
 ], function (
 
   _
@@ -15,6 +17,8 @@ define([
   ,template
 
   ,KeyframePropertyComponent
+
+  ,constant
 
 ) {
   'use strict';
@@ -44,6 +48,27 @@ define([
             this.component.components, keyframePropertyView.component
           )
         );
+      }
+    }
+
+    ,events: {
+      /**
+       * @param {jQuery.Event} evt
+       */
+      dblclick: function (evt) {
+        if (evt.target !== this.el) {
+          return;
+        }
+
+        var distanceFromLeft = evt.offsetX -
+          parseInt(this.$el.css('border-left-width'), 10);
+        var baseMillisecond = (
+          distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
+
+        var scaledMillisecond = Math.floor(
+          baseMillisecond / this.lateralus.model.get('timelineScale'));
+
+        this.addNewKeyframeAtMillisecond(scaledMillisecond);
       }
     }
 
@@ -87,6 +112,41 @@ define([
      */
     ,setActiveClass: function (isActive) {
       this.$el[isActive ? 'addClass' : 'removeClass']('active');
+    }
+
+    /**
+     * @param {number} millisecond
+     */
+    ,addNewKeyframeAtMillisecond: function (millisecond) {
+      var keyframePropertyComponents = _.chain(this.component.components)
+        .filter(function (component) {
+          return component.toString() === 'keyframe-property';
+        })
+        .sortBy(function (component) {
+          return component.view.model.get('millisecond');
+        })
+        .value();
+
+      var previousKeyframePropertyComponent = keyframePropertyComponents[0];
+      var i = 1, len = keyframePropertyComponents.length;
+      for (i; i < len; i++) {
+        if (keyframePropertyComponents[i].view.model.get('millisecond') >
+            millisecond) {
+          break;
+        }
+
+        previousKeyframePropertyComponent = keyframePropertyComponents[i];
+      }
+
+      var previousKeyframePropertyModelJson =
+        previousKeyframePropertyComponent.view.model.toJSON();
+
+      this.emit('requestNewKeyframeProperty', {
+        name: previousKeyframePropertyModelJson.name
+        ,value: previousKeyframePropertyModelJson.value
+        ,easing: previousKeyframePropertyModelJson.easing
+        ,millisecond: millisecond
+      });
     }
   });
 
