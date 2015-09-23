@@ -21413,7 +21413,7 @@ var Tweenable = (function () {
 
 }).call(null);
 
-/*! rekapi - v1.5.2 - 2015-09-05 - http://rekapi.com */
+/*! rekapi - v1.5.3 - 2015-09-15 - http://rekapi.com */
 /*!
  * Rekapi - Rewritten Kapi.
  * http://rekapi.com/
@@ -23781,6 +23781,7 @@ rekapiModules.push(function (context) {
     'rotate',
     'rotateX',
     'rotateY',
+    'rotateZ',
     'skewX',
     'skewY'];
 
@@ -25689,9 +25690,9 @@ define('rekapi-timeline.component.container/view',[
        */
       timelineMillisecondForHandle: function ($handle) {
         var distanceFromLeft = parseInt($handle.css('left'), 10) -
-            parseInt($handle.parent().css('border-left-width'), 10);
+          parseInt($handle.parent().css('border-left-width'), 10);
         var baseMillisecond = (
-            distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
+          distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
 
         return baseMillisecond / this.lateralus.model.get('timelineScale');
       }
@@ -26481,19 +26482,25 @@ define('rekapi-timeline.component.keyframe-property', ['rekapi-timeline.componen
 
 define('rekapi-timeline.component.keyframe-property-track/view',[
 
-  'lateralus'
+  'underscore'
+  ,'lateralus'
 
   ,'text!./template.mustache'
 
   ,'rekapi-timeline.component.keyframe-property'
 
+  ,'rekapi-timeline/constant'
+
 ], function (
 
-  Lateralus
+  _
+  ,Lateralus
 
   ,template
 
   ,KeyframePropertyComponent
+
+  ,constant
 
 ) {
   'use strict';
@@ -26513,6 +26520,38 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
           this.addKeyframePropertyComponent(newKeyframeProperty, true);
         }
       }
+
+      /**
+       * @param {KeyframePropertyComponentView} keyframePropertyView
+       */
+      ,userFocusedKeyframeProperty: function (keyframePropertyView) {
+        this.setActiveClass(
+          _.contains(
+            this.component.components, keyframePropertyView.component
+          )
+        );
+      }
+    }
+
+    ,events: {
+      /**
+       * @param {jQuery.Event} evt
+       */
+      dblclick: function (evt) {
+        if (evt.target !== this.el) {
+          return;
+        }
+
+        var distanceFromLeft = evt.offsetX -
+          parseInt(this.$el.css('border-left-width'), 10);
+        var baseMillisecond = (
+          distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
+
+        var scaledMillisecond = Math.floor(
+          baseMillisecond / this.lateralus.model.get('timelineScale'));
+
+        this.addNewKeyframeAtMillisecond(scaledMillisecond);
+      }
     }
 
     /**
@@ -26521,7 +26560,6 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
      */
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
-      this.keyframePropertyComponents = [];
       var trackName = this.model.get('trackName');
 
       // Is displayed to the user with CSS
@@ -26549,7 +26587,48 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
       });
 
       this.$el.append(keyframePropertyComponent.view.$el);
-      this.keyframePropertyComponents.push(keyframePropertyComponent);
+    }
+
+    /**
+     * @param {boolean} isActive
+     */
+    ,setActiveClass: function (isActive) {
+      this.$el[isActive ? 'addClass' : 'removeClass']('active');
+    }
+
+    /**
+     * @param {number} millisecond
+     */
+    ,addNewKeyframeAtMillisecond: function (millisecond) {
+      var keyframePropertyComponents = _.chain(this.component.components)
+        .filter(function (component) {
+          return component.toString() === 'keyframe-property';
+        })
+        .sortBy(function (component) {
+          return component.view.model.get('millisecond');
+        })
+        .value();
+
+      var previousKeyframePropertyComponent = keyframePropertyComponents[0];
+      var i = 1, len = keyframePropertyComponents.length;
+      for (i; i < len; i++) {
+        if (keyframePropertyComponents[i].view.model.get('millisecond') >
+            millisecond) {
+          break;
+        }
+
+        previousKeyframePropertyComponent = keyframePropertyComponents[i];
+      }
+
+      var previousKeyframePropertyModelJson =
+        previousKeyframePropertyComponent.view.model.toJSON();
+
+      this.emit('requestNewKeyframeProperty', {
+        name: previousKeyframePropertyModelJson.name
+        ,value: previousKeyframePropertyModelJson.value
+        ,easing: previousKeyframePropertyModelJson.easing
+        ,millisecond: millisecond
+      });
     }
   });
 
@@ -26944,7 +27023,7 @@ define('rekapi-timeline.component.keyframe-property-detail/model',[
 });
 
 
-define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
+define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond" min="0">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
 
 
 define('text!aenima.component.curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
@@ -27141,7 +27220,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
       /**
        * @param {jQuery.Event} evt
        */
-      'change input': function (evt) {
+      'change .property-value': function (evt) {
         var keyframePropertyModel = this.keyframePropertyModel;
 
         if (!keyframePropertyModel) {
@@ -27162,8 +27241,6 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           currentValueStructure !== newValueStructure
         ) {
           this.$propertyValue.val(currentValue);
-          this.$propertyMillisecond.val(
-              keyframePropertyModel.get('millisecond'));
           return;
         }
 
@@ -27175,6 +27252,27 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
         var coercedVal = val == +val ? +val : val;
 
         keyframePropertyModel.set($target.attr('name'), coercedVal);
+        this.lateralus.update();
+      }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'change .property-millisecond': function (evt) {
+        var keyframePropertyModel = this.keyframePropertyModel;
+
+        if (!keyframePropertyModel) {
+          return;
+        }
+
+        var $target = $(evt.target);
+        var val = +$target.val();
+
+        if (val < 0) {
+          return;
+        }
+
+        keyframePropertyModel.set('millisecond', val);
         this.lateralus.update();
       }
 
@@ -27198,21 +27296,18 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           return;
         }
 
-        var keyframePropertyModel = this.keyframePropertyModel;
-        var actorModel = keyframePropertyModel.getOwnerActor();
+        var keyframePropertyModelJson = this.keyframePropertyModel.toJSON();
 
         var targetMillisecond =
-          keyframePropertyModel.get('millisecond') +
+          keyframePropertyModelJson.millisecond +
           constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
 
-        var keyframeObject = {};
-        keyframeObject[keyframePropertyModel.get('name')] =
-          keyframePropertyModel.get('value');
-
-        actorModel.keyframe(
-          targetMillisecond
-          ,keyframeObject
-          ,keyframePropertyModel.get('easing'));
+        this.emit('requestNewKeyframeProperty', {
+          name: keyframePropertyModelJson.name
+          ,value: keyframePropertyModelJson.value
+          ,easing: keyframePropertyModelJson.easing
+          ,millisecond: targetMillisecond
+        });
       }
 
       ,'click .delete': function () {
@@ -27835,10 +27930,23 @@ define('rekapi-timeline/models/actor',[
 
     ,lateralusEvents: {
       /**
+       * @param {{
+       *   name: string,
+       *   value: number|string,
+       *   millisecond: number,
+       *   easing: string }} args
+       */
+      requestNewKeyframeProperty: function (args) {
+        var stateObj = {};
+        stateObj[args.name] = args.value;
+        this.keyframe(args.millisecond, stateObj, args.easing);
+      }
+
+      /**
        * @param {Rekapi} rekapi
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
-      'rekapi:addKeyframePropertyTrack': function (rekapi, keyframeProperty) {
+      ,'rekapi:addKeyframePropertyTrack': function (rekapi, keyframeProperty) {
         if (keyframeProperty.actor.id === this.id) {
           this.addKeyframePropertyTrack(keyframeProperty.name);
         }
