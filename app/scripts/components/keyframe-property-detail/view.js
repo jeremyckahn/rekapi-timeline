@@ -133,21 +133,18 @@ define([
           return;
         }
 
-        var keyframePropertyModel = this.keyframePropertyModel;
-        var actorModel = keyframePropertyModel.getOwnerActor();
+        var keyframePropertyModelJson = this.keyframePropertyModel.toJSON();
 
         var targetMillisecond =
-          keyframePropertyModel.get('millisecond') +
+          keyframePropertyModelJson.millisecond +
           constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
 
-        var keyframeObject = {};
-        keyframeObject[keyframePropertyModel.get('name')] =
-          keyframePropertyModel.get('value');
-
-        actorModel.keyframe(
-          targetMillisecond
-          ,keyframeObject
-          ,keyframePropertyModel.get('easing'));
+        this.emit('requestNewKeyframeProperty', {
+          name: keyframePropertyModelJson.name
+          ,value: keyframePropertyModelJson.value
+          ,easing: keyframePropertyModelJson.easing
+          ,millisecond: targetMillisecond
+        });
       }
 
       ,'click .delete': function () {
