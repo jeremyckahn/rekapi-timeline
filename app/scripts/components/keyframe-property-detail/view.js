@@ -76,7 +76,7 @@ define([
       /**
        * @param {jQuery.Event} evt
        */
-      'change input': function (evt) {
+      'change .property-value': function (evt) {
         var keyframePropertyModel = this.keyframePropertyModel;
 
         if (!keyframePropertyModel) {
@@ -97,8 +97,6 @@ define([
           currentValueStructure !== newValueStructure
         ) {
           this.$propertyValue.val(currentValue);
-          this.$propertyMillisecond.val(
-              keyframePropertyModel.get('millisecond'));
           return;
         }
 
@@ -110,6 +108,27 @@ define([
         var coercedVal = val == +val ? +val : val;
 
         keyframePropertyModel.set($target.attr('name'), coercedVal);
+        this.lateralus.update();
+      }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'change .property-millisecond': function (evt) {
+        var keyframePropertyModel = this.keyframePropertyModel;
+
+        if (!keyframePropertyModel) {
+          return;
+        }
+
+        var $target = $(evt.target);
+        var val = +$target.val();
+
+        if (val < 0) {
+          return;
+        }
+
+        keyframePropertyModel.set('millisecond', val);
         this.lateralus.update();
       }
 
