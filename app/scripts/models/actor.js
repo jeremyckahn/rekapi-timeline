@@ -39,10 +39,23 @@ define([
 
     ,lateralusEvents: {
       /**
+       * @param {{
+       *   name: string,
+       *   value: number|string,
+       *   millisecond: number,
+       *   easing: string }} args
+       */
+      requestNewKeyframeProperty: function (args) {
+        var stateObj = {};
+        stateObj[args.name] = args.value;
+        this.keyframe(args.millisecond, stateObj, args.easing);
+      }
+
+      /**
        * @param {Rekapi} rekapi
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
-      'rekapi:addKeyframePropertyTrack': function (rekapi, keyframeProperty) {
+      ,'rekapi:addKeyframePropertyTrack': function (rekapi, keyframeProperty) {
         if (keyframeProperty.actor.id === this.id) {
           this.addKeyframePropertyTrack(keyframeProperty.name);
         }

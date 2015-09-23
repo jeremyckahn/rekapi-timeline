@@ -71,20 +71,6 @@ define([
         this.stop().update(0);
       }
 
-      /**
-       * @param {{
-       *   name: string,
-       *   value: number|string,
-       *   millisecond: number,
-       *   easing: string }} args
-       */
-      ,requestNewKeyframeProperty: function (args) {
-        var currentActorModel = this.collectOne('currentActorModel');
-        var stateObj = {};
-        stateObj[args.name] = args.value;
-        currentActorModel.keyframe(args.millisecond, stateObj, args.easing);
-      }
-
       ,'rekapi:removeKeyframePropertyComplete': function () {
         if (!this.isPlaying()) {
           // This operation needs to be deferred because Rekapi's
