@@ -62,6 +62,22 @@ define([
           this.collectOne('timelineMillisecondForHandle', this.$scrubberHandle);
         this.lateralus.update(millisecond);
       }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'click .scrubber-wrapper': function (evt) {
+        if (evt.target !== this.$scrubberWrapper[0]) {
+          return;
+        }
+
+        var scaledMillisecond =
+          this.collectOne('timelineMillisecondForXOffset', evt.offsetX);
+
+        var lateralus = this.lateralus;
+        lateralus.pause();
+        lateralus.update(scaledMillisecond, true);
+      }
     }
 
     /**
