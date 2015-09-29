@@ -96,6 +96,18 @@ define('rekapi-timeline.component.container/view',[
 
         return baseMillisecond / this.lateralus.model.get('timelineScale');
       }
+
+      /**
+       * @param {number} xOffset Should be a pixel value
+       * @return {number}
+       */
+      ,timelineMillisecondForXOffset: function (xOffset) {
+        var baseMillisecond = (
+          xOffset / constant.PIXELS_PER_SECOND) * 1000;
+
+        return Math.floor(
+          baseMillisecond / this.lateralus.model.get('timelineScale'));
+      }
     }
 
     ,lateralusEvents: {
@@ -308,6 +320,7 @@ define('rekapi-timeline.component.timeline/view',[
 
   var Base = Lateralus.Component.View;
   var baseProto = Base.prototype;
+  var $win = $(window);
 
   var TimelineComponentView = Base.extend({
     template: template
@@ -346,6 +359,8 @@ define('rekapi-timeline.component.timeline/view',[
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.updateWrapperWidth();
+      this.windowHandler = this.onWindowResize.bind(this);
+      $win.on('resize', this.windowHandler);
     }
 
     /**
@@ -360,6 +375,18 @@ define('rekapi-timeline.component.timeline/view',[
       });
 
       return renderData;
+    }
+
+    /**
+     * @override
+     */
+    ,dispose: function () {
+      $win.off('resize', this.windowHandler);
+      baseProto.dispose.apply(this, arguments);
+    }
+
+    ,onWindowResize: function () {
+      this.updateWrapperWidth();
     }
 
     /**
@@ -494,6 +521,22 @@ define('rekapi-timeline.component.scrubber/view',[
         var millisecond =
           this.collectOne('timelineMillisecondForHandle', this.$scrubberHandle);
         this.lateralus.update(millisecond);
+      }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'click .scrubber-wrapper': function (evt) {
+        if (evt.target !== this.$scrubberWrapper[0]) {
+          return;
+        }
+
+        var scaledMillisecond =
+          this.collectOne('timelineMillisecondForXOffset', evt.offsetX);
+
+        var lateralus = this.lateralus;
+        lateralus.pause();
+        lateralus.update(scaledMillisecond, true);
       }
     }
 
@@ -942,13 +985,8 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
           return;
         }
 
-        var distanceFromLeft = evt.offsetX -
-          parseInt(this.$el.css('border-left-width'), 10);
-        var baseMillisecond = (
-          distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
-
-        var scaledMillisecond = Math.floor(
-          baseMillisecond / this.lateralus.model.get('timelineScale'));
+        var scaledMillisecond =
+          this.collectOne('timelineMillisecondForXOffset', evt.offsetX);
 
         this.addNewKeyframeAtMillisecond(scaledMillisecond);
       }
@@ -1871,7 +1909,7 @@ define('rekapi-timeline.component.scrubber-detail/model',[
 });
 
 
-define('text!rekapi-timeline.component.scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row scrubber-scale">\n  <p>Timeline zoom:</p>\n  <input type="number" class="$scrubberScale" value="{{initialZoom}}" min="0">\n</label>\n<p class="position-monitor">\n  <span class="$currentPosition"></span>ms / <span class="$animationLength"></span>ms\n</p>\n';});
+define('text!rekapi-timeline.component.scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row scrubber-scale">\n  <p>Timeline zoom:</p>\n  <input type="number" class="$scrubberScale" value="{{initialZoom}}" min="0" step="10">\n</label>\n<p class="position-monitor">\n  <span class="$currentPosition"></span>ms / <span class="$animationLength"></span>ms\n</p>\n';});
 
 define('rekapi-timeline.component.scrubber-detail/view',[
 
@@ -2595,7 +2633,6 @@ define('rekapi-timeline/rekapi-timeline',[
     }
 
     /**
-     * TODO: Make this a Rekapi method.
      * @return {number}
      */
     ,getLastMillisecondUpdated: function () {
