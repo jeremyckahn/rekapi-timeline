@@ -21,6 +21,7 @@ define([
 
   var Base = Lateralus.Component.View;
   var baseProto = Base.prototype;
+  var $win = $(window);
 
   var TimelineComponentView = Base.extend({
     template: template
@@ -59,6 +60,8 @@ define([
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
       this.updateWrapperWidth();
+      this.windowHandler = this.onWindowResize.bind(this);
+      $win.on('resize', this.windowHandler);
     }
 
     /**
@@ -73,6 +76,18 @@ define([
       });
 
       return renderData;
+    }
+
+    /**
+     * @override
+     */
+    ,dispose: function () {
+      $win.off('resize', this.windowHandler);
+      baseProto.dispose.apply(this, arguments);
+    }
+
+    ,onWindowResize: function () {
+      this.updateWrapperWidth();
     }
 
     /**

@@ -128,7 +128,6 @@ define([
     }
 
     /**
-     * TODO: Make this a Rekapi method.
      * @return {number}
      */
     ,getLastMillisecondUpdated: function () {
