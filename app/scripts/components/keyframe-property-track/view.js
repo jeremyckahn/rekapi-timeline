@@ -60,13 +60,8 @@ define([
           return;
         }
 
-        var distanceFromLeft = evt.offsetX -
-          parseInt(this.$el.css('border-left-width'), 10);
-        var baseMillisecond = (
-          distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
-
-        var scaledMillisecond = Math.floor(
-          baseMillisecond / this.lateralus.model.get('timelineScale'));
+        var scaledMillisecond =
+          this.collectOne('timelineMillisecondForXOffset', evt.offsetX);
 
         this.addNewKeyframeAtMillisecond(scaledMillisecond);
       }

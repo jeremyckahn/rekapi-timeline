@@ -43,6 +43,18 @@ define([
 
         return baseMillisecond / this.lateralus.model.get('timelineScale');
       }
+
+      /**
+       * @param {number} xOffset Should be a pixel value
+       * @return {number}
+       */
+      ,timelineMillisecondForXOffset: function (xOffset) {
+        var baseMillisecond = (
+          xOffset / constant.PIXELS_PER_SECOND) * 1000;
+
+        return Math.floor(
+          baseMillisecond / this.lateralus.model.get('timelineScale'));
+      }
     }
 
     ,lateralusEvents: {
