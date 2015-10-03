@@ -36,16 +36,16 @@ define([
     ,template: template
 
     ,initialize: function () {
+      this.detailsComponent = this.addComponent(DetailsComponent, {
+        el: this.view.$details[0]
+      });
+
       this.controlBar = this.addComponent(ControlBarComponent, {
         el: this.view.$controlBar[0]
       });
 
       this.timelineComponent = this.addComponent(TimelineComponent, {
         el: this.view.$timeline[0]
-      });
-
-      this.detailsComponent = this.addComponent(DetailsComponent, {
-        el: this.view.$details[0]
       });
 
       this.scrubberDetailComponent =

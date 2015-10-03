@@ -1,10 +1,14 @@
 @import ../../../../styles/variables
 
 .timeline-view
-  margin-left: $CONTROL_BAR_VIEW
   overflow: auto
   position: relative
-  width: calc(100% - #{$KEYFRAME_PROPERTY_DETAIL_OUTER_WIDTH + $PLAYBACK_CONTROL_BAR_WIDTH})
+  width: calc(100% - #{$KEYFRAME_PROPERTY_DETAIL_OUTER_WIDTH})
+
+  &.fill,
+  &.aenima .fill
+    left: auto
+    right: 0
 
   .timeline-wrapper
     overflow: auto
