@@ -114,7 +114,7 @@ define([
      * @param {boolean} isActive
      */
     ,setActiveClass: function (isActive) {
-      this.$handle[isActive ? 'addClass' : 'removeClass']('active');
+      this.$el[isActive ? 'addClass' : 'removeClass']('active');
     }
 
     /**

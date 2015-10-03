@@ -9,6 +9,14 @@
   width: $KEYFRAME_PROPERTY_DIMENSION
   z-index: 20
 
+  &.active
+    z-index: 40
+
+    .keyframe-property
+      background-color: $KEYFRAME_PROPERTY_SLIDER_ACTIVE_COLOR
+      opacity: 1
+      outline: none
+
   .keyframe-property
     background-color: $KEYFRAME_PROPERTY_SLIDER_COLOR
     border: none
@@ -20,8 +28,3 @@
     top: 4px
     width: 60%
     +transform(rotate(45deg))
-
-    &.active
-      background-color: $KEYFRAME_PROPERTY_SLIDER_ACTIVE_COLOR
-      opacity: 1
-      outline: none
