@@ -6,9 +6,9 @@ define([
   ,'./view'
   ,'text!./template.mustache'
 
+  ,'rekapi-timeline.component.details'
   ,'rekapi-timeline.component.control-bar'
   ,'rekapi-timeline.component.timeline'
-  ,'rekapi-timeline.component.details'
   ,'rekapi-timeline.component.scrubber-detail'
 
 ], function (
@@ -19,9 +19,9 @@ define([
   ,View
   ,template
 
+  ,DetailsComponent
   ,ControlBarComponent
   ,TimelineComponent
-  ,DetailsComponent
   ,ScrubberDetailComponent
 
 ) {
