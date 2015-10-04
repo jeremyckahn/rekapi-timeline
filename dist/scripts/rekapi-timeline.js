@@ -28,7 +28,7 @@
 
 define('text',{load: function(id){throw new Error("Dynamic load not allowed: " + id);}});
 
-define('text!rekapi-timeline.component.container/template.mustache',[],function () { return '<div class="$controlBar"></div>\n<div class="$timeline fill"></div>\n<div class="$details"></div>\n<div class="$scrubberDetail"></div>\n';});
+define('text!rekapi-timeline.component.container/template.mustache',[],function () { return '<div class="$details"></div>\n<div class="$timeline fill"></div>\n<div class="fill bottom-frame">\n  <div class="$controlBar"></div>\n  <div class="$scrubberDetail"></div>\n</div>\n';});
 
 define('rekapi-timeline/constant',[],function () {
   'use strict';
@@ -133,6 +133,517 @@ define('rekapi-timeline.component.container/view',[
 
   return ContainerComponentView;
 });
+
+define('rekapi-timeline.component.details/model',[
+
+  'lateralus'
+
+], function (
+
+  Lateralus
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.Model;
+  var baseProto = Base.prototype;
+
+  var DetailsComponentModel = Base.extend({
+    /**
+     * Parameters are the same as http://backbonejs.org/#Model-constructor
+     * @param {Object} [attributes]
+     * @param {Object} [options]
+     */
+    initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+    }
+  });
+
+  return DetailsComponentModel;
+});
+
+
+define('text!rekapi-timeline.component.details/template.mustache',[],function () { return '<div class="$keyframePropertyDetail fill"></div>\n';});
+
+define('rekapi-timeline.component.details/view',[
+
+  'lateralus'
+
+  ,'text!./template.mustache'
+
+], function (
+
+  Lateralus
+
+  ,template
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.View;
+  var baseProto = Base.prototype;
+
+  var DetailsComponentView = Base.extend({
+    template: template
+
+    /**
+     * @param {Object} [options] See http://backbonejs.org/#View-constructor
+     */
+    ,initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+    }
+  });
+
+  return DetailsComponentView;
+});
+
+define('rekapi-timeline.component.keyframe-property-detail/model',[
+
+  'lateralus'
+
+], function (
+
+  Lateralus
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.Model;
+  var baseProto = Base.prototype;
+
+  var KeyframePropertyDetailComponentModel = Base.extend({
+    /**
+     * Parameters are the same as http://backbonejs.org/#Model-constructor
+     * @param {Object} [attributes]
+     * @param {Object} [options]
+     */
+    initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+    }
+  });
+
+  return KeyframePropertyDetailComponentModel;
+});
+
+
+define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond" min="0">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
+
+
+define('text!aenima.component.curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
+
+define('aenima.constant',[],function () {
+  'use strict';
+
+  return {
+    CUSTOM_CURVE_PREFIX: 'customCurve'
+    ,NEW_KEYFRAME_MS_INCREASE: 1000
+    ,NEW_KEYFRAME_X_INCREASE: 200
+  };
+});
+
+define('aenima.component.curve-selector/view',[
+
+  'underscore'
+  ,'lateralus'
+  ,'shifty'
+
+  ,'text!./template.mustache'
+
+  ,'aenima.constant'
+
+], function (
+
+  _
+  ,Lateralus
+  ,Tweenable
+
+  ,template
+
+  ,aenimaConstant
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.View;
+  var baseProto = Base.prototype;
+
+  var CurveSelectorComponentView = Base.extend({
+    template: template
+
+    ,lateralusEvents: {
+      tweenableCurveCreated: function () {
+        this.render();
+      }
+    }
+
+    /**
+     * @param {Object} [options] See http://backbonejs.org/#View-constructor
+     * @param {boolean=} [options.onlyShowCustomCurves]
+     */
+    ,initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+    }
+
+    ,render: function () {
+      var currentValue = this.$el.val();
+      this.renderTemplate();
+      this.$el.val(currentValue);
+    }
+
+    ,getTemplateRenderData: function () {
+      var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
+
+      _.extend(renderData, {
+        curves: this.getCurveList()
+      });
+
+      return renderData;
+    }
+
+    /**
+     * @param {Array.<string>}
+     */
+    ,getCurveList: function () {
+      var fullList = Object.keys(Tweenable.prototype.formula);
+      return this.onlyShowCustomCurves ?
+        fullList.filter(function (curve) {
+          return curve.match(aenimaConstant.CUSTOM_CURVE_PREFIX);
+        }) : fullList;
+    }
+  });
+
+  return CurveSelectorComponentView;
+});
+
+define('aenima.component.curve-selector/main',[
+
+  'lateralus'
+
+  ,'./view'
+  ,'text!./template.mustache'
+
+], function (
+
+  Lateralus
+
+  ,View
+  ,template
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component;
+
+  var CurveSelectorComponent = Base.extend({
+    name: 'curve-selector'
+    ,View: View
+    ,template: template
+  });
+
+  return CurveSelectorComponent;
+});
+
+define('aenima.component.curve-selector', ['aenima.component.curve-selector/main'], function (main) { return main; });
+
+define('rekapi-timeline.component.keyframe-property-detail/view',[
+
+  'underscore'
+  ,'lateralus'
+  ,'shifty'
+
+  ,'text!./template.mustache'
+
+  ,'aenima.component.curve-selector'
+
+  ,'rekapi-timeline/constant'
+
+], function (
+
+  _
+  ,Lateralus
+  ,Tweenable
+
+  ,template
+
+  ,CurveSelector
+
+  ,constant
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component.View;
+  var baseProto = Base.prototype;
+
+  var R_NUMBER_STRING = /-?\d*\.?\d*/g;
+
+  var KeyframePropertyDetailComponentView = Base.extend({
+    template: template
+
+    ,lateralusEvents: {
+      /**
+       * @param {KeyframePropertyComponentView} keyframePropertyView
+       */
+      userFocusedKeyframeProperty: function (keyframePropertyView) {
+        if (this.keyframePropertyModel) {
+          this.stopListening(this.keyframePropertyModel);
+        }
+
+        this.keyframePropertyModel = keyframePropertyView.model;
+        this.listenTo(this.keyframePropertyModel, 'change',
+          this.render.bind(this));
+
+        var inputs = [];
+        _.each(Tweenable.prototype.formula, function (formula, name) {
+          var option = document.createElement('option');
+          option.innerHTML = name;
+          inputs.push(option);
+        }, this);
+
+        this.render();
+      }
+
+      /**
+       * @param {Rekapi} rekapi
+       * @param {Rekapi.KeyframeProperty} keyframeProperty
+       */
+      ,'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
+        if (keyframeProperty.id === this.keyframePropertyModel.id) {
+          this.keyframePropertyModel = null;
+          this.reset();
+        }
+      }
+
+      ,keyframePropertyDragEnd: function () {
+        this.$propertyValue.select();
+      }
+    }
+
+    ,events: {
+      /**
+       * @param {jQuery.Event} evt
+       */
+      'change .property-value': function (evt) {
+        var keyframePropertyModel = this.keyframePropertyModel;
+
+        if (!keyframePropertyModel) {
+          return;
+        }
+
+        var $target = $(evt.target);
+        var val = $target.val();
+        var rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
+        var currentValue = keyframePropertyModel.get('value');
+        var currentValueStructure =
+          currentValue.toString().replace(R_NUMBER_STRING, '');
+        var newValueStructure = val.replace(R_NUMBER_STRING, '');
+
+        if (
+          $.trim(val) === '' ||
+          $.trim(rawNumberStringValue) === '' ||
+          currentValueStructure !== newValueStructure
+        ) {
+          this.$propertyValue.val(currentValue);
+          return;
+        }
+
+        // If the inputted value string can be coerced into an equivalent
+        // Number, do it.  Keyframe property values are initially set up as
+        // numbers, and this cast prevents the user from inadvertently setting
+        // inconsistently typed keyframe property values, thus breaking Rekapi.
+        // jshint eqeqeq: false
+        var coercedVal = val == +val ? +val : val;
+
+        keyframePropertyModel.set($target.attr('name'), coercedVal);
+        this.lateralus.update();
+      }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'change .property-millisecond': function (evt) {
+        var keyframePropertyModel = this.keyframePropertyModel;
+
+        if (!keyframePropertyModel) {
+          return;
+        }
+
+        var $target = $(evt.target);
+        var val = +$target.val();
+
+        if (val < 0) {
+          return;
+        }
+
+        keyframePropertyModel.set('millisecond', val);
+        this.lateralus.update();
+      }
+
+      /**
+       * @param {jQuery.Event} evt
+       */
+      ,'change select': function (evt) {
+        var keyframePropertyModel = this.keyframePropertyModel;
+
+        if (!keyframePropertyModel) {
+          return;
+        }
+
+        var $target = $(evt.target);
+        keyframePropertyModel.set($target.attr('name'), $target.val());
+        this.lateralus.update();
+      }
+
+      ,'click .add': function () {
+        if (!this.keyframePropertyModel) {
+          return;
+        }
+
+        var keyframePropertyModelJson = this.keyframePropertyModel.toJSON();
+
+        var targetMillisecond =
+          keyframePropertyModelJson.millisecond +
+          constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
+
+        this.emit('requestNewKeyframeProperty', {
+          name: keyframePropertyModelJson.name
+          ,value: keyframePropertyModelJson.value
+          ,easing: keyframePropertyModelJson.easing
+          ,millisecond: targetMillisecond
+        });
+      }
+
+      ,'click .delete': function () {
+        if (!this.keyframePropertyModel) {
+          return;
+        }
+
+        var keyframePropertyModel = this.keyframePropertyModel;
+        keyframePropertyModel.getOwnerActor().removeKeyframeProperty(
+          keyframePropertyModel.get('name')
+          ,keyframePropertyModel.get('millisecond'));
+      }
+    }
+
+    /**
+     * @param {Object} [options] See http://backbonejs.org/#View-constructor
+     */
+    ,initialize: function () {
+      baseProto.initialize.apply(this, arguments);
+      this.propertyNameDefaultText = this.$propertyName.text();
+
+      this.addSubview(CurveSelector.View, {
+        el: this.$propertyEasing
+      });
+    }
+
+    ,render: function () {
+      var activeElement = document.activeElement;
+
+      // TODO: It would be nice if the template could be declaratively bound to
+      // the model, rather than having to make DOM updates imperatively here.
+      this.$propertyName.text(this.keyframePropertyModel.get('name'));
+      this.$propertyMillisecond.val(
+        this.keyframePropertyModel.get('millisecond'));
+      this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
+
+      this.$propertyValue
+        .val(this.keyframePropertyModel.get('value'))
+        .select();
+
+      // Prevent $propertyMillisecond from losing focus, thereby enabling
+      // browser-standard keyup/keydown functionality to mostly work
+      if (activeElement === this.$propertyMillisecond[0]) {
+        this.$propertyMillisecond.focus();
+      }
+    }
+
+    ,reset: function () {
+      this.$propertyName.text(this.propertyNameDefaultText);
+      this.$propertyMillisecond.val('');
+      this.$propertyValue.val('');
+    }
+  });
+
+  return KeyframePropertyDetailComponentView;
+});
+
+define('rekapi-timeline.component.keyframe-property-detail/main',[
+
+  'lateralus'
+
+  ,'./model'
+  ,'./view'
+  ,'text!./template.mustache'
+
+], function (
+
+  Lateralus
+
+  ,Model
+  ,View
+  ,template
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component;
+
+  var KeyframePropertyDetailComponent = Base.extend({
+    name: 'keyframe-property-detail'
+    ,Model: Model
+    ,View: View
+    ,template: template
+  });
+
+  return KeyframePropertyDetailComponent;
+});
+
+define('rekapi-timeline.component.keyframe-property-detail', ['rekapi-timeline.component.keyframe-property-detail/main'], function (main) { return main; });
+
+define('rekapi-timeline.component.details/main',[
+
+  'lateralus'
+
+  ,'./model'
+  ,'./view'
+  ,'text!./template.mustache'
+
+  ,'rekapi-timeline.component.keyframe-property-detail'
+
+], function (
+
+  Lateralus
+
+  ,Model
+  ,View
+  ,template
+
+  ,KeyframePropertyDetailComponent
+
+) {
+  'use strict';
+
+  var Base = Lateralus.Component;
+
+  var DetailsComponent = Base.extend({
+    name: 'details'
+    ,Model: Model
+    ,View: View
+    ,template: template
+
+    ,initialize: function () {
+      this.keyframePropertyDetailComponent =
+        this.addComponent(KeyframePropertyDetailComponent, {
+        el: this.view.$keyframePropertyDetail[0]
+      });
+    }
+  });
+
+  return DetailsComponent;
+});
+
+define('rekapi-timeline.component.details', ['rekapi-timeline.component.details/main'], function (main) { return main; });
 
 define('rekapi-timeline.component.control-bar/model',[
 
@@ -872,7 +1383,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
      * @param {boolean} isActive
      */
     ,setActiveClass: function (isActive) {
-      this.$handle[isActive ? 'addClass' : 'removeClass']('active');
+      this.$el[isActive ? 'addClass' : 'removeClass']('active');
     }
 
     /**
@@ -1369,517 +1880,6 @@ define('rekapi-timeline.component.timeline/main',[
 
 define('rekapi-timeline.component.timeline', ['rekapi-timeline.component.timeline/main'], function (main) { return main; });
 
-define('rekapi-timeline.component.details/model',[
-
-  'lateralus'
-
-], function (
-
-  Lateralus
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.Model;
-  var baseProto = Base.prototype;
-
-  var DetailsComponentModel = Base.extend({
-    /**
-     * Parameters are the same as http://backbonejs.org/#Model-constructor
-     * @param {Object} [attributes]
-     * @param {Object} [options]
-     */
-    initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
-
-  return DetailsComponentModel;
-});
-
-
-define('text!rekapi-timeline.component.details/template.mustache',[],function () { return '<div class="$keyframePropertyDetail fill"></div>\n';});
-
-define('rekapi-timeline.component.details/view',[
-
-  'lateralus'
-
-  ,'text!./template.mustache'
-
-], function (
-
-  Lateralus
-
-  ,template
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.View;
-  var baseProto = Base.prototype;
-
-  var DetailsComponentView = Base.extend({
-    template: template
-
-    /**
-     * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     */
-    ,initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
-
-  return DetailsComponentView;
-});
-
-define('rekapi-timeline.component.keyframe-property-detail/model',[
-
-  'lateralus'
-
-], function (
-
-  Lateralus
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.Model;
-  var baseProto = Base.prototype;
-
-  var KeyframePropertyDetailComponentModel = Base.extend({
-    /**
-     * Parameters are the same as http://backbonejs.org/#Model-constructor
-     * @param {Object} [attributes]
-     * @param {Object} [options]
-     */
-    initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
-
-  return KeyframePropertyDetailComponentModel;
-});
-
-
-define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond" min="0">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
-
-
-define('text!aenima.component.curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
-
-define('aenima.constant',[],function () {
-  'use strict';
-
-  return {
-    CUSTOM_CURVE_PREFIX: 'customCurve'
-    ,NEW_KEYFRAME_MS_INCREASE: 1000
-    ,NEW_KEYFRAME_X_INCREASE: 200
-  };
-});
-
-define('aenima.component.curve-selector/view',[
-
-  'underscore'
-  ,'lateralus'
-  ,'shifty'
-
-  ,'text!./template.mustache'
-
-  ,'aenima.constant'
-
-], function (
-
-  _
-  ,Lateralus
-  ,Tweenable
-
-  ,template
-
-  ,aenimaConstant
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.View;
-  var baseProto = Base.prototype;
-
-  var CurveSelectorComponentView = Base.extend({
-    template: template
-
-    ,lateralusEvents: {
-      tweenableCurveCreated: function () {
-        this.render();
-      }
-    }
-
-    /**
-     * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     * @param {boolean=} [options.onlyShowCustomCurves]
-     */
-    ,initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-
-    ,render: function () {
-      var currentValue = this.$el.val();
-      this.renderTemplate();
-      this.$el.val(currentValue);
-    }
-
-    ,getTemplateRenderData: function () {
-      var renderData = baseProto.getTemplateRenderData.apply(this, arguments);
-
-      _.extend(renderData, {
-        curves: this.getCurveList()
-      });
-
-      return renderData;
-    }
-
-    /**
-     * @param {Array.<string>}
-     */
-    ,getCurveList: function () {
-      var fullList = Object.keys(Tweenable.prototype.formula);
-      return this.onlyShowCustomCurves ?
-        fullList.filter(function (curve) {
-          return curve.match(aenimaConstant.CUSTOM_CURVE_PREFIX);
-        }) : fullList;
-    }
-  });
-
-  return CurveSelectorComponentView;
-});
-
-define('aenima.component.curve-selector/main',[
-
-  'lateralus'
-
-  ,'./view'
-  ,'text!./template.mustache'
-
-], function (
-
-  Lateralus
-
-  ,View
-  ,template
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component;
-
-  var CurveSelectorComponent = Base.extend({
-    name: 'curve-selector'
-    ,View: View
-    ,template: template
-  });
-
-  return CurveSelectorComponent;
-});
-
-define('aenima.component.curve-selector', ['aenima.component.curve-selector/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.keyframe-property-detail/view',[
-
-  'underscore'
-  ,'lateralus'
-  ,'shifty'
-
-  ,'text!./template.mustache'
-
-  ,'aenima.component.curve-selector'
-
-  ,'rekapi-timeline/constant'
-
-], function (
-
-  _
-  ,Lateralus
-  ,Tweenable
-
-  ,template
-
-  ,CurveSelector
-
-  ,constant
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.View;
-  var baseProto = Base.prototype;
-
-  var R_NUMBER_STRING = /-?\d*\.?\d*/g;
-
-  var KeyframePropertyDetailComponentView = Base.extend({
-    template: template
-
-    ,lateralusEvents: {
-      /**
-       * @param {KeyframePropertyComponentView} keyframePropertyView
-       */
-      userFocusedKeyframeProperty: function (keyframePropertyView) {
-        if (this.keyframePropertyModel) {
-          this.stopListening(this.keyframePropertyModel);
-        }
-
-        this.keyframePropertyModel = keyframePropertyView.model;
-        this.listenTo(this.keyframePropertyModel, 'change',
-          this.render.bind(this));
-
-        var inputs = [];
-        _.each(Tweenable.prototype.formula, function (formula, name) {
-          var option = document.createElement('option');
-          option.innerHTML = name;
-          inputs.push(option);
-        }, this);
-
-        this.render();
-      }
-
-      /**
-       * @param {Rekapi} rekapi
-       * @param {Rekapi.KeyframeProperty} keyframeProperty
-       */
-      ,'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.id === this.keyframePropertyModel.id) {
-          this.keyframePropertyModel = null;
-          this.reset();
-        }
-      }
-
-      ,keyframePropertyDragEnd: function () {
-        this.$propertyValue.select();
-      }
-    }
-
-    ,events: {
-      /**
-       * @param {jQuery.Event} evt
-       */
-      'change .property-value': function (evt) {
-        var keyframePropertyModel = this.keyframePropertyModel;
-
-        if (!keyframePropertyModel) {
-          return;
-        }
-
-        var $target = $(evt.target);
-        var val = $target.val();
-        var rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
-        var currentValue = keyframePropertyModel.get('value');
-        var currentValueStructure =
-          currentValue.toString().replace(R_NUMBER_STRING, '');
-        var newValueStructure = val.replace(R_NUMBER_STRING, '');
-
-        if (
-          $.trim(val) === '' ||
-          $.trim(rawNumberStringValue) === '' ||
-          currentValueStructure !== newValueStructure
-        ) {
-          this.$propertyValue.val(currentValue);
-          return;
-        }
-
-        // If the inputted value string can be coerced into an equivalent
-        // Number, do it.  Keyframe property values are initially set up as
-        // numbers, and this cast prevents the user from inadvertently setting
-        // inconsistently typed keyframe property values, thus breaking Rekapi.
-        // jshint eqeqeq: false
-        var coercedVal = val == +val ? +val : val;
-
-        keyframePropertyModel.set($target.attr('name'), coercedVal);
-        this.lateralus.update();
-      }
-
-      /**
-       * @param {jQuery.Event} evt
-       */
-      ,'change .property-millisecond': function (evt) {
-        var keyframePropertyModel = this.keyframePropertyModel;
-
-        if (!keyframePropertyModel) {
-          return;
-        }
-
-        var $target = $(evt.target);
-        var val = +$target.val();
-
-        if (val < 0) {
-          return;
-        }
-
-        keyframePropertyModel.set('millisecond', val);
-        this.lateralus.update();
-      }
-
-      /**
-       * @param {jQuery.Event} evt
-       */
-      ,'change select': function (evt) {
-        var keyframePropertyModel = this.keyframePropertyModel;
-
-        if (!keyframePropertyModel) {
-          return;
-        }
-
-        var $target = $(evt.target);
-        keyframePropertyModel.set($target.attr('name'), $target.val());
-        this.lateralus.update();
-      }
-
-      ,'click .add': function () {
-        if (!this.keyframePropertyModel) {
-          return;
-        }
-
-        var keyframePropertyModelJson = this.keyframePropertyModel.toJSON();
-
-        var targetMillisecond =
-          keyframePropertyModelJson.millisecond +
-          constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
-
-        this.emit('requestNewKeyframeProperty', {
-          name: keyframePropertyModelJson.name
-          ,value: keyframePropertyModelJson.value
-          ,easing: keyframePropertyModelJson.easing
-          ,millisecond: targetMillisecond
-        });
-      }
-
-      ,'click .delete': function () {
-        if (!this.keyframePropertyModel) {
-          return;
-        }
-
-        var keyframePropertyModel = this.keyframePropertyModel;
-        keyframePropertyModel.getOwnerActor().removeKeyframeProperty(
-          keyframePropertyModel.get('name')
-          ,keyframePropertyModel.get('millisecond'));
-      }
-    }
-
-    /**
-     * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     */
-    ,initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-      this.propertyNameDefaultText = this.$propertyName.text();
-
-      this.addSubview(CurveSelector.View, {
-        el: this.$propertyEasing
-      });
-    }
-
-    ,render: function () {
-      var activeElement = document.activeElement;
-
-      // TODO: It would be nice if the template could be declaratively bound to
-      // the model, rather than having to make DOM updates imperatively here.
-      this.$propertyName.text(this.keyframePropertyModel.get('name'));
-      this.$propertyMillisecond.val(
-        this.keyframePropertyModel.get('millisecond'));
-      this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
-
-      this.$propertyValue
-        .val(this.keyframePropertyModel.get('value'))
-        .select();
-
-      // Prevent $propertyMillisecond from losing focus, thereby enabling
-      // browser-standard keyup/keydown functionality to mostly work
-      if (activeElement === this.$propertyMillisecond[0]) {
-        this.$propertyMillisecond.focus();
-      }
-    }
-
-    ,reset: function () {
-      this.$propertyName.text(this.propertyNameDefaultText);
-      this.$propertyMillisecond.val('');
-      this.$propertyValue.val('');
-    }
-  });
-
-  return KeyframePropertyDetailComponentView;
-});
-
-define('rekapi-timeline.component.keyframe-property-detail/main',[
-
-  'lateralus'
-
-  ,'./model'
-  ,'./view'
-  ,'text!./template.mustache'
-
-], function (
-
-  Lateralus
-
-  ,Model
-  ,View
-  ,template
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component;
-
-  var KeyframePropertyDetailComponent = Base.extend({
-    name: 'keyframe-property-detail'
-    ,Model: Model
-    ,View: View
-    ,template: template
-  });
-
-  return KeyframePropertyDetailComponent;
-});
-
-define('rekapi-timeline.component.keyframe-property-detail', ['rekapi-timeline.component.keyframe-property-detail/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.details/main',[
-
-  'lateralus'
-
-  ,'./model'
-  ,'./view'
-  ,'text!./template.mustache'
-
-  ,'rekapi-timeline.component.keyframe-property-detail'
-
-], function (
-
-  Lateralus
-
-  ,Model
-  ,View
-  ,template
-
-  ,KeyframePropertyDetailComponent
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component;
-
-  var DetailsComponent = Base.extend({
-    name: 'details'
-    ,Model: Model
-    ,View: View
-    ,template: template
-
-    ,initialize: function () {
-      this.keyframePropertyDetailComponent =
-        this.addComponent(KeyframePropertyDetailComponent, {
-        el: this.view.$keyframePropertyDetail[0]
-      });
-    }
-  });
-
-  return DetailsComponent;
-});
-
-define('rekapi-timeline.component.details', ['rekapi-timeline.component.details/main'], function (main) { return main; });
-
 define('rekapi-timeline.component.scrubber-detail/model',[
 
   'lateralus'
@@ -2033,9 +2033,9 @@ define('rekapi-timeline.component.container/main',[
   ,'./view'
   ,'text!./template.mustache'
 
+  ,'rekapi-timeline.component.details'
   ,'rekapi-timeline.component.control-bar'
   ,'rekapi-timeline.component.timeline'
-  ,'rekapi-timeline.component.details'
   ,'rekapi-timeline.component.scrubber-detail'
 
 ], function (
@@ -2046,9 +2046,9 @@ define('rekapi-timeline.component.container/main',[
   ,View
   ,template
 
+  ,DetailsComponent
   ,ControlBarComponent
   ,TimelineComponent
-  ,DetailsComponent
   ,ScrubberDetailComponent
 
 ) {
@@ -2063,16 +2063,16 @@ define('rekapi-timeline.component.container/main',[
     ,template: template
 
     ,initialize: function () {
+      this.detailsComponent = this.addComponent(DetailsComponent, {
+        el: this.view.$details[0]
+      });
+
       this.controlBar = this.addComponent(ControlBarComponent, {
         el: this.view.$controlBar[0]
       });
 
       this.timelineComponent = this.addComponent(TimelineComponent, {
         el: this.view.$timeline[0]
-      });
-
-      this.detailsComponent = this.addComponent(DetailsComponent, {
-        el: this.view.$details[0]
       });
 
       this.scrubberDetailComponent =
