@@ -238,6 +238,7 @@ define('aenima.constant',[],function () {
     CUSTOM_CURVE_PREFIX: 'customCurve'
     ,NEW_KEYFRAME_MS_INCREASE: 1000
     ,NEW_KEYFRAME_X_INCREASE: 200
+    ,UNDO_STACK_LIMIT: 50
   };
 });
 
@@ -414,8 +415,11 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
         }
       }
 
-      ,keyframePropertyDragEnd: function () {
-        this.$propertyValue.select();
+      ,requestDeselectAllKeyframes: function () {
+        this.$propertyName.text(this.propertyNameDefaultText);
+        this.$propertyValue.val('');
+        this.$propertyMillisecond.val('');
+        this.$propertyEasing.val('linear');
       }
     }
 
@@ -430,6 +434,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           return;
         }
 
+        this.emit('beforeUserUpdatesKeyframeValueInput');
         var $target = $(evt.target);
         var val = $target.val();
         var rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
@@ -468,6 +473,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           return;
         }
 
+        this.emit('beforeUserUpdatesKeyframeMillisecondInput');
         var $target = $(evt.target);
         var val = +$target.val();
 
@@ -489,6 +495,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           return;
         }
 
+        this.emit('beforeUserUpdatesKeyframeCurveSelector');
         var $target = $(evt.target);
         keyframePropertyModel.set($target.attr('name'), $target.val());
         this.lateralus.update();
@@ -547,9 +554,11 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
         this.keyframePropertyModel.get('millisecond'));
       this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
 
-      this.$propertyValue
-        .val(this.keyframePropertyModel.get('value'))
-        .select();
+      this.$propertyValue.val(this.keyframePropertyModel.get('value'));
+
+      if (!this.lateralus.model.get('preventValueInputAutoSelect')) {
+        this.$propertyValue.select();
+      }
 
       // Prevent $propertyMillisecond from losing focus, thereby enabling
       // browser-standard keyup/keydown functionality to mostly work
@@ -1236,34 +1245,6 @@ define('rekapi-timeline.component.keyframe-property-track/model',[
 
 define('text!rekapi-timeline.component.keyframe-property-track/template.mustache',[],function () { return '';});
 
-define('rekapi-timeline.component.keyframe-property/model',[
-
-  'lateralus'
-
-], function (
-
-  Lateralus
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.Model;
-  var baseProto = Base.prototype;
-
-  var KeyframePropertyComponentModel = Base.extend({
-    /**
-     * Parameters are the same as http://backbonejs.org/#Model-constructor
-     * @param {Object} [attributes]
-     * @param {Object} [options]
-     */
-    initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
-
-  return KeyframePropertyComponentModel;
-});
-
 
 define('text!rekapi-timeline.component.keyframe-property/template.mustache',[],function () { return '<div class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" >&nbsp;</div>\n';});
 
@@ -1293,7 +1274,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
     template: template
 
     ,events: {
-      'mousedown .keyframe-property':  function () {
+      'mousedown':  function () {
         this.activate();
       }
 
@@ -1304,6 +1285,10 @@ define('rekapi-timeline.component.keyframe-property/view',[
       ,dragEnd: function () {
         this.emit('keyframePropertyDragEnd');
       }
+
+      ,dragStart: function () {
+        this.emit('keyframePropertyDragStart');
+      }
     }
 
     ,modelEvents: {
@@ -1313,6 +1298,21 @@ define('rekapi-timeline.component.keyframe-property/view',[
 
       ,destroy: function () {
         this.dispose();
+      }
+
+      /**
+       * @param {KeyframePropertyComponentModel} model
+       * @param {boolean} isActive
+       */
+      ,'change:isActive': function (model, isActive) {
+        this.isActivating = isActive;
+
+        if (isActive) {
+          this.emit('userFocusedKeyframeProperty', this);
+        }
+
+        this.setActiveClass(isActive);
+        this.isActivating = false;
       }
     }
 
@@ -1333,7 +1333,35 @@ define('rekapi-timeline.component.keyframe-property/view',[
       }
 
       ,userFocusedKeyframeProperty: function () {
-        this.setActiveClass(false);
+        if (this.isActivating) {
+          return;
+        }
+
+        this.model.set('isActive', false);
+      }
+
+      /**
+       * @param {{ name: string, millisecond: number}} nameAndMillisecondOb
+       */
+      ,activateKeyframePropertyByNameAndMillisecond:
+          function (nameAndMillisecondOb) {
+        var modelAttrs = this.model.toJSON();
+
+        if (nameAndMillisecondOb.name === modelAttrs.name &&
+            nameAndMillisecondOb.millisecond === modelAttrs.millisecond) {
+          this.activate();
+        }
+      }
+    }
+
+    ,provide: {
+      /**
+       * @return {KeyframePropertyComponentView|undefined}
+       */
+      activeKeyframeProperties: function () {
+        if (this.model.get('isActive')) {
+          return this;
+        }
       }
     }
 
@@ -1375,8 +1403,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
     }
 
     ,activate: function () {
-      this.emit('userFocusedKeyframeProperty', this);
-      this.setActiveClass(true);
+      this.model.set('isActive', true);
     }
 
     /**
@@ -1405,7 +1432,6 @@ define('rekapi-timeline.component.keyframe-property/main',[
 
   'lateralus'
 
-  ,'./model'
   ,'./view'
   ,'text!./template.mustache'
 
@@ -1413,7 +1439,6 @@ define('rekapi-timeline.component.keyframe-property/main',[
 
   Lateralus
 
-  ,Model
   ,View
   ,template
 
@@ -1424,7 +1449,6 @@ define('rekapi-timeline.component.keyframe-property/main',[
 
   var KeyframePropertyComponent = Base.extend({
     name: 'keyframe-property'
-    ,Model: Model
     ,View: View
     ,template: template
   });
@@ -1443,8 +1467,6 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
 
   ,'rekapi-timeline.component.keyframe-property'
 
-  ,'rekapi-timeline/constant'
-
 ], function (
 
   _
@@ -1453,8 +1475,6 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
   ,template
 
   ,KeyframePropertyComponent
-
-  ,constant
 
 ) {
   'use strict';
@@ -2155,6 +2175,8 @@ define('rekapi-timeline/model',[
 
       // @type {Array.<{name: string, defaultValue: string}>}
       ,supportedProperties: []
+
+      ,preventValueInputAutoSelect: false
     }
   });
 
@@ -2187,6 +2209,7 @@ define('rekapi-timeline/models/keyframe-property',[
   var KeyframePropertyModel = Base.extend({
     defaults: {
       keyframeProperty: Rekapi.KeyframeProperty
+      ,isActive: false
     }
 
     ,lateralusEvents: {
@@ -2209,6 +2232,8 @@ define('rekapi-timeline/models/keyframe-property',[
       // Have all Backbone.Model.prototype methods act upon the
       // Rekapi.KeyframeProperty instance.
       this.attributes = this.attributes.keyframeProperty;
+      _.defaults(this.attributes,
+        _.omit(KeyframePropertyModel.prototype.defaults, 'keyframeProperty'));
 
       this.id = this.attributes.id;
     }
@@ -2538,6 +2563,7 @@ define('rekapi-timeline/rekapi-timeline',[
    * @param {Rekapi} rekapi The Rekapi instance that this widget represents.
    * @param {Object} config
    * @param {Array.<string>=} [config.supportedProperties]
+   * @param {boolean=} [config.preventValueInputAutoSelect]
    * @extends {Lateralus}
    * @constructor
    */
@@ -2650,7 +2676,7 @@ define('rekapi-timeline/rekapi-timeline',[
   };
 
   utils.proxy(Rekapi, RekapiTimeline, {
-    blacklistedMethodNames: ['on', 'off', 'update']
+    blacklistedMethodNames: ['on', 'off', 'trigger', 'update']
     ,subject: function () {
       return this.rekapi;
     }

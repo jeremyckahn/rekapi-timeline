@@ -17616,8 +17616,6 @@ define('lateralus/lateralus.mixins',[
 ) {
   'use strict';
 
-  var PROVIDE_PREFIX = '_provide:';
-
   /**
    * These method are mixed into `{{#crossLink "Lateralus"}}{{/crossLink}}`,
    * `{{#crossLink "Lateralus.Component"}}{{/crossLink}}`, and `{{#crossLink
@@ -17626,6 +17624,17 @@ define('lateralus/lateralus.mixins',[
    * @requires http://backbonejs.org/#Events
    */
   var mixins = {};
+
+  /**
+   * Event namespace for `{{#crossLink
+   * "Lateralus.mixins/provide:property"}}{{/crossLink}}` handlers.
+   * @type {string}
+   * @property PROVIDE_PREFIX
+   * @final
+   * @private
+   */
+  mixins.PROVIDE_PREFIX = '_provide:';
+  var PROVIDE_PREFIX = mixins.PROVIDE_PREFIX;
 
   /**
    * @param {Object} obj
@@ -17798,49 +17807,19 @@ define('lateralus/lateralus.mixins',[
   };
 
   mixins.setupProviders = function () {
-    /**
-     * A map of functions that will handle `{{#crossLink
-     * "Lateralus.mixins/collect"}}{{/crossLink}}` calls.  Each of the
-     * functions attached to this Object should return a value.  These
-     * functions **must** be completely synchronous.
-     *
-     *     var App = Lateralus.beget(function () {
-     *       Lateralus.apply(this, arguments);
-     *     });
-     *
-     *     _.extend(App.prototype, {
-     *       provide: {
-     *         demoData: function () {
-     *           return 1;
-     *         }
-     *       }
-     *     });
-     *
-     *     var app = new App();
-     *     var ComponentSubclass = Lateralus.Component.extend({
-     *       name: 'provider'
-     *       ,provide: {
-     *         demoData: function () {
-     *           return 2;
-     *         }
-     *       }
-     *     });
-     *
-     *     app.addComponent(ComponentSubclass);
-     *     console.log(app.collect('demoData')); // [1, 2]
-     * @property provide
-     * @type {Object|undefined}
-     */
-    if (!this.provide) {
-      return;
-    }
-
-    this.lateralusEvents = this.lateralusEvents || {};
-
     _.each(this.provide, function (fn, key) {
-      this.lateralusEvents[PROVIDE_PREFIX + key] = function (callback, args) {
+      // The `provide` Object may have already been processed by setupProviders
+      // from a previous class instantiation (it is a shared prototype Object)
+      // so check for that and don't namespace the keys again.
+      if (key.match(PROVIDE_PREFIX)) {
+        return;
+      }
+
+      this.provide[PROVIDE_PREFIX + key] = function (callback, args) {
         callback(fn.apply(this, args));
       };
+
+      delete this.provide[key];
     }, this);
   };
 
@@ -17848,6 +17827,8 @@ define('lateralus/lateralus.mixins',[
    * Execute any `{{#crossLink
    * "Lateralus.mixins/provide:property"}}{{/crossLink}}` handlers that have
    * been set up in the app and return an array of the returned values.
+   *
+   * Values that are `undefined` are excluded from the returned Array.
    * @method collect
    * @param {string} key The name of the `{{#crossLink
    * "Lateralus.mixins/provide:property"}}{{/crossLink}}` methods to run.
@@ -17862,7 +17843,9 @@ define('lateralus/lateralus.mixins',[
     this.emit(PROVIDE_PREFIX + key,
         _.bind(collectedValues.push, collectedValues), args);
 
-    return collectedValues;
+    return _.reject(collectedValues, function (collectedValue) {
+      return collectedValue === undefined;
+    });
   };
 
   /**
@@ -17918,6 +17901,41 @@ define('lateralus/lateralus.mixins',[
          * @default undefined
          */
         lateralusEvents: this.lateralus || this
+
+        /**
+         * A map of functions that will handle `{{#crossLink
+         * "Lateralus.mixins/collect"}}{{/crossLink}}` calls.  Each of the
+         * functions attached to this Object should return a value.  These
+         * functions **must** be completely synchronous.
+         *
+         *     var App = Lateralus.beget(function () {
+         *       Lateralus.apply(this, arguments);
+         *     });
+         *
+         *     _.extend(App.prototype, {
+         *       provide: {
+         *         demoData: function () {
+         *           return 1;
+         *         }
+         *       }
+         *     });
+         *
+         *     var app = new App();
+         *     var ComponentSubclass = Lateralus.Component.extend({
+         *       name: 'provider'
+         *       ,provide: {
+         *         demoData: function () {
+         *           return 2;
+         *         }
+         *       }
+         *     });
+         *
+         *     app.addComponent(ComponentSubclass);
+         *     console.log(app.collect('demoData')); // [1, 2]
+         * @property provide
+         * @type {Object|undefined}
+         */
+        ,provide: this.lateralus || this
 
         /**
          * A map of functions or string references to functions that will
@@ -17981,7 +17999,6 @@ define('lateralus/lateralus.mixins',[
         } else {
           this.listenTo(subject, eventName, boundMethod);
         }
-
       }
     }, this);
 
@@ -19760,6 +19777,23 @@ define('lateralus/lateralus',[
   };
 
   /**
+   * Relay `{{#crossLink "Lateralus.mixins/provide:property"}}{{/crossLink}}`d
+   * handlers to another `{{#crossLink "Lateralus"}}{{/crossLink}}` instance.
+   * This is the `{{#crossLink
+   * "Lateralus.mixins/provide:property"}}{{/crossLink}}` analog to
+   * `{{#crossLink "Lateralus.mixins/amplify"}}{{/crossLink}}`.
+   * @method shareWith
+   * @param {Lateralus} receiver The `{{#crossLink "Lateralus"}}{{/crossLink}}`
+   * instance to share `{{#crossLink
+   * "Lateralus.mixins/provide:property"}}{{/crossLink}}`d handlers with.
+   * @param {string} providerName The name of the `{{#crossLink
+   * "Lateralus.mixins/provide:property"}}{{/crossLink}}`er.
+   */
+  fn.shareWith = function (receiver, providerName) {
+    this.amplify(receiver, mixins.PROVIDE_PREFIX + providerName);
+  };
+
+  /**
    * Remove this `{{#crossLink "Lateralus"}}{{/crossLink}}` app from memory.
    * @method dispose
    */
@@ -21413,7 +21447,7 @@ var Tweenable = (function () {
 
 }).call(null);
 
-/*! rekapi - v1.5.5 - 2015-10-04 - http://rekapi.com */
+/*! rekapi - v1.6.1 - 2015-10-29 - http://rekapi.com */
 /*!
  * Rekapi - Rewritten Kapi.
  * http://rekapi.com/
@@ -21712,9 +21746,11 @@ var rekapiCore = function (root, _, Tweenable) {
       ,'afterUpdate': []
       ,'addActor': []
       ,'removeActor': []
+      ,'beforeAddKeyframeProperty': []
       ,'addKeyframeProperty': []
       ,'removeKeyframeProperty': []
       ,'removeKeyframePropertyComplete': []
+      ,'beforeRemoveKeyframeProperty': []
       ,'addKeyframePropertyTrack': []
       ,'removeKeyframePropertyTrack': []
       ,'timelineModified': []
@@ -22084,13 +22120,21 @@ var rekapiCore = function (root, _, Tweenable) {
    *   {{#crossLink "Rekapi.Actor"}}{{/crossLink}} that was added.
    * - __removeActor__: Fires when an actor is removed.  `opt_data` is the
    *   {{#crossLink "Rekapi.Actor"}}{{/crossLink}} that was removed.
+   * - __beforeAddKeyframeProperty__: Fires just before the point where a
+   *   {{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}} is added to the
+   *   timeline.  This event is called before any modifications to the timeline
+   *   are done.
    * - __addKeyframeProperty__: Fires when a keyframe property is added.
    *   `opt_data` is the {{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}}
    *   that was added.
+   * - __beforeRemoveKeyframeProperty__: Fires just before the point where a
+   *   {{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}} is removed.  This
+   *   event is called before any modifications to the timeline are done.
    * - __removeKeyframeProperty__: Fires when a {{#crossLink
    *   "Rekapi.KeyframeProperty"}}{{/crossLink}} is removed.  This event is
-   *   fired _before_ the internal state of the timeline has been updated to
-   *   reflect the keyframe property removal (this is in contrast to
+   *   fired _before_ the internal state of the keyframe (but not the timeline,
+   *   in contrast to the `beforeRemoveKeyframeProperty` event) has been
+   *   updated to reflect the keyframe property removal (this is in contrast to
    *   `removeKeyframePropertyComplete`).  `opt_data` is the {{#crossLink
    *   "Rekapi.KeyframeProperty"}}{{/crossLink}} that was removed.
    * - __removeKeyframePropertyComplete__: Fires when a {{#crossLink
@@ -22125,6 +22169,19 @@ var rekapiCore = function (root, _, Tweenable) {
     }
 
     this._events[eventName].push(handler);
+
+    return this;
+  };
+
+  /**
+   * Manually fire a Rekapi event, thereby calling all bound event handlers.
+   * @param {string} eventName The name of the event to trigger.
+   * @param {any=} opt_data Optional data to provide to `eventName` handlers.
+   * @method trigger
+   * @chainable
+   */
+  Rekapi.prototype.trigger = function (eventName, opt_data) {
+    fireEvent(this, eventName, _, opt_data);
 
     return this;
   };
@@ -22866,11 +22923,11 @@ rekapiModules.push(function (context) {
    * Remove all `{{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}}`s set
    * on the actor.
    *
-   * **NOTE**: This method does _not_ fire the `removeKeyframePropertyComplete`
-   * event.  This method is a bulk operation that is more efficient than
-   * calling `{{#crossLink
+   * **NOTE**: This method does _not_ fire the `beforeRemoveKeyframeProperty`
+   * or `removeKeyframePropertyComplete` events.  This method is a bulk
+   * operation that is more efficient than calling `{{#crossLink
    * "Rekapi.Actor/removeKeyframeProperty:method"}}{{/crossLink}}` many times
-   * individually, but foregoes firing that event.
+   * individually, but foregoes firing events.
    *
    * __[Example](../../../../docs/examples/actor_remove_all_keyframes.html)__
    * @method removeAllKeyframes
@@ -22955,6 +23012,7 @@ rekapiModules.push(function (context) {
 
     if (typeof propertyTracks[property] !== 'undefined') {
       var keyframeProperty = this.getKeyframeProperty(property, millisecond);
+      fireEvent(this.rekapi, 'beforeRemoveKeyframeProperty', _, keyframeProperty);
       propertyTracks[property] =
         _.without(propertyTracks[property], keyframeProperty);
       keyframeProperty.detach();
@@ -23121,6 +23179,10 @@ rekapiModules.push(function (context) {
    * @chainable
    */
   Actor.prototype._addKeyframeProperty = function (keyframeProperty) {
+    if (this.rekapi) {
+      fireEvent(this.rekapi, 'beforeAddKeyframeProperty', _, keyframeProperty);
+    }
+
     keyframeProperty.actor = this;
     this._keyframeProperties[keyframeProperty.id] = keyframeProperty;
 
@@ -25839,6 +25901,7 @@ define('aenima.constant',[],function () {
     CUSTOM_CURVE_PREFIX: 'customCurve'
     ,NEW_KEYFRAME_MS_INCREASE: 1000
     ,NEW_KEYFRAME_X_INCREASE: 200
+    ,UNDO_STACK_LIMIT: 50
   };
 });
 
@@ -26015,8 +26078,11 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
         }
       }
 
-      ,keyframePropertyDragEnd: function () {
-        this.$propertyValue.select();
+      ,requestDeselectAllKeyframes: function () {
+        this.$propertyName.text(this.propertyNameDefaultText);
+        this.$propertyValue.val('');
+        this.$propertyMillisecond.val('');
+        this.$propertyEasing.val('linear');
       }
     }
 
@@ -26031,6 +26097,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           return;
         }
 
+        this.emit('beforeUserUpdatesKeyframeValueInput');
         var $target = $(evt.target);
         var val = $target.val();
         var rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
@@ -26069,6 +26136,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           return;
         }
 
+        this.emit('beforeUserUpdatesKeyframeMillisecondInput');
         var $target = $(evt.target);
         var val = +$target.val();
 
@@ -26090,6 +26158,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
           return;
         }
 
+        this.emit('beforeUserUpdatesKeyframeCurveSelector');
         var $target = $(evt.target);
         keyframePropertyModel.set($target.attr('name'), $target.val());
         this.lateralus.update();
@@ -26148,9 +26217,11 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
         this.keyframePropertyModel.get('millisecond'));
       this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
 
-      this.$propertyValue
-        .val(this.keyframePropertyModel.get('value'))
-        .select();
+      this.$propertyValue.val(this.keyframePropertyModel.get('value'));
+
+      if (!this.lateralus.model.get('preventValueInputAutoSelect')) {
+        this.$propertyValue.select();
+      }
 
       // Prevent $propertyMillisecond from losing focus, thereby enabling
       // browser-standard keyup/keydown functionality to mostly work
@@ -26837,34 +26908,6 @@ define('rekapi-timeline.component.keyframe-property-track/model',[
 
 define('text!rekapi-timeline.component.keyframe-property-track/template.mustache',[],function () { return '';});
 
-define('rekapi-timeline.component.keyframe-property/model',[
-
-  'lateralus'
-
-], function (
-
-  Lateralus
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.Model;
-  var baseProto = Base.prototype;
-
-  var KeyframePropertyComponentModel = Base.extend({
-    /**
-     * Parameters are the same as http://backbonejs.org/#Model-constructor
-     * @param {Object} [attributes]
-     * @param {Object} [options]
-     */
-    initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
-
-  return KeyframePropertyComponentModel;
-});
-
 
 define('text!rekapi-timeline.component.keyframe-property/template.mustache',[],function () { return '<div class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" >&nbsp;</div>\n';});
 
@@ -26894,7 +26937,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
     template: template
 
     ,events: {
-      'mousedown .keyframe-property':  function () {
+      'mousedown':  function () {
         this.activate();
       }
 
@@ -26905,6 +26948,10 @@ define('rekapi-timeline.component.keyframe-property/view',[
       ,dragEnd: function () {
         this.emit('keyframePropertyDragEnd');
       }
+
+      ,dragStart: function () {
+        this.emit('keyframePropertyDragStart');
+      }
     }
 
     ,modelEvents: {
@@ -26914,6 +26961,21 @@ define('rekapi-timeline.component.keyframe-property/view',[
 
       ,destroy: function () {
         this.dispose();
+      }
+
+      /**
+       * @param {KeyframePropertyComponentModel} model
+       * @param {boolean} isActive
+       */
+      ,'change:isActive': function (model, isActive) {
+        this.isActivating = isActive;
+
+        if (isActive) {
+          this.emit('userFocusedKeyframeProperty', this);
+        }
+
+        this.setActiveClass(isActive);
+        this.isActivating = false;
       }
     }
 
@@ -26934,7 +26996,35 @@ define('rekapi-timeline.component.keyframe-property/view',[
       }
 
       ,userFocusedKeyframeProperty: function () {
-        this.setActiveClass(false);
+        if (this.isActivating) {
+          return;
+        }
+
+        this.model.set('isActive', false);
+      }
+
+      /**
+       * @param {{ name: string, millisecond: number}} nameAndMillisecondOb
+       */
+      ,activateKeyframePropertyByNameAndMillisecond:
+          function (nameAndMillisecondOb) {
+        var modelAttrs = this.model.toJSON();
+
+        if (nameAndMillisecondOb.name === modelAttrs.name &&
+            nameAndMillisecondOb.millisecond === modelAttrs.millisecond) {
+          this.activate();
+        }
+      }
+    }
+
+    ,provide: {
+      /**
+       * @return {KeyframePropertyComponentView|undefined}
+       */
+      activeKeyframeProperties: function () {
+        if (this.model.get('isActive')) {
+          return this;
+        }
       }
     }
 
@@ -26976,8 +27066,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
     }
 
     ,activate: function () {
-      this.emit('userFocusedKeyframeProperty', this);
-      this.setActiveClass(true);
+      this.model.set('isActive', true);
     }
 
     /**
@@ -27006,7 +27095,6 @@ define('rekapi-timeline.component.keyframe-property/main',[
 
   'lateralus'
 
-  ,'./model'
   ,'./view'
   ,'text!./template.mustache'
 
@@ -27014,7 +27102,6 @@ define('rekapi-timeline.component.keyframe-property/main',[
 
   Lateralus
 
-  ,Model
   ,View
   ,template
 
@@ -27025,7 +27112,6 @@ define('rekapi-timeline.component.keyframe-property/main',[
 
   var KeyframePropertyComponent = Base.extend({
     name: 'keyframe-property'
-    ,Model: Model
     ,View: View
     ,template: template
   });
@@ -27044,8 +27130,6 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
 
   ,'rekapi-timeline.component.keyframe-property'
 
-  ,'rekapi-timeline/constant'
-
 ], function (
 
   _
@@ -27054,8 +27138,6 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
   ,template
 
   ,KeyframePropertyComponent
-
-  ,constant
 
 ) {
   'use strict';
@@ -27756,6 +27838,8 @@ define('rekapi-timeline/model',[
 
       // @type {Array.<{name: string, defaultValue: string}>}
       ,supportedProperties: []
+
+      ,preventValueInputAutoSelect: false
     }
   });
 
@@ -27788,6 +27872,7 @@ define('rekapi-timeline/models/keyframe-property',[
   var KeyframePropertyModel = Base.extend({
     defaults: {
       keyframeProperty: Rekapi.KeyframeProperty
+      ,isActive: false
     }
 
     ,lateralusEvents: {
@@ -27810,6 +27895,8 @@ define('rekapi-timeline/models/keyframe-property',[
       // Have all Backbone.Model.prototype methods act upon the
       // Rekapi.KeyframeProperty instance.
       this.attributes = this.attributes.keyframeProperty;
+      _.defaults(this.attributes,
+        _.omit(KeyframePropertyModel.prototype.defaults, 'keyframeProperty'));
 
       this.id = this.attributes.id;
     }
@@ -28524,6 +28611,7 @@ define('rekapi-timeline/rekapi-timeline',[
    * @param {Rekapi} rekapi The Rekapi instance that this widget represents.
    * @param {Object} config
    * @param {Array.<string>=} [config.supportedProperties]
+   * @param {boolean=} [config.preventValueInputAutoSelect]
    * @extends {Lateralus}
    * @constructor
    */
@@ -28636,7 +28724,7 @@ define('rekapi-timeline/rekapi-timeline',[
   };
 
   utils.proxy(Rekapi, RekapiTimeline, {
-    blacklistedMethodNames: ['on', 'off', 'update']
+    blacklistedMethodNames: ['on', 'off', 'trigger', 'update']
     ,subject: function () {
       return this.rekapi;
     }
