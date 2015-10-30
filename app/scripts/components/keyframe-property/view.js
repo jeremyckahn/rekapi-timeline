@@ -24,7 +24,7 @@ define([
     template: template
 
     ,events: {
-      'mousedown .keyframe-property':  function () {
+      'mousedown':  function () {
         this.activate();
       }
 
@@ -35,6 +35,10 @@ define([
       ,dragEnd: function () {
         this.emit('keyframePropertyDragEnd');
       }
+
+      ,dragStart: function () {
+        this.emit('keyframePropertyDragStart');
+      }
     }
 
     ,modelEvents: {
@@ -44,6 +48,21 @@ define([
 
       ,destroy: function () {
         this.dispose();
+      }
+
+      /**
+       * @param {KeyframePropertyComponentModel} model
+       * @param {boolean} isActive
+       */
+      ,'change:isActive': function (model, isActive) {
+        this.isActivating = isActive;
+
+        if (isActive) {
+          this.emit('userFocusedKeyframeProperty', this);
+        }
+
+        this.setActiveClass(isActive);
+        this.isActivating = false;
       }
     }
 
@@ -64,7 +83,35 @@ define([
       }
 
       ,userFocusedKeyframeProperty: function () {
-        this.setActiveClass(false);
+        if (this.isActivating) {
+          return;
+        }
+
+        this.model.set('isActive', false);
+      }
+
+      /**
+       * @param {{ name: string, millisecond: number}} nameAndMillisecondOb
+       */
+      ,activateKeyframePropertyByNameAndMillisecond:
+          function (nameAndMillisecondOb) {
+        var modelAttrs = this.model.toJSON();
+
+        if (nameAndMillisecondOb.name === modelAttrs.name &&
+            nameAndMillisecondOb.millisecond === modelAttrs.millisecond) {
+          this.activate();
+        }
+      }
+    }
+
+    ,provide: {
+      /**
+       * @return {KeyframePropertyComponentView|undefined}
+       */
+      activeKeyframeProperties: function () {
+        if (this.model.get('isActive')) {
+          return this;
+        }
       }
     }
 
@@ -106,8 +153,7 @@ define([
     }
 
     ,activate: function () {
-      this.emit('userFocusedKeyframeProperty', this);
-      this.setActiveClass(true);
+      this.model.set('isActive', true);
     }
 
     /**

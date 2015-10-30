@@ -22,6 +22,8 @@ define([
 
       // @type {Array.<{name: string, defaultValue: string}>}
       ,supportedProperties: []
+
+      ,preventValueInputAutoSelect: false
     }
   });
 

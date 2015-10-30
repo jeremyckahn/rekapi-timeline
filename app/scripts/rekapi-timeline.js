@@ -33,6 +33,7 @@ define([
    * @param {Rekapi} rekapi The Rekapi instance that this widget represents.
    * @param {Object} config
    * @param {Array.<string>=} [config.supportedProperties]
+   * @param {boolean=} [config.preventValueInputAutoSelect]
    * @extends {Lateralus}
    * @constructor
    */
@@ -145,7 +146,7 @@ define([
   };
 
   utils.proxy(Rekapi, RekapiTimeline, {
-    blacklistedMethodNames: ['on', 'off', 'update']
+    blacklistedMethodNames: ['on', 'off', 'trigger', 'update']
     ,subject: function () {
       return this.rekapi;
     }

@@ -24,6 +24,7 @@ define([
   var KeyframePropertyModel = Base.extend({
     defaults: {
       keyframeProperty: Rekapi.KeyframeProperty
+      ,isActive: false
     }
 
     ,lateralusEvents: {
@@ -46,6 +47,8 @@ define([
       // Have all Backbone.Model.prototype methods act upon the
       // Rekapi.KeyframeProperty instance.
       this.attributes = this.attributes.keyframeProperty;
+      _.defaults(this.attributes,
+        _.omit(KeyframePropertyModel.prototype.defaults, 'keyframeProperty'));
 
       this.id = this.attributes.id;
     }

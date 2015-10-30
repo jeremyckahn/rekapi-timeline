@@ -67,8 +67,11 @@ define([
         }
       }
 
-      ,keyframePropertyDragEnd: function () {
-        this.$propertyValue.select();
+      ,requestDeselectAllKeyframes: function () {
+        this.$propertyName.text(this.propertyNameDefaultText);
+        this.$propertyValue.val('');
+        this.$propertyMillisecond.val('');
+        this.$propertyEasing.val('linear');
       }
     }
 
@@ -83,6 +86,7 @@ define([
           return;
         }
 
+        this.emit('beforeUserUpdatesKeyframeValueInput');
         var $target = $(evt.target);
         var val = $target.val();
         var rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
@@ -121,6 +125,7 @@ define([
           return;
         }
 
+        this.emit('beforeUserUpdatesKeyframeMillisecondInput');
         var $target = $(evt.target);
         var val = +$target.val();
 
@@ -142,6 +147,7 @@ define([
           return;
         }
 
+        this.emit('beforeUserUpdatesKeyframeCurveSelector');
         var $target = $(evt.target);
         keyframePropertyModel.set($target.attr('name'), $target.val());
         this.lateralus.update();
@@ -200,9 +206,11 @@ define([
         this.keyframePropertyModel.get('millisecond'));
       this.$propertyEasing.val(this.keyframePropertyModel.get('easing'));
 
-      this.$propertyValue
-        .val(this.keyframePropertyModel.get('value'))
-        .select();
+      this.$propertyValue.val(this.keyframePropertyModel.get('value'));
+
+      if (!this.lateralus.model.get('preventValueInputAutoSelect')) {
+        this.$propertyValue.select();
+      }
 
       // Prevent $propertyMillisecond from losing focus, thereby enabling
       // browser-standard keyup/keydown functionality to mostly work

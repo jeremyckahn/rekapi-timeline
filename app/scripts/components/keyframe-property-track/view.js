@@ -7,8 +7,6 @@ define([
 
   ,'rekapi-timeline.component.keyframe-property'
 
-  ,'rekapi-timeline/constant'
-
 ], function (
 
   _
@@ -17,8 +15,6 @@ define([
   ,template
 
   ,KeyframePropertyComponent
-
-  ,constant
 
 ) {
   'use strict';
