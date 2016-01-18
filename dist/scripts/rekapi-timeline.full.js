@@ -26678,19 +26678,22 @@ define('rekapi-timeline.component.scrubber/view',[
         this.render();
       }
 
+      ,requestResizeScrubberGuide: function () {
+        this.resizeScrubberGuide();
+      }
+
       ,'rekapi:afterUpdate': function () {
         this.render();
       }
 
+      // resizeScrubberGuide calls that are called in response to a Rekapi
+      // event must be deferred here so the DOM has a chance to finish building
+      // itself
       ,'rekapi:addKeyframePropertyTrack': function () {
-        this.resizeScrubberGuide();
+        _.defer(this.resizeScrubberGuide.bind(this));
       }
 
       ,'rekapi:removeKeyframePropertyTrack': function () {
-        // Defer this operation so that the relevant
-        // KeyframePropertyTrackComponent has a chance to remove itself from
-        // the DOM, which needs to happen before the DOM calculation in
-        // resizeScrubberGuide occurs.
         _.defer(this.resizeScrubberGuide.bind(this));
       }
 
