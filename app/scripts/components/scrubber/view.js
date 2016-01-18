@@ -35,6 +35,10 @@ define([
         this.render();
       }
 
+      ,requestResizeScrubberGuide: function () {
+        this.resizeScrubberGuide();
+      }
+
       ,'rekapi:afterUpdate': function () {
         this.render();
       }
