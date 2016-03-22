@@ -11,7 +11,8 @@
     "aenima": "~0.1.0"
   },
   "resolutions": {
+    "lateralus": "~0.9.3",
     "jquery": "2.1.4",
-    "lateralus": "~0.8.0"
+    "lodash": "~2.4.1"
   }
 }
