@@ -57,16 +57,26 @@ define([
      * @override
      */
     ,set: function (key, value) {
-      Backbone.Model.prototype.set.apply(this, arguments);
+      if (typeof key === 'string') {
+        var oldValue = this.get(key);
 
-      if (key in this.attributes) {
-        // Modify the keyframeProperty via its actor so that the state of the
-        // animation is updated.
-        var obj = {};
-        obj[key] = value;
-        this.attributes.actor.modifyKeyframeProperty(
-            this.attributes.name, this.attributes.millisecond, obj);
+        if (key in this.attributes) {
+          if (this.get(key) === value) {
+            return;
+          }
+
+          // Modify the keyframeProperty via its actor so that the state of the
+          // animation is updated.
+          var obj = {};
+          obj[key] = value;
+          this.attributes.actor.modifyKeyframeProperty(
+              this.attributes.name, this.attributes.millisecond, obj);
+        }
+
+        this.attributes[key] = oldValue;
       }
+
+      Backbone.Model.prototype.set.apply(this, arguments);
     }
 
     /**
@@ -86,7 +96,11 @@ define([
     }
   });
 
-  utils.proxy(Rekapi.KeyframeProperty, KeyframePropertyModel);
+  utils.proxy(Rekapi.KeyframeProperty, KeyframePropertyModel, {
+    subject: function () {
+      return this.attributes;
+    }
+  });
 
   return KeyframePropertyModel;
 });

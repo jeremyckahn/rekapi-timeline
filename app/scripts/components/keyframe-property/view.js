@@ -33,6 +33,7 @@ define([
       }
 
       ,dragEnd: function () {
+        this.overwriteRedundantProperty();
         this.emit('keyframePropertyDragEnd');
       }
 
@@ -167,11 +168,52 @@ define([
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
     ,updateKeyframeProperty: function () {
-      var scaledValue =
-        this.collectOne('timelineMillisecondForHandle', this.$el);
+      var model = this.model;
+      var millisecond = Math.round(
+        this.collectOne('timelineMillisecondForHandle', this.$el)
+      );
 
-      this.model.set('millisecond', Math.round(scaledValue));
+      if (
+          // This will be true if the user drags the property vertically, which
+          // would cause the drag event handler to be called but should not
+          // cause any kind of a state change.
+          millisecond === model.get('millisecond') ||
+
+          this.doesPropertyAlreadyExistAt(millisecond)) {
+        return;
+      }
+
+      model.set('millisecond', millisecond);
       this.lateralus.update();
+    }
+
+    ,overwriteRedundantProperty: function () {
+      var model = this.model;
+      var millisecond = Math.round(
+        this.collectOne('timelineMillisecondForHandle', this.$el)
+      );
+
+      this.emit('beginTemporaryTimelineModifications');
+      model.set('millisecond', 1e99);
+
+      if (this.doesPropertyAlreadyExistAt(millisecond)) {
+        var actor = model.get('actor');
+        actor.removeKeyframeProperty(model.get('name'), millisecond);
+      }
+
+      model.set('millisecond', millisecond);
+      this.emit('endTemporaryTimelineModifications');
+      this.lateralus.update();
+    }
+
+    /**
+     * @param {number} millisecond
+     * @return {boolean}
+     */
+    ,doesPropertyAlreadyExistAt: function (millisecond) {
+      return this.model.get('actor').hasKeyframeAt(
+        millisecond, this.model.get('name')
+      );
     }
   });
 

@@ -127,13 +127,18 @@ define([
 
         this.emit('beforeUserUpdatesKeyframeMillisecondInput');
         var $target = $(evt.target);
-        var val = +$target.val();
+        var millisecond = +$target.val();
 
-        if (val < 0) {
+        if (millisecond < 0 ||
+            keyframePropertyModel.get('actor').hasKeyframeAt(
+              millisecond
+              ,keyframePropertyModel.get('name')
+            )
+          ) {
           return;
         }
 
-        keyframePropertyModel.set('millisecond', val);
+        keyframePropertyModel.set('millisecond', millisecond);
         this.lateralus.update();
       }
 

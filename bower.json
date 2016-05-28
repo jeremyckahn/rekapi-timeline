@@ -5,10 +5,10 @@
     "bootstrap-sass-official": "~3.2.0",
     "modernizr": "~2.7.1",
     "lateralus": "~0.9.3",
-    "rekapi": "~1.6.1",
+    "rekapi": "~1.7.1",
     "jquery-dragon": "~0.4.5",
     "jquery": "2.1.4",
-    "aenima": "~0.1.0"
+    "aenima": "~0.3.3"
   },
   "resolutions": {
     "lateralus": "~0.9.3",
