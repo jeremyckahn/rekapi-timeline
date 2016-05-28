@@ -19825,11 +19825,11 @@ define('lateralus/lateralus',[
 
 define('lateralus', ['lateralus/lateralus'], function (main) { return main; });
 
-/*! shifty - v1.5.1 - 2015-08-28 - http://jeremyckahn.github.io/shifty */
+/* shifty - v1.5.2 - 2016-03-19 - http://jeremyckahn.github.io/shifty */
 ;(function () {
   var root = this || Function('return this')();
 
-/*!
+/**
  * Shifty Core
  * By Jeremy Kahn - jeremyckahn@gmail.com
  */
@@ -19871,12 +19871,13 @@ var Tweenable = (function () {
     // NOOP!
   }
 
-  /*!
+  /**
    * Handy shortcut for doing a for-in loop. This is not a "normal" each
    * function, it is optimized for Shifty.  The iterator function only receives
    * the property name, not the value.
    * @param {Object} obj
    * @param {Function(string)} fn
+   * @private
    */
   function each (obj, fn) {
     var key;
@@ -19887,11 +19888,12 @@ var Tweenable = (function () {
     }
   }
 
-  /*!
+  /**
    * Perform a shallow copy of Object properties.
    * @param {Object} targetObject The object to copy into
    * @param {Object} srcObject The object to copy from
    * @return {Object} A reference to the augmented `targetObj` Object
+   * @private
    */
   function shallowCopy (targetObj, srcObj) {
     each(srcObj, function (prop) {
@@ -19901,11 +19903,12 @@ var Tweenable = (function () {
     return targetObj;
   }
 
-  /*!
+  /**
    * Copies each property from src onto target, but only if the property to
    * copy to target is undefined.
    * @param {Object} target Missing properties in this Object are filled in
    * @param {Object} src
+   * @private
    */
   function defaults (target, src) {
     each(src, function (prop) {
@@ -19915,7 +19918,7 @@ var Tweenable = (function () {
     });
   }
 
-  /*!
+  /**
    * Calculates the interpolated tween values of an Object for a given
    * timestamp.
    * @param {Number} forPosition The position to compute the state for.
@@ -19928,6 +19931,7 @@ var Tweenable = (function () {
    * @param {number} timestamp: The UNIX epoch time at which the tween began.
    * @param {Object} easing: This Object's keys must correspond to the keys in
    * targetState.
+   * @private
    */
   function tweenProps (forPosition, currentState, originalState, targetState,
     duration, timestamp, easing) {
@@ -19957,7 +19961,7 @@ var Tweenable = (function () {
     return currentState;
   }
 
-  /*!
+  /**
    * Tweens a single property.
    * @param {number} start The value that the tween started from.
    * @param {number} end The value that the tween should end at.
@@ -19965,16 +19969,18 @@ var Tweenable = (function () {
    * @param {number} position The normalized position (between 0.0 and 1.0) to
    * calculate the midpoint of 'start' and 'end' against.
    * @return {number} The tweened value.
+   * @private
    */
   function tweenProp (start, end, easingFunc, position) {
     return start + (end - start) * easingFunc(position);
   }
 
-  /*!
+  /**
    * Applies a filter to Tweenable instance.
    * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
    * upon.
    * @param {String} filterName The name of the filter to apply.
+   * @private
    */
   function applyFilter (tweenable, filterName) {
     var filters = Tweenable.prototype.filter;
@@ -19991,7 +19997,7 @@ var Tweenable = (function () {
   var timeoutHandler_currentTime;
   var timeoutHandler_isEnded;
   var timeoutHandler_offset;
-  /*!
+  /**
    * Handles the update logic for one step of a tween.
    * @param {Tweenable} tweenable
    * @param {number} timestamp
@@ -20005,6 +20011,7 @@ var Tweenable = (function () {
    * @param {Function(Function,number)}} schedule
    * @param {number=} opt_currentTimeOverride Needed for accurate timestamp in
    * Tweenable#seek.
+   * @private
    */
   function timeoutHandler (tweenable, timestamp, delay, duration, currentState,
     originalState, targetState, easing, step, schedule,
@@ -20049,13 +20056,14 @@ var Tweenable = (function () {
   }
 
 
-  /*!
+  /**
    * Creates a usable easing Object from a string, a function or another easing
    * Object.  If `easing` is an Object, then this function clones it and fills
    * in the missing properties with `"linear"`.
    * @param {Object.<string|Function>} fromTweenParams
    * @param {Object|string|Function} easing
    * @return {Object.<string|Function>}
+   * @private
    */
   function composeEasingObject (fromTweenParams, easing) {
     var composedEasing = {};
@@ -20375,9 +20383,10 @@ var Tweenable = (function () {
     }
   };
 
-  /*!
+  /**
    * Filters are used for transforming the properties of a tween at various
    * points in a Tweenable's life cycle.  See the README for more info on this.
+   * @private
    */
   Tweenable.prototype.filter = {};
 
@@ -20635,7 +20644,7 @@ var Tweenable = (function () {
 }());
 
 // jshint maxlen:100
-/*!
+/**
  * The Bezier magic in this file is adapted/copied almost wholesale from
  * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/cubic-bezier.js),
  * which was adapted from Apple code (which probably came from
@@ -20643,7 +20652,7 @@ var Tweenable = (function () {
  * Special thanks to Apple and Thomas Fuchs for much of this code.
  */
 
-/*!
+/**
  *  Copyright (c) 2006 Apple Computer, Inc. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -20742,7 +20751,7 @@ var Tweenable = (function () {
     ay = 1.0 - cy - by;
     return solve(t, solveEpsilon(duration));
   }
-  /*!
+  /**
    *  getCubicBezierTransition(x1, y1, x2, y2) -> Function
    *
    *  Generates a transition easing function that is compatible
@@ -20757,6 +20766,7 @@ var Tweenable = (function () {
    *  @param {number} x2
    *  @param {number} y2
    *  @return {function}
+   *  @private
    */
   function getCubicBezierTransition (x1, y1, x2, y2) {
     return function (pos) {
@@ -21031,11 +21041,12 @@ var Tweenable = (function () {
 
 ;(function (Tweenable) {
 
-  /*!
+  /**
    * @typedef {{
    *   formatString: string
    *   chunkNames: Array.<string>
    * }}
+   * @private
    */
   var formatManifest;
 
@@ -21054,11 +21065,12 @@ var Tweenable = (function () {
 
   // HELPERS
 
-  /*!
+  /**
    * @param {Array.number} rawValues
    * @param {string} prefix
    *
    * @return {Array.<string>}
+   * @private
    */
   function getFormatChunksFrom (rawValues, prefix) {
     var accumulator = [];
@@ -21073,10 +21085,11 @@ var Tweenable = (function () {
     return accumulator;
   }
 
-  /*!
+  /**
    * @param {string} formattedString
    *
    * @return {string}
+   * @private
    */
   function getFormatStringFrom (formattedString) {
     var chunks = formattedString.match(R_FORMAT_CHUNKS);
@@ -21102,12 +21115,13 @@ var Tweenable = (function () {
     return chunks.join(VALUE_PLACEHOLDER);
   }
 
-  /*!
+  /**
    * Convert all hex color values within a string to an rgb string.
    *
    * @param {Object} stateObject
    *
    * @return {Object} The modified obj
+   * @private
    */
   function sanitizeObjectForHexProps (stateObject) {
     Tweenable.each(stateObject, function (prop) {
@@ -21119,19 +21133,21 @@ var Tweenable = (function () {
     });
   }
 
-  /*!
+  /**
    * @param {string} str
    *
    * @return {string}
+   * @private
    */
   function  sanitizeHexChunksToRGB (str) {
     return filterStringChunks(R_HEX, str, convertHexToRGB);
   }
 
-  /*!
+  /**
    * @param {string} hexString
    *
    * @return {string}
+   * @private
    */
   function convertHexToRGB (hexString) {
     var rgbArr = hexToRGBArray(hexString);
@@ -21139,7 +21155,7 @@ var Tweenable = (function () {
   }
 
   var hexToRGBArray_returnArray = [];
-  /*!
+  /**
    * Convert a hexadecimal string to an array with three items, one each for
    * the red, blue, and green decimal values.
    *
@@ -21147,6 +21163,7 @@ var Tweenable = (function () {
    *
    * @returns {Array.<number>} The converted Array of RGB values if `hex` is a
    * valid string, or an Array of three 0's.
+   * @private
    */
   function hexToRGBArray (hex) {
 
@@ -21166,18 +21183,19 @@ var Tweenable = (function () {
     return hexToRGBArray_returnArray;
   }
 
-  /*!
+  /**
    * Convert a base-16 number to base-10.
    *
    * @param {Number|String} hex The value to convert
    *
    * @returns {Number} The base-10 equivalent of `hex`.
+   * @private
    */
   function hexToDec (hex) {
     return parseInt(hex, 16);
   }
 
-  /*!
+  /**
    * Runs a filter operation on all chunks of a string that match a RegExp
    *
    * @param {RegExp} pattern
@@ -21185,6 +21203,7 @@ var Tweenable = (function () {
    * @param {function(string)} filter
    *
    * @return {string}
+   * @private
    */
   function filterStringChunks (pattern, unfilteredString, filter) {
     var pattenMatches = unfilteredString.match(pattern);
@@ -21204,21 +21223,23 @@ var Tweenable = (function () {
     return filteredString;
   }
 
-  /*!
+  /**
    * Check for floating point values within rgb strings and rounds them.
    *
    * @param {string} formattedString
    *
    * @return {string}
+   * @private
    */
   function sanitizeRGBChunks (formattedString) {
     return filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk);
   }
 
-  /*!
+  /**
    * @param {string} rgbChunk
    *
    * @return {string}
+   * @private
    */
   function sanitizeRGBChunk (rgbChunk) {
     var numbers = rgbChunk.match(R_UNFORMATTED_VALUES);
@@ -21234,11 +21255,12 @@ var Tweenable = (function () {
     return sanitizedString;
   }
 
-  /*!
+  /**
    * @param {Object} stateObject
    *
    * @return {Object} An Object of formatManifests that correspond to
    * the string properties of stateObject
+   * @private
    */
   function getFormatManifests (stateObject) {
     var manifestAccumulator = {};
@@ -21259,9 +21281,10 @@ var Tweenable = (function () {
     return manifestAccumulator;
   }
 
-  /*!
+  /**
    * @param {Object} stateObject
    * @param {Object} formatManifests
+   * @private
    */
   function expandFormattedProperties (stateObject, formatManifests) {
     Tweenable.each(formatManifests, function (prop) {
@@ -21277,9 +21300,10 @@ var Tweenable = (function () {
     });
   }
 
-  /*!
+  /**
    * @param {Object} stateObject
    * @param {Object} formatManifests
+   * @private
    */
   function collapseFormattedProperties (stateObject, formatManifests) {
     Tweenable.each(formatManifests, function (prop) {
@@ -21294,11 +21318,12 @@ var Tweenable = (function () {
     });
   }
 
-  /*!
+  /**
    * @param {Object} stateObject
    * @param {Array.<string>} chunkNames
    *
    * @return {Object} The extracted value chunks.
+   * @private
    */
   function extractPropertyChunks (stateObject, chunkNames) {
     var extractedValues = {};
@@ -21314,11 +21339,12 @@ var Tweenable = (function () {
   }
 
   var getValuesList_accumulator = [];
-  /*!
+  /**
    * @param {Object} stateObject
    * @param {Array.<string>} chunkNames
    *
    * @return {Array.<number>}
+   * @private
    */
   function getValuesList (stateObject, chunkNames) {
     getValuesList_accumulator.length = 0;
@@ -21331,11 +21357,12 @@ var Tweenable = (function () {
     return getValuesList_accumulator;
   }
 
-  /*!
+  /**
    * @param {string} formatString
    * @param {Array.<number>} rawValues
    *
    * @return {string}
+   * @private
    */
   function getFormattedValues (formatString, rawValues) {
     var formattedValueString = formatString;
@@ -21349,21 +21376,23 @@ var Tweenable = (function () {
     return formattedValueString;
   }
 
-  /*!
+  /**
    * Note: It's the duty of the caller to convert the Array elements of the
    * return value into numbers.  This is a performance optimization.
    *
    * @param {string} formattedString
    *
    * @return {Array.<string>|null}
+   * @private
    */
   function getValuesFrom (formattedString) {
     return formattedString.match(R_UNFORMATTED_VALUES);
   }
 
-  /*!
+  /**
    * @param {Object} easingObject
    * @param {Object} tokenData
+   * @private
    */
   function expandEasingObject (easingObject, tokenData) {
     Tweenable.each(tokenData, function (prop) {
@@ -21392,9 +21421,10 @@ var Tweenable = (function () {
     });
   }
 
-  /*!
+  /**
    * @param {Object} easingObject
    * @param {Object} tokenData
+   * @private
    */
   function collapseEasingObject (easingObject, tokenData) {
     Tweenable.each(tokenData, function (prop) {
@@ -21447,7 +21477,7 @@ var Tweenable = (function () {
 
 }).call(null);
 
-/*! rekapi - v1.6.1 - 2015-10-29 - http://rekapi.com */
+/*! rekapi - v1.7.1 - 2016-05-28 - http://rekapi.com */
 /*!
  * Rekapi - Rewritten Kapi.
  * http://rekapi.com/
@@ -21493,14 +21523,8 @@ function fireEvent (rekapi, eventName, _, opt_data) {
  * @param {Rekapi} rekapi
  * @param {Underscore} _
  */
-function recalculateAnimationLength (rekapi, _) {
-  var actorLengths = [];
-
-  _.each(rekapi._actors, function (actor) {
-    actorLengths.push(actor.getEnd());
-  });
-
-  rekapi._animationLength = Math.max.apply(Math, actorLengths);
+function invalidateAnimationLength (rekapi) {
+  rekapi._animationLengthValid = false;
 }
 
 /*!
@@ -21524,7 +21548,7 @@ var rekapiCore = function (root, _, Tweenable) {
    * @param {number} timeSinceStart
    */
   function determineCurrentLoopIteration (rekapi, timeSinceStart) {
-    var animationLength = rekapi._animationLength;
+    var animationLength = rekapi.getAnimationLength();
     if (animationLength === 0) {
       return timeSinceStart;
     }
@@ -21575,7 +21599,7 @@ var rekapiCore = function (root, _, Tweenable) {
    */
   function calculateLoopPosition (rekapi, forMillisecond, currentLoopIteration) {
     var currentLoopPosition;
-    var animationLength = rekapi._animationLength;
+    var animationLength = rekapi.getAnimationLength();
 
     if (animationLength === 0) {
       return 0;
@@ -21762,6 +21786,7 @@ var rekapiCore = function (root, _, Tweenable) {
 
     // Millisecond duration of the animation
     this._animationLength = 0;
+    this._animationLengthValid = false;
 
     // The setTimeout ID of `tick`
     this._loopId = null;
@@ -21838,7 +21863,7 @@ var rekapiCore = function (root, _, Tweenable) {
       // Store a reference to the actor internally
       this._actors[rekapiActor.id] = rekapiActor;
 
-      recalculateAnimationLength(this, _);
+      invalidateAnimationLength(this);
       rekapiActor.setup();
 
       fireEvent(this, 'addActor', _, rekapiActor);
@@ -21901,7 +21926,7 @@ var rekapiCore = function (root, _, Tweenable) {
     delete actor.rekapi;
 
     actor.teardown();
-    recalculateAnimationLength(this, _);
+    invalidateAnimationLength(this);
 
     fireEvent(this, 'removeActor', _, actor);
 
@@ -22052,6 +22077,8 @@ var rekapiCore = function (root, _, Tweenable) {
    * @chainable
    */
   Rekapi.prototype.update = function (opt_millisecond,  opt_doResetLaterFnKeyframes) {
+    var skipRender = this.renderer && this.renderer._batchRendering;
+
     if (opt_millisecond === undefined) {
       opt_millisecond = this._lastUpdatedMillisecond;
     }
@@ -22061,7 +22088,7 @@ var rekapiCore = function (root, _, Tweenable) {
     // Update and render each of the actors
     _.each(this._actors, function (actor) {
       actor._updateState(opt_millisecond, opt_doResetLaterFnKeyframes);
-      if (typeof actor.render === 'function') {
+      if (!skipRender && actor.wasActive && typeof actor.render === 'function') {
         actor.render(actor.context, actor.get());
       }
     });
@@ -22079,7 +22106,7 @@ var rekapiCore = function (root, _, Tweenable) {
    * was last rendered.
    */
   Rekapi.prototype.getLastPositionUpdated = function () {
-    return (this._lastUpdatedMillisecond / this._animationLength);
+    return (this._lastUpdatedMillisecond / this.getAnimationLength());
   };
 
   /**
@@ -22095,6 +22122,17 @@ var rekapiCore = function (root, _, Tweenable) {
    * @return {number} The length of the animation timeline, in milliseconds.
    */
   Rekapi.prototype.getAnimationLength = function () {
+    if (!this._animationLengthValid) {
+      var actorLengths = [];
+
+      _.each(this._actors, function (actor) {
+        actorLengths.push(actor.getEnd());
+      });
+
+      this._animationLength = Math.max.apply(Math, actorLengths);
+      this._animationLengthValid = true;
+    }
+
     return this._animationLength;
   };
 
@@ -22224,7 +22262,7 @@ var rekapiCore = function (root, _, Tweenable) {
    */
   Rekapi.prototype.exportTimeline = function () {
     var exportData = {
-      'duration': this._animationLength
+      'duration': this.getAnimationLength()
       ,'actors': []
     };
 
@@ -22329,14 +22367,19 @@ rekapiModules.push(function (context) {
   var _ = Rekapi._;
 
   /*!
-   * Sorts an array numerically, from smallest to largest.
-   * @param {Array.<number>} array The Array to sort.
-   * @return {Array.<number>} The sorted Array.
+   * @param {Object} obj
+   * @return {number} millisecond
    */
-  function sortNumerically (array) {
-    return array.sort(function (a, b) {
-      return a - b;
-    });
+  function getMillisecond(obj) {
+    return obj.millisecond;
+  }
+
+  /*!
+   * @param {Object} obj
+   * @return {number} millisecond
+   */
+  function get_Millisecond(obj) {
+    return obj._millisecond;
   }
 
   /*!
@@ -22351,53 +22394,24 @@ rekapiModules.push(function (context) {
   }
 
   /*!
-   * Retrieves the most recent property cache ID for a given millisecond.
+   * Retrieves the most recent property cache entry for a given millisecond.
    * @param {Rekapi.Actor} actor
    * @param {number} millisecond
-   * @return {number} -1 if there is no property cache for the millisecond
-   * (this should never happen).
+   * @return {Object|undefined} undefined if there is no property cache for
+   * the millisecond, i.e. an empty cache.
    */
-  function getPropertyCacheIdForMillisecond (actor, millisecond) {
-    var list = actor._timelinePropertyCacheKeys;
+  function getPropertyCacheEntryForMillisecond (actor, millisecond) {
+    var cache = actor._timelinePropertyCache;
 
-    var i, len = list.length;
+    var index = _.sortedIndex(cache, { _millisecond: millisecond }, get_Millisecond);
 
-    // If there is only one keyframe, use that
-    if (len === 1) {
-      return 0;
+    if (cache[index] && cache[index]._millisecond === millisecond) {
+      return cache[index];
+    } else if (index >= 1) {
+      return cache[index - 1];
+    } else {
+      return cache[0];
     }
-
-    //TODO:  Oh noes, this is a linear search!  Maybe optimize it?
-    for (i = 1; i < len; i++) {
-      if (list[i] >= millisecond) {
-        return (i - 1);
-      }
-    }
-
-    return -1;
-  }
-
-  /*!
-   * Sort all of an Actor's property tracks so they can be cached.
-   * @param {Rekapi.Actor} actor
-   */
-  function sortPropertyTracks (actor) {
-    _.each(actor._propertyTracks, function (track) {
-      track.sort(function (current, next) {
-        return current.millisecond - next.millisecond;
-      });
-    });
-  }
-
-  /*!
-   * Compute and fill all timeline caches.
-   * @param {Rekapi.Actor} actor
-   */
-  function cachePropertiesToSegments (actor) {
-    _.each(actor._timelinePropertyCache, function (propertyCache, cacheId) {
-      var latestProperties = getLatestPropeties(actor, cacheId);
-      _.defaults(propertyCache, latestProperties);
-    });
   }
 
   /*!
@@ -22407,42 +22421,22 @@ rekapiModules.push(function (context) {
    * @param {number} forMillisecond
    * @return {Object} An Object containing Rekapi.KeyframeProperties
    */
-  function getLatestPropeties (actor, forMillisecond) {
+  function getLatestProperties (actor, forMillisecond) {
     var latestProperties = {};
 
     _.each(actor._propertyTracks, function (propertyTrack, propertyName) {
-      var previousKeyframeProperty = propertyTrack[0] || null;
-      var i = 0, len = propertyTrack.length, keyframeProperty;
-
-      for (i; i < len; i++) {
-        keyframeProperty = propertyTrack[i];
-
-        if (keyframeProperty.millisecond > forMillisecond) {
-          // We went to far, use the previous keyframeProperty
-          latestProperties[propertyName] = previousKeyframeProperty;
-        } else if (keyframeProperty.millisecond === forMillisecond) {
-          // Found it!
-          latestProperties[propertyName] = keyframeProperty;
-        }
-
-        previousKeyframeProperty = keyframeProperty;
-
-        // Quit the loop if something was found.  We can't early-return above,
-        // because latestProperties[propertyName] might be null, which is not
-        // what we want.
-        if (latestProperties[propertyName]) {
-          break;
-        }
-      }
-
-      // If nothing was found, attempt to use the last keyframeProperty in the
-      // track.
-      if (!latestProperties[propertyName]) {
-        var lastProp = _.last(propertyTrack);
-
-        if (lastProp && lastProp.millisecond <= forMillisecond) {
-          latestProperties[propertyName] = lastProp;
-        }
+      var index = insertionPointInTrack(propertyTrack, forMillisecond);
+      if (propertyTrack[index] && propertyTrack[index].millisecond === forMillisecond) {
+        // Found forMillisecond exactly.
+        latestProperties[propertyName] = propertyTrack[index];
+      } else if (index >= 1) {
+        // forMillisecond doesn't exist in the track and index is
+        // where we'd need to insert it, therefore the previous
+        // keyframe is the most recent one before forMillisecond.
+        latestProperties[propertyName] = propertyTrack[index - 1];
+      } else {
+        // Return first property.  This is after forMillisecond.
+        latestProperties[propertyName] = propertyTrack[0];
       }
     });
 
@@ -22450,66 +22444,73 @@ rekapiModules.push(function (context) {
   }
 
   /*!
-   * Links each KeyframeProperty to the next one in its respective track.
-   *
-   * They're linked lists!
-   * @param {Rekapi.Actor} actor
-   */
-  function linkTrackedProperties (actor) {
-    _.each(actor._propertyTracks, function (propertyTrack) {
-      _.each(propertyTrack, function (keyframeProperty, i) {
-        keyframeProperty.linkToNext(propertyTrack[i + 1]);
-      });
-    });
-  }
-
-  /*!
-   * Returns a requested KeyframeProperty at a millisecond on a specified
-   * track.
-   * @param {Rekapi.Actor} actor
-   * @param {string} trackName
+   * Search property track `track` and find the correct index to insert a
+   * new element at `millisecond`.
+   * @param {Array(Rekapi.KeyframeProperty)} track
    * @param {number} millisecond
-   * @return {Rekapi.KeyframeProperty|undefined}
+   * @return {number} index
    */
-  function findPropertyAtMillisecondInTrack (actor, trackName, millisecond) {
-    return _.findWhere(actor._propertyTracks[trackName], {
-      millisecond: millisecond
-    });
+  function insertionPointInTrack (track, millisecond) {
+    return _.sortedIndex(track, { millisecond: millisecond }, getMillisecond);
   }
 
   /*!
-   * Empty out and rebuild the cache of internal KeyframeProperty data.
+   * Search property track `track` and find the index to the element that is
+   * at `millisecond`.  Returns `undefined` if not found.
+   * @param {Array(Rekapi.KeyframeProperty)} track
+   * @param {number} millisecond
+   * @return {number|undefined} index or undefined if not present
+   */
+  function propertyIndexInTrack (track, millisecond) {
+    var index = insertionPointInTrack(track, millisecond);
+    if (track[index] && track[index].millisecond === millisecond) {
+      return index;
+    }
+  }
+
+  /*!
+   * Mark the cache of internal KeyframeProperty data as invalid.  The cache
+   * will be rebuilt on the next call to ensurePropertyCacheValid.
    * @param {Rekapi.Actor}
    */
   function invalidatePropertyCache (actor) {
-    actor._timelinePropertyCache = {};
+    actor._timelinePropertyCacheValid = false;
+  }
+
+  /*!
+   * Empty out and rebuild the cache of internal KeyframeProperty data if it
+   * has been marked as invalid.
+   * @param {Rekapi.Actor}
+   */
+  function ensurePropertyCacheValid (actor) {
+    if (actor._timelinePropertyCacheValid) {
+      return;
+    }
+
+    actor._timelinePropertyCache = [];
+    actor._timelineFunctionCache = [];
     var timelinePropertyCache = actor._timelinePropertyCache;
 
     // Build the cache map
-    var millisecond;
-    _.each(actor._keyframeProperties, function (keyframeProperty) {
-      millisecond = keyframeProperty.millisecond;
-      if (!timelinePropertyCache[millisecond]) {
-        timelinePropertyCache[millisecond] = {};
+    var props = _.values(actor._keyframeProperties);
+    props.sort(function (a, b) { return a.millisecond - b.millisecond });
+
+    var curCacheEntry = getLatestProperties(actor, 0);
+    curCacheEntry._millisecond = 0;
+    timelinePropertyCache.push(curCacheEntry);
+    _.each(props, function (property) {
+      if (property.millisecond !== curCacheEntry._millisecond) {
+        curCacheEntry = _.clone(curCacheEntry);
+        curCacheEntry._millisecond = property.millisecond;
+        timelinePropertyCache.push(curCacheEntry);
       }
-
-      timelinePropertyCache[millisecond][keyframeProperty.name]
-         = keyframeProperty;
+      curCacheEntry[property.name] = property;
+      if (property.name === 'function') {
+        actor._timelineFunctionCache.push(property);
+      }
     });
 
-    actor._timelinePropertyCacheKeys = _.map(timelinePropertyCache,
-    function (val, key) {
-      return +key;
-    });
-
-    // Optimize the cache lookup
-    sortNumerically(actor._timelinePropertyCacheKeys);
-
-    // Associate cache map elements to their respective points on the timeline
-    cachePropertiesToSegments(actor);
-
-    // Re-link the linked list of keyframeProperties
-    linkTrackedProperties(actor);
+    actor._timelinePropertyCacheValid = true;
   }
 
   /*!
@@ -22534,6 +22535,21 @@ rekapiModules.push(function (context) {
   }
 
   /*!
+   * Stably sort all of the property tracks of an actor
+   * @param {Rekapi.Actor} actor
+   */
+  function sortPropertyTracks (actor) {
+    _.each(actor._propertyTracks, function (propertyTrack, trackName) {
+      actor._propertyTracks[trackName] = _.sortBy(propertyTrack, 'millisecond');
+      propertyTrack = actor._propertyTracks[trackName];
+
+      _.each(propertyTrack, function (keyframeProperty, i) {
+        keyframeProperty.linkToNext(propertyTrack[i + 1]);
+      });
+    });
+  }
+
+  /*!
    * Updates internal Rekapi and Actor data after a KeyframeProperty
    * modification method is called.
    *
@@ -22544,7 +22560,11 @@ rekapiModules.push(function (context) {
   function cleanupAfterKeyframeModification (actor) {
     sortPropertyTracks(actor);
     invalidatePropertyCache(actor);
-    recalculateAnimationLength(actor.rekapi, _);
+
+    if (actor.rekapi) {
+      invalidateAnimationLength(actor.rekapi);
+    }
+
     fireRekapiEventForActor(actor, 'timelineModified');
   }
 
@@ -22581,8 +22601,9 @@ rekapiModules.push(function (context) {
 
     _.extend(this, {
       '_propertyTracks': {}
-      ,'_timelinePropertyCache': {}
-      ,'_timelinePropertyCacheKeys': []
+      ,'_timelinePropertyCache': []
+      ,'_timelineFunctionCache': []
+      ,'_timelinePropertyCacheValid': false
       ,'_keyframeProperties': {}
       ,'id': _.uniqueId()
       ,'context': opt_config.context // This may be undefined
@@ -22590,6 +22611,7 @@ rekapiModules.push(function (context) {
       ,'render': opt_config.render || noop
       ,'teardown': opt_config.teardown || noop
       ,'data': {}
+      ,'wasActive': true
     });
 
     return this;
@@ -22707,11 +22729,11 @@ rekapiModules.push(function (context) {
       newKeyframeProperty = new Rekapi.KeyframeProperty(
         millisecond, name, value, easing[name]);
 
-      this._addKeyframeProperty(newKeyframeProperty);
+      this.addKeyframeProperty(newKeyframeProperty);
     }, this);
 
     if (this.rekapi) {
-      recalculateAnimationLength(this.rekapi, _);
+      invalidateAnimationLength(this.rekapi);
     }
 
     invalidatePropertyCache(this);
@@ -22742,7 +22764,7 @@ rekapiModules.push(function (context) {
     var track;
     for (track in tracks) {
       if (tracks.hasOwnProperty(track)
-         && findPropertyAtMillisecondInTrack(this, track, millisecond)) {
+         && this.getKeyframeProperty(track, millisecond)) {
         return true;
       }
     }
@@ -22783,7 +22805,7 @@ rekapiModules.push(function (context) {
 
     _.each(this._propertyTracks, function (propertyTrack, trackName) {
       var keyframeProperty =
-      findPropertyAtMillisecondInTrack(this, trackName, copyFrom);
+      this.getKeyframeProperty(trackName, copyFrom);
 
       if (keyframeProperty) {
         sourcePositions[trackName] = keyframeProperty.value;
@@ -22819,9 +22841,9 @@ rekapiModules.push(function (context) {
     // Move each of the relevant KeyframeProperties to the new location in the
     // timeline
     _.each(this._propertyTracks, function (propertyTrack, trackName) {
-      var property = findPropertyAtMillisecondInTrack(this, trackName, from);
-
-      if (property) {
+      var oldIndex = propertyIndexInTrack(propertyTrack, from);
+      if (typeof oldIndex !== 'undefined') {
+        var property = propertyTrack[oldIndex];
         property.millisecond = to;
       }
     }, this);
@@ -22868,14 +22890,20 @@ rekapiModules.push(function (context) {
     opt_easingModification = opt_easingModification || {};
 
     _.each(this._propertyTracks, function (propertyTrack, trackName) {
-      var property = findPropertyAtMillisecondInTrack(
-        this, trackName, millisecond);
+      var property = this.getKeyframeProperty(trackName, millisecond);
 
       if (property) {
         property.modifyWith({
           'value': stateModification[trackName]
           ,'easing': opt_easingModification[trackName]
         });
+      } else if (typeof stateModification[trackName] !== 'undefined') {
+        property = new Rekapi.KeyframeProperty(
+          millisecond, trackName,
+          stateModification[trackName],
+          opt_easingModification[trackName]);
+
+        this.addKeyframeProperty(property);
       }
     }, this);
 
@@ -22898,22 +22926,16 @@ rekapiModules.push(function (context) {
     var propertyTracks = this._propertyTracks;
 
     _.each(this._propertyTracks, function (propertyTrack, propertyName) {
-      var keyframeProperty = _.findWhere(
-        propertyTrack, { millisecond: millisecond });
-
-      if (keyframeProperty) {
-        propertyTracks[propertyName] = _.without(
-          propertyTrack, keyframeProperty);
+      var index = propertyIndexInTrack(propertyTrack, millisecond);
+      if (typeof index !== 'undefined') {
+        var keyframeProperty = propertyTrack[index];
+        this._deleteKeyframePropertyAt(propertyTrack, index);
         keyframeProperty.detach();
-        removeEmptyPropertyTracks(this);
       }
     }, this);
 
-    if (this.rekapi) {
-      recalculateAnimationLength(this.rekapi, _);
-    }
-
-    invalidatePropertyCache(this);
+    removeEmptyPropertyTracks(this);
+    cleanupAfterKeyframeModification(this);
     fireRekapiEventForActor(this, 'timelineModified');
 
     return this;
@@ -22940,9 +22962,9 @@ rekapiModules.push(function (context) {
 
     _.each(this._keyframeProperties, function (keyframeProperty) {
       keyframeProperty.detach();
-      removeEmptyPropertyTracks(this);
     }, this);
 
+    removeEmptyPropertyTracks(this);
     this._keyframeProperties = {};
 
     // Calling removeKeyframe performs some necessary post-removal cleanup, the
@@ -22963,8 +22985,9 @@ rekapiModules.push(function (context) {
    */
   Actor.prototype.getKeyframeProperty = function (property, millisecond) {
     var propertyTrack = this._propertyTracks[property];
-    if (propertyTrack) {
-      return _.findWhere(propertyTrack, { millisecond: millisecond });
+    var index = propertyIndexInTrack(propertyTrack, millisecond);
+    if (typeof index !== 'undefined') {
+      return propertyTrack[index];
     }
   };
 
@@ -22989,6 +23012,12 @@ rekapiModules.push(function (context) {
 
     var keyframeProperty = this.getKeyframeProperty(property, millisecond);
     if (keyframeProperty) {
+      if ('millisecond' in newProperties) {
+        if (this.hasKeyframeAt(newProperties.millisecond, property)) {
+          throw new Error('Tried to move ' + property + ' to ' + newProperties.millisecond + 'ms, but a keyframe property already exists there');
+        }
+      }
+
       keyframeProperty.modifyWith(newProperties);
       cleanupAfterKeyframeModification(this);
     }
@@ -23011,10 +23040,11 @@ rekapiModules.push(function (context) {
     var propertyTracks = this._propertyTracks;
 
     if (typeof propertyTracks[property] !== 'undefined') {
-      var keyframeProperty = this.getKeyframeProperty(property, millisecond);
+      var propertyTrack = propertyTracks[property];
+      var index = propertyIndexInTrack(propertyTrack, millisecond);
+      var keyframeProperty = propertyTrack[index];
       fireEvent(this.rekapi, 'beforeRemoveKeyframeProperty', _, keyframeProperty);
-      propertyTracks[property] =
-        _.without(propertyTracks[property], keyframeProperty);
+      this._deleteKeyframePropertyAt(propertyTrack, index);
       keyframeProperty.detach();
 
       removeEmptyPropertyTracks(this);
@@ -23111,7 +23141,7 @@ rekapiModules.push(function (context) {
 
     _.each(tracksToInspect, function (propertyTrack) {
       if (propertyTrack.length) {
-        var trackLength = _.last(propertyTrack).millisecond;
+        var trackLength = Math.max.apply(Math, _.map(propertyTrack, 'millisecond'));
 
         if (trackLength > latest) {
           latest = trackLength;
@@ -23155,7 +23185,7 @@ rekapiModules.push(function (context) {
     }
 
     var end = this.getEnd();
-    var latestProps = getLatestPropeties(this, this.getEnd());
+    var latestProps = getLatestProperties(this, this.getEnd());
     var serializedProps = {};
     var serializedEasings = {};
 
@@ -23164,21 +23194,50 @@ rekapiModules.push(function (context) {
       serializedEasings[propName] = latestProp.easing;
     });
 
-    this.removeKeyframe(end);
-    this.keyframe(end, serializedProps, serializedEasings);
+    this.modifyKeyframe(end, serializedProps, serializedEasings);
     this.keyframe(until, serializedProps, serializedEasings);
 
     return this;
   };
 
   /*!
-   * Associate a `Rekapi.KeyframeProperty` to this actor.  Augments the
-   * `Rekapi.KeyframeProperty` to maintain a link between the two objects.
-   * @method _addKeyframeProperty
+   * Insert a `KeyframeProperty` into a property track at `index`.  The linked
+   * list structure of the property track is maintained.
+   * @method _insertKeyframePropertyAt
+   * @param {Rekapi.KeyframeProperty} keyframeProperty
+   * @param {Array(Rekapi.KeyframeProperty)} propertyTrack
+   * @param {number} index
+   */
+  Actor.prototype._insertKeyframePropertyAt = function (keyframeProperty, propertyTrack, index) {
+    propertyTrack.splice(index, 0, keyframeProperty);
+  };
+
+  /*!
+   * Remove the `KeyframeProperty` at `index` from a property track.  The linked
+   * list structure of the property track is maintained.  The removed property
+   * is not modified or unlinked internally.
+   * @method _deleteKeyframePropertyAt
+   * @param {Array(Rekapi.KeyframeProperty)} propertyTrack
+   * @param {number} index
+   */
+  Actor.prototype._deleteKeyframePropertyAt = function (propertyTrack, index) {
+    propertyTrack.splice(index, 1);
+  };
+
+  /**
+   * Associate a `{{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}}` to
+   * this actor.  Augments the `{{#crossLink
+   * "Rekapi.KeyframeProperty"}}{{/crossLink}}` to maintain a link between the
+   * two objects.  This is a lower-level method, and it is generally better to
+   * use `{{#crossLink "Rekapi.Actor/keyframe:method"}}{{/crossLink}}`.  This
+   * is mostly useful for adding a `{{#crossLink
+   * "Rekapi.KeyframeProperty"}}{{/crossLink}}` back to an actor after it was
+   * `{{#crossLink "Rekapi.KeyframeProperty/detach"}}{{/crossLink}}`ed.
+   * @method addKeyframeProperty
    * @param {Rekapi.KeyframeProperty} keyframeProperty
    * @chainable
    */
-  Actor.prototype._addKeyframeProperty = function (keyframeProperty) {
+  Actor.prototype.addKeyframeProperty = function (keyframeProperty) {
     if (this.rekapi) {
       fireEvent(this.rekapi, 'beforeAddKeyframeProperty', _, keyframeProperty);
     }
@@ -23195,13 +23254,44 @@ rekapiModules.push(function (context) {
         fireEvent(this.rekapi, 'addKeyframePropertyTrack', _, keyframeProperty);
       }
     } else {
-      propertyTracks[name].push(keyframeProperty);
+      var index = insertionPointInTrack(propertyTracks[name], keyframeProperty.millisecond);
+      if (propertyTracks[name][index]) {
+        var ms = keyframeProperty.millisecond;
+        var otherMs = propertyTracks[name][index].millisecond;
+        if (otherMs === ms) {
+          throw new Error('Tried to add a duplicate keyframe property, ' + name + ' @ ' + ms + ' ms');
+        } else if (this.rekapi && this.rekapi._warnOnOutOfOrderKeyframes) {
+          console.warn(new Error('Added a keyframe property before end of track, ' + name + ' @ ' + ms + ' ms < ' + otherMs + ' ms'));
+        }
+      }
+      this._insertKeyframePropertyAt(keyframeProperty, propertyTracks[name], index);
+      cleanupAfterKeyframeModification(this);
     }
-
-    sortPropertyTracks(this);
 
     if (this.rekapi) {
       fireEvent(this.rekapi, 'addKeyframeProperty', _, keyframeProperty);
+    }
+
+    return this;
+  };
+
+  /*!
+   * Set the actor to be active or inactive starting at `millisecond`.
+   * @method setActive
+   * @param {number} millisecond The time at which to change the actor's active state
+   * @param {boolean} isActive Whether the actor should be active or inactive
+   * @chainable
+   */
+  Actor.prototype.setActive = function (millisecond, isActive) {
+    var activeProperty = this._propertyTracks._active
+        && this.getKeyframeProperty('_active', millisecond);
+
+    if (activeProperty) {
+      activeProperty.value = isActive;
+    } else {
+      activeProperty = new Rekapi.KeyframeProperty(
+        millisecond, '_active', isActive);
+      this.addKeyframeProperty(activeProperty);
     }
 
     return this;
@@ -23222,42 +23312,57 @@ rekapiModules.push(function (context) {
 
     millisecond = Math.min(endMs, millisecond);
 
-    var latestCacheId = getPropertyCacheIdForMillisecond(this, millisecond);
+    ensurePropertyCacheValid(this);
     var propertiesToInterpolate =
-      this._timelinePropertyCache[this._timelinePropertyCacheKeys[
-          latestCacheId]];
+        getPropertyCacheEntryForMillisecond(this, millisecond);
+
+    // All actors are active at time 0 unless otherwise specified;
+    // make sure a future time deactivation doesn't deactive the actor
+    // by default.
+    if (propertiesToInterpolate._active
+        && millisecond >= propertiesToInterpolate._active.millisecond) {
+      this.wasActive = propertiesToInterpolate._active.getValueAt(millisecond);
+      if (!this.wasActive)
+        return this;
+    } else {
+      this.wasActive = true;
+    }
 
     if (startMs === endMs) {
 
       // If there is only one keyframe, use that for the state of the actor
       _.each(propertiesToInterpolate, function (keyframeProperty, propName) {
-        if (keyframeProperty.shouldInvokeForMillisecond(millisecond)) {
-          keyframeProperty.invoke();
-          keyframeProperty.hasFired = false;
-          return;
-        }
+        if (propName !== '_millisecond') {
+          if (keyframeProperty.shouldInvokeForMillisecond(millisecond)) {
+            keyframeProperty.invoke();
+            keyframeProperty.hasFired = false;
+            return;
+          }
 
-        interpolatedObject[propName] = keyframeProperty.value;
+          interpolatedObject[propName] = keyframeProperty.value;
+        }
       }, this);
 
     } else {
 
       _.each(propertiesToInterpolate, function (keyframeProperty, propName) {
-        if (this._beforeKeyframePropertyInterpolate !== noop) {
-          this._beforeKeyframePropertyInterpolate(keyframeProperty);
-        }
+        if (propName !== '_millisecond') {
+          if (this._beforeKeyframePropertyInterpolate !== noop) {
+            this._beforeKeyframePropertyInterpolate(keyframeProperty);
+          }
 
-        if (keyframeProperty.shouldInvokeForMillisecond(millisecond)) {
-          keyframeProperty.invoke();
-          return;
-        }
+          if (keyframeProperty.shouldInvokeForMillisecond(millisecond)) {
+            keyframeProperty.invoke();
+            return;
+          }
 
-        interpolatedObject[propName] =
-        keyframeProperty.getValueAt(millisecond);
+          interpolatedObject[propName] =
+          keyframeProperty.getValueAt(millisecond);
 
-        if (this._afterKeyframePropertyInterpolate !== noop) {
-          this._afterKeyframePropertyInterpolate(
-            keyframeProperty, interpolatedObject);
+          if (this._afterKeyframePropertyInterpolate !== noop) {
+            this._afterKeyframePropertyInterpolate(
+              keyframeProperty, interpolatedObject);
+          }
         }
       }, this);
     }
@@ -23276,13 +23381,13 @@ rekapiModules.push(function (context) {
    * @param {number} millisecond
    */
   Actor.prototype._resetFnKeyframesFromMillisecond = function (millisecond) {
-    _.chain(this._keyframeProperties)
-      .where({ name: 'function' })
-      .each(function (fnKeyframe) {
-        if (fnKeyframe.millisecond >= millisecond) {
-          fnKeyframe.hasFired = false;
-        }
-      });
+    var cache = this._timelineFunctionCache;
+    var index = _.sortedIndex(cache, { millisecond: millisecond }, getMillisecond);
+    var len = cache.length;
+
+    while (index < len) {
+      cache[index++].hasFired = false;
+    }
   };
 
   /*!
@@ -23428,7 +23533,9 @@ rekapiModules.push(function (context) {
     var nextProperty = this.nextProperty;
     var correctedMillisecond = Math.max(millisecond, this.millisecond);
 
-    if (nextProperty) {
+    if (typeof this.value === 'boolean') {
+      value = this.value;
+    } else if (nextProperty) {
       correctedMillisecond =
       Math.min(correctedMillisecond, nextProperty.millisecond);
 
@@ -23590,7 +23697,9 @@ rekapiModules.push(function (context) {
     var i;
     for (i = 0; i < len; i++) {
       currentActor = canvasActors[renderOrder[i]];
-      currentActor.render(currentActor.context, currentActor.get());
+      if (currentActor.wasActive) {
+        currentActor.render(currentActor.context, currentActor.get());
+      }
     }
     fireEvent(rekapi, 'afterRender', _);
 
@@ -23689,6 +23798,7 @@ rekapiModules.push(function (context) {
     this._renderOrder = [];
     this._renderOrderSorter = null;
     this._canvasActors = {};
+    this._batchRendering = true;
 
     _.extend(rekapi._events, {
       'beforeRender': []
@@ -24550,7 +24660,19 @@ rekapiModules.push(function (context) {
   function getActorCSS (actor, opts) {
     opts = opts || {};
     var actorCSS = [];
-    var animName = opts.name || DOMRenderer.getActorClassName(actor);
+    var animName;
+
+    if (opts.name) {
+      if (actor.rekapi.getActorCount() > 1) {
+        animName = opts.name + '-' + actor.id;
+      } else {
+        animName = opts.name;
+      }
+    } else {
+      animName = DOMRenderer.getActorClassName(actor);
+    }
+
+
     var fps = opts.fps || DEFAULT_FPS;
     var steps = Math.ceil((actor.rekapi.getAnimationLength() / 1000) * fps);
     var combineProperties = !canOptimizeAnyKeyframeProperties(actor);
@@ -26138,13 +26260,18 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
 
         this.emit('beforeUserUpdatesKeyframeMillisecondInput');
         var $target = $(evt.target);
-        var val = +$target.val();
+        var millisecond = +$target.val();
 
-        if (val < 0) {
+        if (millisecond < 0 ||
+            keyframePropertyModel.get('actor').hasKeyframeAt(
+              millisecond
+              ,keyframePropertyModel.get('name')
+            )
+          ) {
           return;
         }
 
-        keyframePropertyModel.set('millisecond', val);
+        keyframePropertyModel.set('millisecond', millisecond);
         this.lateralus.update();
       }
 
@@ -26678,19 +26805,22 @@ define('rekapi-timeline.component.scrubber/view',[
         this.render();
       }
 
+      ,requestResizeScrubberGuide: function () {
+        this.resizeScrubberGuide();
+      }
+
       ,'rekapi:afterUpdate': function () {
         this.render();
       }
 
+      // resizeScrubberGuide calls that are called in response to a Rekapi
+      // event must be deferred here so the DOM has a chance to finish building
+      // itself
       ,'rekapi:addKeyframePropertyTrack': function () {
-        this.resizeScrubberGuide();
+        _.defer(this.resizeScrubberGuide.bind(this));
       }
 
       ,'rekapi:removeKeyframePropertyTrack': function () {
-        // Defer this operation so that the relevant
-        // KeyframePropertyTrackComponent has a chance to remove itself from
-        // the DOM, which needs to happen before the DOM calculation in
-        // resizeScrubberGuide occurs.
         _.defer(this.resizeScrubberGuide.bind(this));
       }
 
@@ -26946,6 +27076,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
       }
 
       ,dragEnd: function () {
+        this.overwriteRedundantProperty();
         this.emit('keyframePropertyDragEnd');
       }
 
@@ -27080,11 +27211,52 @@ define('rekapi-timeline.component.keyframe-property/view',[
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
     ,updateKeyframeProperty: function () {
-      var scaledValue =
-        this.collectOne('timelineMillisecondForHandle', this.$el);
+      var model = this.model;
+      var millisecond = Math.round(
+        this.collectOne('timelineMillisecondForHandle', this.$el)
+      );
 
-      this.model.set('millisecond', Math.round(scaledValue));
+      if (
+          // This will be true if the user drags the property vertically, which
+          // would cause the drag event handler to be called but should not
+          // cause any kind of a state change.
+          millisecond === model.get('millisecond') ||
+
+          this.doesPropertyAlreadyExistAt(millisecond)) {
+        return;
+      }
+
+      model.set('millisecond', millisecond);
       this.lateralus.update();
+    }
+
+    ,overwriteRedundantProperty: function () {
+      var model = this.model;
+      var millisecond = Math.round(
+        this.collectOne('timelineMillisecondForHandle', this.$el)
+      );
+
+      this.emit('beginTemporaryTimelineModifications');
+      model.set('millisecond', 1e99);
+
+      if (this.doesPropertyAlreadyExistAt(millisecond)) {
+        var actor = model.get('actor');
+        actor.removeKeyframeProperty(model.get('name'), millisecond);
+      }
+
+      model.set('millisecond', millisecond);
+      this.emit('endTemporaryTimelineModifications');
+      this.lateralus.update();
+    }
+
+    /**
+     * @param {number} millisecond
+     * @return {boolean}
+     */
+    ,doesPropertyAlreadyExistAt: function (millisecond) {
+      return this.model.get('actor').hasKeyframeAt(
+        millisecond, this.model.get('name')
+      );
     }
   });
 
@@ -27905,16 +28077,26 @@ define('rekapi-timeline/models/keyframe-property',[
      * @override
      */
     ,set: function (key, value) {
-      Backbone.Model.prototype.set.apply(this, arguments);
+      if (typeof key === 'string') {
+        var oldValue = this.get(key);
 
-      if (key in this.attributes) {
-        // Modify the keyframeProperty via its actor so that the state of the
-        // animation is updated.
-        var obj = {};
-        obj[key] = value;
-        this.attributes.actor.modifyKeyframeProperty(
-            this.attributes.name, this.attributes.millisecond, obj);
+        if (key in this.attributes) {
+          if (this.get(key) === value) {
+            return;
+          }
+
+          // Modify the keyframeProperty via its actor so that the state of the
+          // animation is updated.
+          var obj = {};
+          obj[key] = value;
+          this.attributes.actor.modifyKeyframeProperty(
+              this.attributes.name, this.attributes.millisecond, obj);
+        }
+
+        this.attributes[key] = oldValue;
       }
+
+      Backbone.Model.prototype.set.apply(this, arguments);
     }
 
     /**
@@ -27934,7 +28116,11 @@ define('rekapi-timeline/models/keyframe-property',[
     }
   });
 
-  utils.proxy(Rekapi.KeyframeProperty, KeyframePropertyModel);
+  utils.proxy(Rekapi.KeyframeProperty, KeyframePropertyModel, {
+    subject: function () {
+      return this.attributes;
+    }
+  });
 
   return KeyframePropertyModel;
 });

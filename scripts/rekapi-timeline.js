@@ -475,13 +475,18 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
 
         this.emit('beforeUserUpdatesKeyframeMillisecondInput');
         var $target = $(evt.target);
-        var val = +$target.val();
+        var millisecond = +$target.val();
 
-        if (val < 0) {
+        if (millisecond < 0 ||
+            keyframePropertyModel.get('actor').hasKeyframeAt(
+              millisecond
+              ,keyframePropertyModel.get('name')
+            )
+          ) {
           return;
         }
 
-        keyframePropertyModel.set('millisecond', val);
+        keyframePropertyModel.set('millisecond', millisecond);
         this.lateralus.update();
       }
 
@@ -1015,19 +1020,22 @@ define('rekapi-timeline.component.scrubber/view',[
         this.render();
       }
 
+      ,requestResizeScrubberGuide: function () {
+        this.resizeScrubberGuide();
+      }
+
       ,'rekapi:afterUpdate': function () {
         this.render();
       }
 
+      // resizeScrubberGuide calls that are called in response to a Rekapi
+      // event must be deferred here so the DOM has a chance to finish building
+      // itself
       ,'rekapi:addKeyframePropertyTrack': function () {
-        this.resizeScrubberGuide();
+        _.defer(this.resizeScrubberGuide.bind(this));
       }
 
       ,'rekapi:removeKeyframePropertyTrack': function () {
-        // Defer this operation so that the relevant
-        // KeyframePropertyTrackComponent has a chance to remove itself from
-        // the DOM, which needs to happen before the DOM calculation in
-        // resizeScrubberGuide occurs.
         _.defer(this.resizeScrubberGuide.bind(this));
       }
 
@@ -1283,6 +1291,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
       }
 
       ,dragEnd: function () {
+        this.overwriteRedundantProperty();
         this.emit('keyframePropertyDragEnd');
       }
 
@@ -1417,11 +1426,52 @@ define('rekapi-timeline.component.keyframe-property/view',[
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
     ,updateKeyframeProperty: function () {
-      var scaledValue =
-        this.collectOne('timelineMillisecondForHandle', this.$el);
+      var model = this.model;
+      var millisecond = Math.round(
+        this.collectOne('timelineMillisecondForHandle', this.$el)
+      );
 
-      this.model.set('millisecond', Math.round(scaledValue));
+      if (
+          // This will be true if the user drags the property vertically, which
+          // would cause the drag event handler to be called but should not
+          // cause any kind of a state change.
+          millisecond === model.get('millisecond') ||
+
+          this.doesPropertyAlreadyExistAt(millisecond)) {
+        return;
+      }
+
+      model.set('millisecond', millisecond);
       this.lateralus.update();
+    }
+
+    ,overwriteRedundantProperty: function () {
+      var model = this.model;
+      var millisecond = Math.round(
+        this.collectOne('timelineMillisecondForHandle', this.$el)
+      );
+
+      this.emit('beginTemporaryTimelineModifications');
+      model.set('millisecond', 1e99);
+
+      if (this.doesPropertyAlreadyExistAt(millisecond)) {
+        var actor = model.get('actor');
+        actor.removeKeyframeProperty(model.get('name'), millisecond);
+      }
+
+      model.set('millisecond', millisecond);
+      this.emit('endTemporaryTimelineModifications');
+      this.lateralus.update();
+    }
+
+    /**
+     * @param {number} millisecond
+     * @return {boolean}
+     */
+    ,doesPropertyAlreadyExistAt: function (millisecond) {
+      return this.model.get('actor').hasKeyframeAt(
+        millisecond, this.model.get('name')
+      );
     }
   });
 
@@ -2242,16 +2292,26 @@ define('rekapi-timeline/models/keyframe-property',[
      * @override
      */
     ,set: function (key, value) {
-      Backbone.Model.prototype.set.apply(this, arguments);
+      if (typeof key === 'string') {
+        var oldValue = this.get(key);
 
-      if (key in this.attributes) {
-        // Modify the keyframeProperty via its actor so that the state of the
-        // animation is updated.
-        var obj = {};
-        obj[key] = value;
-        this.attributes.actor.modifyKeyframeProperty(
-            this.attributes.name, this.attributes.millisecond, obj);
+        if (key in this.attributes) {
+          if (this.get(key) === value) {
+            return;
+          }
+
+          // Modify the keyframeProperty via its actor so that the state of the
+          // animation is updated.
+          var obj = {};
+          obj[key] = value;
+          this.attributes.actor.modifyKeyframeProperty(
+              this.attributes.name, this.attributes.millisecond, obj);
+        }
+
+        this.attributes[key] = oldValue;
       }
+
+      Backbone.Model.prototype.set.apply(this, arguments);
     }
 
     /**
@@ -2271,7 +2331,11 @@ define('rekapi-timeline/models/keyframe-property',[
     }
   });
 
-  utils.proxy(Rekapi.KeyframeProperty, KeyframePropertyModel);
+  utils.proxy(Rekapi.KeyframeProperty, KeyframePropertyModel, {
+    subject: function () {
+      return this.attributes;
+    }
+  });
 
   return KeyframePropertyModel;
 });
