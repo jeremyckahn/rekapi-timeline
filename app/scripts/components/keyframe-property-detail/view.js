@@ -6,7 +6,7 @@ define([
 
   ,'text!./template.mustache'
 
-  ,'aenima.component.curve-selector'
+  ,'aenima/components/curve-selector/main'
 
   ,'rekapi-timeline/constant'
 
