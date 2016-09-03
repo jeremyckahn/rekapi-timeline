@@ -4,7 +4,7 @@ define([
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.keyframe-property-track'
+  ,'../keyframe-property-track/main'
 
 ], function (
 

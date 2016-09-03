@@ -4,7 +4,7 @@ define([
   ,'lateralus'
   ,'rekapi'
 
-  ,'rekapi-timeline.component.container'
+  ,'./components/container/main'
 
   ,'rekapi-timeline/utils'
   ,'rekapi-timeline/model'

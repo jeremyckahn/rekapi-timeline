@@ -6,8 +6,8 @@ define([
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.scrubber'
-  ,'rekapi-timeline.component.animation-tracks'
+  ,'../scrubber/main'
+  ,'../animation-tracks/main'
 
 ], function (
 

@@ -28,41 +28,6 @@ require.config({
     ,location: 'scripts'
     ,main: 'rekapi-timeline'
   }, {
-    name: 'rekapi-timeline.component.container'
-    ,location: 'scripts/components/container'
-  }, {
-    name: 'rekapi-timeline.component.timeline'
-    ,location: 'scripts/components/timeline'
-  }, {
-    name: 'rekapi-timeline.component.control-bar'
-    ,location: 'scripts/components/control-bar'
-  }, {
-    name: 'rekapi-timeline.component.details'
-    ,location: 'scripts/components/details'
-  }, {
-    name: 'rekapi-timeline.component.scrubber'
-    ,location: 'scripts/components/scrubber'
-  }, {
-    name: 'rekapi-timeline.component.scrubber-detail'
-    ,location: 'scripts/components/scrubber-detail'
-  }, {
-    name: 'rekapi-timeline.component.animation-tracks'
-    ,location: 'scripts/components/animation-tracks'
-  }, {
-    name: 'rekapi-timeline.component.actor-tracks'
-    ,location: 'scripts/components/actor-tracks'
-  }, {
-    name: 'rekapi-timeline.component.keyframe-property-track'
-    ,location: 'scripts/components/keyframe-property-track'
-  }, {
-    name: 'rekapi-timeline.component.keyframe-property'
-    ,location: 'scripts/components/keyframe-property'
-  }, {
-    name: 'rekapi-timeline.component.keyframe-property-detail'
-    ,location: 'scripts/components/keyframe-property-detail'
-
-  // AEnima
-  }, {
     name: 'aenima'
     ,location: 'bower_components/aenima'
   }]

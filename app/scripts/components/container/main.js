@@ -6,10 +6,10 @@ define([
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.details'
-  ,'rekapi-timeline.component.control-bar'
-  ,'rekapi-timeline.component.timeline'
-  ,'rekapi-timeline.component.scrubber-detail'
+  ,'../details/main'
+  ,'../control-bar/main'
+  ,'../timeline/main'
+  ,'../scrubber-detail/main'
 
 ], function (
 

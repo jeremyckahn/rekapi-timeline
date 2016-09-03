@@ -5,7 +5,7 @@ define([
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.actor-tracks'
+  ,'../actor-tracks/main'
 
 ], function (
 

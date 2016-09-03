@@ -6,7 +6,7 @@ define([
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.keyframe-property-detail'
+  ,'../keyframe-property-detail/main'
 
 ], function (
 
