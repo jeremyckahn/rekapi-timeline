@@ -1,4 +1,4 @@
-(function () {define('rekapi-timeline.component.container/model',[
+(function () {define('rekapi-timeline/components/container/model',[
 
   'lateralus'
 
@@ -28,7 +28,7 @@
 
 define('text',{load: function(id){throw new Error("Dynamic load not allowed: " + id);}});
 
-define('text!rekapi-timeline.component.container/template.mustache',[],function () { return '<div class="$details"></div>\n<div class="$timeline fill"></div>\n<div class="fill bottom-frame">\n  <div class="$controlBar"></div>\n  <div class="$scrubberDetail"></div>\n</div>\n';});
+define('text!rekapi-timeline/components/container/template.mustache',[],function () { return '<div class="$details"></div>\n<div class="$timeline fill"></div>\n<div class="fill bottom-frame">\n  <div class="$controlBar"></div>\n  <div class="$scrubberDetail"></div>\n</div>\n';});
 
 define('rekapi-timeline/constant',[],function () {
   'use strict';
@@ -51,14 +51,14 @@ define('rekapi-timeline/constant',[],function () {
   return rekapiTimelineConstants;
 });
 
-define('rekapi-timeline.component.container/view',[
+define('rekapi-timeline/components/container/view',[
 
   'jquery'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -134,7 +134,7 @@ define('rekapi-timeline.component.container/view',[
   return ContainerComponentView;
 });
 
-define('rekapi-timeline.component.details/model',[
+define('rekapi-timeline/components/details/model',[
 
   'lateralus'
 
@@ -163,9 +163,9 @@ define('rekapi-timeline.component.details/model',[
 });
 
 
-define('text!rekapi-timeline.component.details/template.mustache',[],function () { return '<div class="$keyframePropertyDetail fill"></div>\n';});
+define('text!rekapi-timeline/components/details/template.mustache',[],function () { return '<div class="$keyframePropertyDetail fill"></div>\n';});
 
-define('rekapi-timeline.component.details/view',[
+define('rekapi-timeline/components/details/view',[
 
   'lateralus'
 
@@ -197,7 +197,7 @@ define('rekapi-timeline.component.details/view',[
   return DetailsComponentView;
 });
 
-define('rekapi-timeline.component.keyframe-property-detail/model',[
+define('rekapi-timeline/components/keyframe-property-detail/model',[
 
   'lateralus'
 
@@ -226,23 +226,27 @@ define('rekapi-timeline.component.keyframe-property-detail/model',[
 });
 
 
-define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond" min="0">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
+define('text!rekapi-timeline/components/keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond" min="0">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
 
 
-define('text!aenima.component.curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
+define('text!aenima/components/curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
 
-define('aenima.constant',[],function () {
+define('aenima/constant',[],function () {
   'use strict';
 
   return {
     CUSTOM_CURVE_PREFIX: 'customCurve'
+    ,HIDABLE_VIEW_TRANSITION_DURATION: 450
     ,NEW_KEYFRAME_MS_INCREASE: 1000
     ,NEW_KEYFRAME_X_INCREASE: 200
     ,UNDO_STACK_LIMIT: 50
+    ,MODAL_OPACITY: 0.95
+    ,CSS_DURATION_LIMIT: 1000 * 60 * 5
+    ,INVALID_CLASS: 'invalid'
   };
 });
 
-define('aenima.component.curve-selector/view',[
+define('aenima/components/curve-selector/view',[
 
   'underscore'
   ,'lateralus'
@@ -250,7 +254,7 @@ define('aenima.component.curve-selector/view',[
 
   ,'text!./template.mustache'
 
-  ,'aenima.constant'
+  ,'aenima/constant'
 
 ], function (
 
@@ -316,7 +320,7 @@ define('aenima.component.curve-selector/view',[
   return CurveSelectorComponentView;
 });
 
-define('aenima.component.curve-selector/main',[
+define('aenima/components/curve-selector/main',[
 
   'lateralus'
 
@@ -344,9 +348,7 @@ define('aenima.component.curve-selector/main',[
   return CurveSelectorComponent;
 });
 
-define('aenima.component.curve-selector', ['aenima.component.curve-selector/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.keyframe-property-detail/view',[
+define('rekapi-timeline/components/keyframe-property-detail/view',[
 
   'underscore'
   ,'lateralus'
@@ -354,9 +356,9 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
 
   ,'text!./template.mustache'
 
-  ,'aenima.component.curve-selector'
+  ,'aenima/components/curve-selector/main'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -582,7 +584,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
   return KeyframePropertyDetailComponentView;
 });
 
-define('rekapi-timeline.component.keyframe-property-detail/main',[
+define('rekapi-timeline/components/keyframe-property-detail/main',[
 
   'lateralus'
 
@@ -613,9 +615,7 @@ define('rekapi-timeline.component.keyframe-property-detail/main',[
   return KeyframePropertyDetailComponent;
 });
 
-define('rekapi-timeline.component.keyframe-property-detail', ['rekapi-timeline.component.keyframe-property-detail/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.details/main',[
+define('rekapi-timeline/components/details/main',[
 
   'lateralus'
 
@@ -623,7 +623,7 @@ define('rekapi-timeline.component.details/main',[
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.keyframe-property-detail'
+  ,'../keyframe-property-detail/main'
 
 ], function (
 
@@ -657,9 +657,7 @@ define('rekapi-timeline.component.details/main',[
   return DetailsComponent;
 });
 
-define('rekapi-timeline.component.details', ['rekapi-timeline.component.details/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.control-bar/model',[
+define('rekapi-timeline/components/control-bar/model',[
 
   'lateralus'
 
@@ -688,9 +686,9 @@ define('rekapi-timeline.component.control-bar/model',[
 });
 
 
-define('text!rekapi-timeline.component.control-bar/template.mustache',[],function () { return '<button class="icon-button play">\n  <i class="glyphicon glyphicon-play"></i>\n</button>\n<button class="icon-button pause">\n  <i class="glyphicon glyphicon-pause"></i>\n</button>\n<button class="icon-button stop">\n  <i class="glyphicon glyphicon-stop"></i>\n</button>\n';});
+define('text!rekapi-timeline/components/control-bar/template.mustache',[],function () { return '<button class="icon-button play">\n  <i class="glyphicon glyphicon-play"></i>\n</button>\n<button class="icon-button pause">\n  <i class="glyphicon glyphicon-pause"></i>\n</button>\n<button class="icon-button stop">\n  <i class="glyphicon glyphicon-stop"></i>\n</button>\n';});
 
-define('rekapi-timeline.component.control-bar/view',[
+define('rekapi-timeline/components/control-bar/view',[
 
   'lateralus'
 
@@ -758,7 +756,7 @@ define('rekapi-timeline.component.control-bar/view',[
   return ControlBarComponentView;
 });
 
-define('rekapi-timeline.component.control-bar/main',[
+define('rekapi-timeline/components/control-bar/main',[
 
   'lateralus'
 
@@ -789,9 +787,7 @@ define('rekapi-timeline.component.control-bar/main',[
   return ControlBarComponent;
 });
 
-define('rekapi-timeline.component.control-bar', ['rekapi-timeline.component.control-bar/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.timeline/model',[
+define('rekapi-timeline/components/timeline/model',[
 
   'lateralus'
 
@@ -820,16 +816,16 @@ define('rekapi-timeline.component.timeline/model',[
 });
 
 
-define('text!rekapi-timeline.component.timeline/template.mustache',[],function () { return '<div class="$timelineWrapper timeline-wrapper">\n  <div class="$scrubber"></div>\n  <div class="$animationTracks"></div>\n  <div class="$newTrackNameInputWrapper new-track-name-input-wrapper">\n    <button class="icon-button add" title="Add a new property to animate">\n      <i class="glyphicon glyphicon-plus"></i>\n    </button>\n    {{#supportedPropertiesAreRestricted}}\n    <select class="$newTrackName new-track-name">\n      {{#supportedProperties}}\n      <option>{{name}}</option>\n      {{/supportedProperties}}\n    </select>\n    {{/supportedPropertiesAreRestricted}}\n    {{^supportedPropertiesAreRestricted}}\n    <input class="$newTrackName new-track-name" value="newProperty"></input>\n    {{/supportedPropertiesAreRestricted}}\n  </div>\n</div>\n';});
+define('text!rekapi-timeline/components/timeline/template.mustache',[],function () { return '<div class="$timelineWrapper timeline-wrapper">\n  <div class="$scrubber"></div>\n  <div class="$animationTracks"></div>\n  <div class="$newTrackNameInputWrapper new-track-name-input-wrapper">\n    <button class="icon-button add" title="Add a new property to animate">\n      <i class="glyphicon glyphicon-plus"></i>\n    </button>\n    {{#supportedPropertiesAreRestricted}}\n    <select class="$newTrackName new-track-name">\n      {{#supportedProperties}}\n      <option>{{name}}</option>\n      {{/supportedProperties}}\n    </select>\n    {{/supportedPropertiesAreRestricted}}\n    {{^supportedPropertiesAreRestricted}}\n    <input class="$newTrackName new-track-name" value="newProperty"></input>\n    {{/supportedPropertiesAreRestricted}}\n  </div>\n</div>\n';});
 
-define('rekapi-timeline.component.timeline/view',[
+define('rekapi-timeline/components/timeline/view',[
 
   'underscore'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -952,7 +948,7 @@ define('rekapi-timeline.component.timeline/view',[
   return TimelineComponentView;
 });
 
-define('rekapi-timeline.component.scrubber/model',[
+define('rekapi-timeline/components/scrubber/model',[
 
   'lateralus'
 
@@ -981,16 +977,16 @@ define('rekapi-timeline.component.scrubber/model',[
 });
 
 
-define('text!rekapi-timeline.component.scrubber/template.mustache',[],function () { return '<div class="$scrubberWrapper scrubber-wrapper">\n  <div class="$scrubberHandle scrubber-handle">\n    <i class="glyphicon glyphicon-chevron-down scrubber-icon">&nbsp;</i>\n    <figure class="$scrubberGuide scrubber-guide"></figure>\n  </div>\n</div>\n';});
+define('text!rekapi-timeline/components/scrubber/template.mustache',[],function () { return '<div class="$scrubberWrapper scrubber-wrapper">\n  <div class="$scrubberHandle scrubber-handle">\n    <i class="glyphicon glyphicon-chevron-down scrubber-icon">&nbsp;</i>\n    <figure class="$scrubberGuide scrubber-guide"></figure>\n  </div>\n</div>\n';});
 
-define('rekapi-timeline.component.scrubber/view',[
+define('rekapi-timeline/components/scrubber/view',[
 
   'underscore'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -1124,7 +1120,7 @@ define('rekapi-timeline.component.scrubber/view',[
   return ScrubberComponentView;
 });
 
-define('rekapi-timeline.component.scrubber/main',[
+define('rekapi-timeline/components/scrubber/main',[
 
   'lateralus'
 
@@ -1155,9 +1151,7 @@ define('rekapi-timeline.component.scrubber/main',[
   return ScrubberComponent;
 });
 
-define('rekapi-timeline.component.scrubber', ['rekapi-timeline.component.scrubber/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.animation-tracks/model',[
+define('rekapi-timeline/components/animation-tracks/model',[
 
   'lateralus'
 
@@ -1186,9 +1180,9 @@ define('rekapi-timeline.component.animation-tracks/model',[
 });
 
 
-define('text!rekapi-timeline.component.animation-tracks/template.mustache',[],function () { return '';});
+define('text!rekapi-timeline/components/animation-tracks/template.mustache',[],function () { return '';});
 
-define('rekapi-timeline.component.actor-tracks/model',[
+define('rekapi-timeline/components/actor-tracks/model',[
 
   'lateralus'
 
@@ -1217,9 +1211,9 @@ define('rekapi-timeline.component.actor-tracks/model',[
 });
 
 
-define('text!rekapi-timeline.component.actor-tracks/template.mustache',[],function () { return '';});
+define('text!rekapi-timeline/components/actor-tracks/template.mustache',[],function () { return '';});
 
-define('rekapi-timeline.component.keyframe-property-track/model',[
+define('rekapi-timeline/components/keyframe-property-track/model',[
 
   'lateralus'
 
@@ -1251,18 +1245,18 @@ define('rekapi-timeline.component.keyframe-property-track/model',[
 });
 
 
-define('text!rekapi-timeline.component.keyframe-property-track/template.mustache',[],function () { return '';});
+define('text!rekapi-timeline/components/keyframe-property-track/template.mustache',[],function () { return '';});
 
 
-define('text!rekapi-timeline.component.keyframe-property/template.mustache',[],function () { return '<div class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" >&nbsp;</div>\n';});
+define('text!rekapi-timeline/components/keyframe-property/template.mustache',[],function () { return '<div class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" >&nbsp;</div>\n';});
 
-define('rekapi-timeline.component.keyframe-property/view',[
+define('rekapi-timeline/components/keyframe-property/view',[
 
   'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -1478,7 +1472,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
   return KeyframePropertyComponentView;
 });
 
-define('rekapi-timeline.component.keyframe-property/main',[
+define('rekapi-timeline/components/keyframe-property/main',[
 
   'lateralus'
 
@@ -1506,16 +1500,14 @@ define('rekapi-timeline.component.keyframe-property/main',[
   return KeyframePropertyComponent;
 });
 
-define('rekapi-timeline.component.keyframe-property', ['rekapi-timeline.component.keyframe-property/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.keyframe-property-track/view',[
+define('rekapi-timeline/components/keyframe-property-track/view',[
 
   'underscore'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.keyframe-property'
+  ,'../keyframe-property/main'
 
 ], function (
 
@@ -1654,7 +1646,7 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
   return KeyframePropertyTrackComponentView;
 });
 
-define('rekapi-timeline.component.keyframe-property-track/main',[
+define('rekapi-timeline/components/keyframe-property-track/main',[
 
   'lateralus'
 
@@ -1697,15 +1689,13 @@ define('rekapi-timeline.component.keyframe-property-track/main',[
   return KeyframePropertyTrackComponent;
 });
 
-define('rekapi-timeline.component.keyframe-property-track', ['rekapi-timeline.component.keyframe-property-track/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.actor-tracks/view',[
+define('rekapi-timeline/components/actor-tracks/view',[
 
   'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.keyframe-property-track'
+  ,'../keyframe-property-track/main'
 
 ], function (
 
@@ -1771,7 +1761,7 @@ define('rekapi-timeline.component.actor-tracks/view',[
   return ActorTracksComponentView;
 });
 
-define('rekapi-timeline.component.actor-tracks/main',[
+define('rekapi-timeline/components/actor-tracks/main',[
 
   'lateralus'
 
@@ -1802,16 +1792,14 @@ define('rekapi-timeline.component.actor-tracks/main',[
   return ActorTracksComponent;
 });
 
-define('rekapi-timeline.component.actor-tracks', ['rekapi-timeline.component.actor-tracks/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.animation-tracks/view',[
+define('rekapi-timeline/components/animation-tracks/view',[
 
   'underscore'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.actor-tracks'
+  ,'../actor-tracks/main'
 
 ], function (
 
@@ -1867,7 +1855,7 @@ define('rekapi-timeline.component.animation-tracks/view',[
   return AnimationTracksComponentView;
 });
 
-define('rekapi-timeline.component.animation-tracks/main',[
+define('rekapi-timeline/components/animation-tracks/main',[
 
   'lateralus'
 
@@ -1898,9 +1886,7 @@ define('rekapi-timeline.component.animation-tracks/main',[
   return AnimationTracksComponent;
 });
 
-define('rekapi-timeline.component.animation-tracks', ['rekapi-timeline.component.animation-tracks/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.timeline/main',[
+define('rekapi-timeline/components/timeline/main',[
 
   'lateralus'
 
@@ -1908,8 +1894,8 @@ define('rekapi-timeline.component.timeline/main',[
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.scrubber'
-  ,'rekapi-timeline.component.animation-tracks'
+  ,'../scrubber/main'
+  ,'../animation-tracks/main'
 
 ], function (
 
@@ -1948,9 +1934,7 @@ define('rekapi-timeline.component.timeline/main',[
   return TimelineComponent;
 });
 
-define('rekapi-timeline.component.timeline', ['rekapi-timeline.component.timeline/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.scrubber-detail/model',[
+define('rekapi-timeline/components/scrubber-detail/model',[
 
   'lateralus'
 
@@ -1979,9 +1963,9 @@ define('rekapi-timeline.component.scrubber-detail/model',[
 });
 
 
-define('text!rekapi-timeline.component.scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row scrubber-scale">\n  <p>Timeline zoom:</p>\n  <input type="number" class="$scrubberScale" value="{{initialZoom}}" min="0" step="10">\n</label>\n<p class="position-monitor">\n  <span class="$currentPosition"></span>ms / <span class="$animationLength"></span>ms\n</p>\n';});
+define('text!rekapi-timeline/components/scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row scrubber-scale">\n  <p>Timeline zoom:</p>\n  <input type="number" class="$scrubberScale" value="{{initialZoom}}" min="0" step="10">\n</label>\n<p class="position-monitor">\n  <span class="$currentPosition"></span>ms / <span class="$animationLength"></span>ms\n</p>\n';});
 
-define('rekapi-timeline.component.scrubber-detail/view',[
+define('rekapi-timeline/components/scrubber-detail/view',[
 
   'underscore'
   ,'lateralus'
@@ -2062,7 +2046,7 @@ define('rekapi-timeline.component.scrubber-detail/view',[
   return ScrubberDetailComponentView;
 });
 
-define('rekapi-timeline.component.scrubber-detail/main',[
+define('rekapi-timeline/components/scrubber-detail/main',[
 
   'lateralus'
 
@@ -2093,9 +2077,7 @@ define('rekapi-timeline.component.scrubber-detail/main',[
   return ScrubberDetailComponent;
 });
 
-define('rekapi-timeline.component.scrubber-detail', ['rekapi-timeline.component.scrubber-detail/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.container/main',[
+define('rekapi-timeline/components/container/main',[
 
   'lateralus'
 
@@ -2103,10 +2085,10 @@ define('rekapi-timeline.component.container/main',[
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.details'
-  ,'rekapi-timeline.component.control-bar'
-  ,'rekapi-timeline.component.timeline'
-  ,'rekapi-timeline.component.scrubber-detail'
+  ,'../details/main'
+  ,'../control-bar/main'
+  ,'../timeline/main'
+  ,'../scrubber-detail/main'
 
 ], function (
 
@@ -2154,8 +2136,6 @@ define('rekapi-timeline.component.container/main',[
 
   return ContainerComponent;
 });
-
-define('rekapi-timeline.component.container', ['rekapi-timeline.component.container/main'], function (main) { return main; });
 
 define('rekapi-timeline/utils',[
 
@@ -2206,7 +2186,7 @@ define('rekapi-timeline/model',[
   'underscore'
   ,'lateralus'
 
-  ,'rekapi-timeline/constant'
+  ,'./constant'
 
 ], function (
 
@@ -2240,7 +2220,7 @@ define('rekapi-timeline/models/keyframe-property',[
   ,'lateralus'
   ,'rekapi'
 
-  ,'rekapi-timeline/utils'
+  ,'../utils'
 
 ], function (
 
@@ -2345,7 +2325,7 @@ define('rekapi-timeline/collections/keyframe-property',[
   'backbone'
   ,'lateralus'
 
-  ,'rekapi-timeline/models/keyframe-property'
+  ,'../models/keyframe-property'
 
 ], function (
 
@@ -2421,9 +2401,9 @@ define('rekapi-timeline/models/actor',[
   'lateralus'
   ,'rekapi'
 
-  ,'rekapi-timeline/collections/keyframe-property'
+  ,'../collections/keyframe-property'
 
-  ,'rekapi-timeline/utils'
+  ,'../utils'
 
 ], function (
 
@@ -2538,7 +2518,7 @@ define('rekapi-timeline/collections/actor',[
   ,'backbone'
   ,'lateralus'
 
-  ,'rekapi-timeline/models/actor'
+  ,'../models/actor'
 
 ], function (
 
@@ -2598,11 +2578,11 @@ define('rekapi-timeline/rekapi-timeline',[
   ,'lateralus'
   ,'rekapi'
 
-  ,'rekapi-timeline.component.container'
+  ,'./components/container/main'
 
-  ,'rekapi-timeline/utils'
-  ,'rekapi-timeline/model'
-  ,'rekapi-timeline/collections/actor'
+  ,'./utils'
+  ,'./model'
+  ,'./collections/actor'
 
   // Silent dependency
   ,'jquery-dragon'

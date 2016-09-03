@@ -19825,11 +19825,11 @@ define('lateralus/lateralus',[
 
 define('lateralus', ['lateralus/lateralus'], function (main) { return main; });
 
-/* shifty - v1.5.2 - 2016-03-19 - http://jeremyckahn.github.io/shifty */
+/*! shifty - v1.5.0 - 2015-05-31 - http://jeremyckahn.github.io/shifty */
 ;(function () {
-  var root = this || Function('return this')();
+  var root = this;
 
-/**
+/*!
  * Shifty Core
  * By Jeremy Kahn - jeremyckahn@gmail.com
  */
@@ -19871,13 +19871,12 @@ var Tweenable = (function () {
     // NOOP!
   }
 
-  /**
+  /*!
    * Handy shortcut for doing a for-in loop. This is not a "normal" each
    * function, it is optimized for Shifty.  The iterator function only receives
    * the property name, not the value.
    * @param {Object} obj
    * @param {Function(string)} fn
-   * @private
    */
   function each (obj, fn) {
     var key;
@@ -19888,12 +19887,11 @@ var Tweenable = (function () {
     }
   }
 
-  /**
+  /*!
    * Perform a shallow copy of Object properties.
    * @param {Object} targetObject The object to copy into
    * @param {Object} srcObject The object to copy from
    * @return {Object} A reference to the augmented `targetObj` Object
-   * @private
    */
   function shallowCopy (targetObj, srcObj) {
     each(srcObj, function (prop) {
@@ -19903,12 +19901,11 @@ var Tweenable = (function () {
     return targetObj;
   }
 
-  /**
+  /*!
    * Copies each property from src onto target, but only if the property to
    * copy to target is undefined.
    * @param {Object} target Missing properties in this Object are filled in
    * @param {Object} src
-   * @private
    */
   function defaults (target, src) {
     each(src, function (prop) {
@@ -19918,7 +19915,7 @@ var Tweenable = (function () {
     });
   }
 
-  /**
+  /*!
    * Calculates the interpolated tween values of an Object for a given
    * timestamp.
    * @param {Number} forPosition The position to compute the state for.
@@ -19931,7 +19928,6 @@ var Tweenable = (function () {
    * @param {number} timestamp: The UNIX epoch time at which the tween began.
    * @param {Object} easing: This Object's keys must correspond to the keys in
    * targetState.
-   * @private
    */
   function tweenProps (forPosition, currentState, originalState, targetState,
     duration, timestamp, easing) {
@@ -19961,7 +19957,7 @@ var Tweenable = (function () {
     return currentState;
   }
 
-  /**
+  /*!
    * Tweens a single property.
    * @param {number} start The value that the tween started from.
    * @param {number} end The value that the tween should end at.
@@ -19969,18 +19965,16 @@ var Tweenable = (function () {
    * @param {number} position The normalized position (between 0.0 and 1.0) to
    * calculate the midpoint of 'start' and 'end' against.
    * @return {number} The tweened value.
-   * @private
    */
   function tweenProp (start, end, easingFunc, position) {
     return start + (end - start) * easingFunc(position);
   }
 
-  /**
+  /*!
    * Applies a filter to Tweenable instance.
    * @param {Tweenable} tweenable The `Tweenable` instance to call the filter
    * upon.
    * @param {String} filterName The name of the filter to apply.
-   * @private
    */
   function applyFilter (tweenable, filterName) {
     var filters = Tweenable.prototype.filter;
@@ -19997,7 +19991,7 @@ var Tweenable = (function () {
   var timeoutHandler_currentTime;
   var timeoutHandler_isEnded;
   var timeoutHandler_offset;
-  /**
+  /*!
    * Handles the update logic for one step of a tween.
    * @param {Tweenable} tweenable
    * @param {number} timestamp
@@ -20011,7 +20005,6 @@ var Tweenable = (function () {
    * @param {Function(Function,number)}} schedule
    * @param {number=} opt_currentTimeOverride Needed for accurate timestamp in
    * Tweenable#seek.
-   * @private
    */
   function timeoutHandler (tweenable, timestamp, delay, duration, currentState,
     originalState, targetState, easing, step, schedule,
@@ -20028,42 +20021,38 @@ var Tweenable = (function () {
     timeoutHandler_offset = duration - (
       timeoutHandler_endTime - timeoutHandler_currentTime);
 
-    if (tweenable.isPlaying()) {
-      if (timeoutHandler_isEnded) {
-        step(targetState, tweenable._attachment, timeoutHandler_offset);
-        tweenable.stop(true);
+    if (tweenable.isPlaying() && !timeoutHandler_isEnded) {
+      tweenable._scheduleId = schedule(tweenable._timeoutHandler, UPDATE_TIME);
+
+      applyFilter(tweenable, 'beforeTween');
+
+      // If the animation has not yet reached the start point (e.g., there was
+      // delay that has not yet completed), just interpolate the starting
+      // position of the tween.
+      if (timeoutHandler_currentTime < (timestamp + delay)) {
+        tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
       } else {
-        tweenable._scheduleId =
-          schedule(tweenable._timeoutHandler, UPDATE_TIME);
-
-        applyFilter(tweenable, 'beforeTween');
-
-        // If the animation has not yet reached the start point (e.g., there was
-        // delay that has not yet completed), just interpolate the starting
-        // position of the tween.
-        if (timeoutHandler_currentTime < (timestamp + delay)) {
-          tweenProps(1, currentState, originalState, targetState, 1, 1, easing);
-        } else {
-          tweenProps(timeoutHandler_currentTime, currentState, originalState,
-            targetState, duration, timestamp + delay, easing);
-        }
-
-        applyFilter(tweenable, 'afterTween');
-
-        step(currentState, tweenable._attachment, timeoutHandler_offset);
+        tweenProps(timeoutHandler_currentTime, currentState, originalState,
+          targetState, duration, timestamp + delay, easing);
       }
+
+      applyFilter(tweenable, 'afterTween');
+
+      step(currentState, tweenable._attachment, timeoutHandler_offset);
+    } else if (tweenable.isPlaying() && timeoutHandler_isEnded) {
+      step(targetState, tweenable._attachment, timeoutHandler_offset);
+      tweenable.stop(true);
     }
   }
 
 
-  /**
+  /*!
    * Creates a usable easing Object from a string, a function or another easing
    * Object.  If `easing` is an Object, then this function clones it and fills
    * in the missing properties with `"linear"`.
    * @param {Object.<string|Function>} fromTweenParams
    * @param {Object|string|Function} easing
    * @return {Object.<string|Function>}
-   * @private
    */
   function composeEasingObject (fromTweenParams, easing) {
     var composedEasing = {};
@@ -20383,10 +20372,9 @@ var Tweenable = (function () {
     }
   };
 
-  /**
+  /*!
    * Filters are used for transforming the properties of a tween at various
    * points in a Tweenable's life cycle.  See the README for more info on this.
-   * @private
    */
   Tweenable.prototype.filter = {};
 
@@ -20644,7 +20632,7 @@ var Tweenable = (function () {
 }());
 
 // jshint maxlen:100
-/**
+/*!
  * The Bezier magic in this file is adapted/copied almost wholesale from
  * [Scripty2](https://github.com/madrobby/scripty2/blob/master/src/effects/transitions/cubic-bezier.js),
  * which was adapted from Apple code (which probably came from
@@ -20652,7 +20640,7 @@ var Tweenable = (function () {
  * Special thanks to Apple and Thomas Fuchs for much of this code.
  */
 
-/**
+/*!
  *  Copyright (c) 2006 Apple Computer, Inc. All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -20751,7 +20739,7 @@ var Tweenable = (function () {
     ay = 1.0 - cy - by;
     return solve(t, solveEpsilon(duration));
   }
-  /**
+  /*!
    *  getCubicBezierTransition(x1, y1, x2, y2) -> Function
    *
    *  Generates a transition easing function that is compatible
@@ -20766,7 +20754,6 @@ var Tweenable = (function () {
    *  @param {number} x2
    *  @param {number} y2
    *  @return {function}
-   *  @private
    */
   function getCubicBezierTransition (x1, y1, x2, y2) {
     return function (pos) {
@@ -21041,12 +21028,11 @@ var Tweenable = (function () {
 
 ;(function (Tweenable) {
 
-  /**
+  /*!
    * @typedef {{
    *   formatString: string
    *   chunkNames: Array.<string>
    * }}
-   * @private
    */
   var formatManifest;
 
@@ -21065,12 +21051,11 @@ var Tweenable = (function () {
 
   // HELPERS
 
-  /**
+  /*!
    * @param {Array.number} rawValues
    * @param {string} prefix
    *
    * @return {Array.<string>}
-   * @private
    */
   function getFormatChunksFrom (rawValues, prefix) {
     var accumulator = [];
@@ -21085,11 +21070,10 @@ var Tweenable = (function () {
     return accumulator;
   }
 
-  /**
+  /*!
    * @param {string} formattedString
    *
    * @return {string}
-   * @private
    */
   function getFormatStringFrom (formattedString) {
     var chunks = formattedString.match(R_FORMAT_CHUNKS);
@@ -21115,13 +21099,12 @@ var Tweenable = (function () {
     return chunks.join(VALUE_PLACEHOLDER);
   }
 
-  /**
+  /*!
    * Convert all hex color values within a string to an rgb string.
    *
    * @param {Object} stateObject
    *
    * @return {Object} The modified obj
-   * @private
    */
   function sanitizeObjectForHexProps (stateObject) {
     Tweenable.each(stateObject, function (prop) {
@@ -21133,21 +21116,19 @@ var Tweenable = (function () {
     });
   }
 
-  /**
+  /*!
    * @param {string} str
    *
    * @return {string}
-   * @private
    */
   function  sanitizeHexChunksToRGB (str) {
     return filterStringChunks(R_HEX, str, convertHexToRGB);
   }
 
-  /**
+  /*!
    * @param {string} hexString
    *
    * @return {string}
-   * @private
    */
   function convertHexToRGB (hexString) {
     var rgbArr = hexToRGBArray(hexString);
@@ -21155,7 +21136,7 @@ var Tweenable = (function () {
   }
 
   var hexToRGBArray_returnArray = [];
-  /**
+  /*!
    * Convert a hexadecimal string to an array with three items, one each for
    * the red, blue, and green decimal values.
    *
@@ -21163,7 +21144,6 @@ var Tweenable = (function () {
    *
    * @returns {Array.<number>} The converted Array of RGB values if `hex` is a
    * valid string, or an Array of three 0's.
-   * @private
    */
   function hexToRGBArray (hex) {
 
@@ -21183,19 +21163,18 @@ var Tweenable = (function () {
     return hexToRGBArray_returnArray;
   }
 
-  /**
+  /*!
    * Convert a base-16 number to base-10.
    *
    * @param {Number|String} hex The value to convert
    *
    * @returns {Number} The base-10 equivalent of `hex`.
-   * @private
    */
   function hexToDec (hex) {
     return parseInt(hex, 16);
   }
 
-  /**
+  /*!
    * Runs a filter operation on all chunks of a string that match a RegExp
    *
    * @param {RegExp} pattern
@@ -21203,7 +21182,6 @@ var Tweenable = (function () {
    * @param {function(string)} filter
    *
    * @return {string}
-   * @private
    */
   function filterStringChunks (pattern, unfilteredString, filter) {
     var pattenMatches = unfilteredString.match(pattern);
@@ -21223,23 +21201,21 @@ var Tweenable = (function () {
     return filteredString;
   }
 
-  /**
+  /*!
    * Check for floating point values within rgb strings and rounds them.
    *
    * @param {string} formattedString
    *
    * @return {string}
-   * @private
    */
   function sanitizeRGBChunks (formattedString) {
     return filterStringChunks(R_RGB, formattedString, sanitizeRGBChunk);
   }
 
-  /**
+  /*!
    * @param {string} rgbChunk
    *
    * @return {string}
-   * @private
    */
   function sanitizeRGBChunk (rgbChunk) {
     var numbers = rgbChunk.match(R_UNFORMATTED_VALUES);
@@ -21255,12 +21231,11 @@ var Tweenable = (function () {
     return sanitizedString;
   }
 
-  /**
+  /*!
    * @param {Object} stateObject
    *
    * @return {Object} An Object of formatManifests that correspond to
    * the string properties of stateObject
-   * @private
    */
   function getFormatManifests (stateObject) {
     var manifestAccumulator = {};
@@ -21281,10 +21256,9 @@ var Tweenable = (function () {
     return manifestAccumulator;
   }
 
-  /**
+  /*!
    * @param {Object} stateObject
    * @param {Object} formatManifests
-   * @private
    */
   function expandFormattedProperties (stateObject, formatManifests) {
     Tweenable.each(formatManifests, function (prop) {
@@ -21300,10 +21274,9 @@ var Tweenable = (function () {
     });
   }
 
-  /**
+  /*!
    * @param {Object} stateObject
    * @param {Object} formatManifests
-   * @private
    */
   function collapseFormattedProperties (stateObject, formatManifests) {
     Tweenable.each(formatManifests, function (prop) {
@@ -21318,12 +21291,11 @@ var Tweenable = (function () {
     });
   }
 
-  /**
+  /*!
    * @param {Object} stateObject
    * @param {Array.<string>} chunkNames
    *
    * @return {Object} The extracted value chunks.
-   * @private
    */
   function extractPropertyChunks (stateObject, chunkNames) {
     var extractedValues = {};
@@ -21339,12 +21311,11 @@ var Tweenable = (function () {
   }
 
   var getValuesList_accumulator = [];
-  /**
+  /*!
    * @param {Object} stateObject
    * @param {Array.<string>} chunkNames
    *
    * @return {Array.<number>}
-   * @private
    */
   function getValuesList (stateObject, chunkNames) {
     getValuesList_accumulator.length = 0;
@@ -21357,12 +21328,11 @@ var Tweenable = (function () {
     return getValuesList_accumulator;
   }
 
-  /**
+  /*!
    * @param {string} formatString
    * @param {Array.<number>} rawValues
    *
    * @return {string}
-   * @private
    */
   function getFormattedValues (formatString, rawValues) {
     var formattedValueString = formatString;
@@ -21376,23 +21346,21 @@ var Tweenable = (function () {
     return formattedValueString;
   }
 
-  /**
+  /*!
    * Note: It's the duty of the caller to convert the Array elements of the
    * return value into numbers.  This is a performance optimization.
    *
    * @param {string} formattedString
    *
    * @return {Array.<string>|null}
-   * @private
    */
   function getValuesFrom (formattedString) {
     return formattedString.match(R_UNFORMATTED_VALUES);
   }
 
-  /**
+  /*!
    * @param {Object} easingObject
    * @param {Object} tokenData
-   * @private
    */
   function expandEasingObject (easingObject, tokenData) {
     Tweenable.each(tokenData, function (prop) {
@@ -21421,10 +21389,9 @@ var Tweenable = (function () {
     });
   }
 
-  /**
+  /*!
    * @param {Object} easingObject
    * @param {Object} tokenData
-   * @private
    */
   function collapseEasingObject (easingObject, tokenData) {
     Tweenable.each(tokenData, function (prop) {
@@ -21477,7 +21444,7 @@ var Tweenable = (function () {
 
 }).call(null);
 
-/*! rekapi - v1.7.1 - 2016-05-28 - http://rekapi.com */
+/*! rekapi - v1.7.2 - 2016-06-13 - http://rekapi.com */
 /*!
  * Rekapi - Rewritten Kapi.
  * http://rekapi.com/
@@ -21945,7 +21912,7 @@ var rekapiCore = function (root, _, Tweenable) {
   /**
    * Play the animation.
    *
-   * __[Example](../../../../docs/examples/play.html)__
+   * __[Example](../../../../examples/play.html)__
    * @method play
    * @param {number=} opt_howManyTimes If omitted, the animation will loop
    * endlessly.
@@ -21977,7 +21944,7 @@ var rekapiCore = function (root, _, Tweenable) {
   /**
    * Move to a specific millisecond on the timeline and play from there.
    *
-   * __[Example](../../../../docs/examples/play_from.html)__
+   * __[Example](../../../../examples/play_from.html)__
    * @method playFrom
    * @param {number} millisecond
    * @param {number=} opt_howManyTimes Works as it does in {{#crossLink
@@ -21997,7 +21964,7 @@ var rekapiCore = function (root, _, Tweenable) {
    * Play from the last frame that was rendered with {{#crossLink
    * "Rekapi/update:method"}}{{/crossLink}}.
    *
-   * __[Example](../../../../docs/examples/play_from_current.html)__
+   * __[Example](../../../../examples/play_from_current.html)__
    * @method playFromCurrent
    * @param {number=} opt_howManyTimes Works as it does in {{#crossLink
    * "Rekapi/play:method"}}{{/crossLink}}.
@@ -22011,7 +21978,7 @@ var rekapiCore = function (root, _, Tweenable) {
    * Pause the animation.  A "paused" animation can be resumed from where it
    * left off with {{#crossLink "Rekapi/play:method"}}{{/crossLink}}.
    *
-   * __[Example](../../../../docs/examples/pause.html)__
+   * __[Example](../../../../examples/pause.html)__
    * @method pause
    * @param pause
    * @chainable
@@ -22035,7 +22002,7 @@ var rekapiCore = function (root, _, Tweenable) {
    * Stop the animation.  A "stopped" animation will start from the beginning
    * if {{#crossLink "Rekapi/play:method"}}{{/crossLink}} is called.
    *
-   * __[Example](../../../../docs/examples/stop.html)__
+   * __[Example](../../../../examples/stop.html)__
    * @method stop
    * @chainable
    */
@@ -22066,7 +22033,7 @@ var rekapiCore = function (root, _, Tweenable) {
   /**
    * Render an animation frame at a specific point in the timeline.
    *
-   * __[Example](../../../../docs/examples/update.html)__
+   * __[Example](../../../../examples/update.html)__
    * @method update
    * @param {number=} opt_millisecond The point in the timeline at which to
    * render.  If omitted, this renders the last millisecond that was rendered
@@ -22100,7 +22067,7 @@ var rekapiCore = function (root, _, Tweenable) {
   };
 
   /**
-   * __[Example](../../../../docs/examples/get_last_position_updated.html)__
+   * __[Example](../../../../examples/get_last_position_updated.html)__
    * @method getLastPositionUpdated
    * @return {number} The normalized timeline position (between 0 and 1) that
    * was last rendered.
@@ -22139,7 +22106,7 @@ var rekapiCore = function (root, _, Tweenable) {
   /**
    * Bind a handler function to a Rekapi event.
    *
-   * __[Example](../../../../docs/examples/bind.html)__
+   * __[Example](../../../../examples/bind.html)__
    * @method on
    * @param {string} eventName Valid values are:
    *
@@ -22227,7 +22194,7 @@ var rekapiCore = function (root, _, Tweenable) {
   /**
    * Unbind one or more handlers from a Rekapi event.
    *
-   * __[Example](../../../../docs/examples/unbind.html)__
+   * __[Example](../../../../examples/unbind.html)__
    * @method off
    * @param {string} eventName Valid values correspond to the list under
    * {{#crossLink "Rekapi/on:method"}}{{/crossLink}}.
@@ -22255,7 +22222,7 @@ var rekapiCore = function (root, _, Tweenable) {
   /**
    * Export the timeline to a JSON-serializable `Object`.
    *
-   * __[Example](../../../docs/examples/export_timeline.html)__
+   * __[Example](../../../examples/export_timeline.html)__
    * @method exportTimeline
    * @return {Object} This data can later be consumed by {{#crossLink
    * "Rekapi/importTimeline:method"}}{{/crossLink}}.
@@ -22790,7 +22757,7 @@ rekapiModules.push(function (context) {
    *     // Return the actor to its original position
    *     actor.copyKeyframe(2000, 0);
    *
-   * __[Example](../../../../docs/examples/actor_copy_keyframe.html)__
+   * __[Example](../../../../examples/actor_copy_keyframe.html)__
    * @method copyKeyframe
    * @param {number} copyTo The timeline millisecond to copy KeyframeProperties
    * to.
@@ -22826,7 +22793,7 @@ rekapiModules.push(function (context) {
    * "Rekapi.Actor/hasKeyframeAt:method"}}{{/crossLink}}` to see if there is
    * already a keyframe at the requested `to` destination.
    *
-   * __[Example](../../../../docs/examples/actor_move_keyframe.html)__
+   * __[Example](../../../../examples/actor_move_keyframe.html)__
    * @method moveKeyframe
    * @param {number} from The millisecond of the keyframe to be moved.
    * @param {number} to The millisecond of where the keyframe should be moved
@@ -22878,7 +22845,7 @@ rekapiModules.push(function (context) {
    *       'x': 'easeFrom'
    *     });
    *
-   * __[Example](../../../../docs/examples/actor_modify_keyframe.html)__
+   * __[Example](../../../../examples/actor_modify_keyframe.html)__
    * @method modifyKeyframe
    * @param {number} millisecond
    * @param {Object} stateModification
@@ -22916,7 +22883,7 @@ rekapiModules.push(function (context) {
    * Remove all `{{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}}`s set
    * on the actor at a given millisecond in the animation.
    *
-   * __[Example](../../../../docs/examples/actor_remove_keyframe.html)__
+   * __[Example](../../../../examples/actor_remove_keyframe.html)__
    * @method removeKeyframe
    * @param {number} millisecond The location on the timeline of the keyframe
    * to remove.
@@ -22951,7 +22918,7 @@ rekapiModules.push(function (context) {
    * "Rekapi.Actor/removeKeyframeProperty:method"}}{{/crossLink}}` many times
    * individually, but foregoes firing events.
    *
-   * __[Example](../../../../docs/examples/actor_remove_all_keyframes.html)__
+   * __[Example](../../../../examples/actor_remove_all_keyframes.html)__
    * @method removeAllKeyframes
    * @chainable
    */
@@ -22997,7 +22964,7 @@ rekapiModules.push(function (context) {
    * "Rekapi.KeyframeProperty/modifyWith:method"}}{{/crossLink}}` and then
    * performs some cleanup.
    *
-   * __[Example](../../../../docs/examples/actor_modify_keyframe_property.html)__
+   * __[Example](../../../../examples/actor_modify_keyframe_property.html)__
    * @method modifyKeyframeProperty
    * @param {string} property The name of the `{{#crossLink
    * "Rekapi.KeyframeProperty"}}{{/crossLink}}` to modify.
@@ -23168,7 +23135,7 @@ rekapiModules.push(function (context) {
    * Internally, this method copies the final state of the actor in the
    * timeline to the millisecond defined by `until`.
    *
-   * __[Example](../../../../docs/examples/actor_wait.html)__
+   * __[Example](../../../../examples/actor_wait.html)__
    * @method wait
    * @param {number} until At what point in the animation the Actor should wait
    * until (relative to the start of the animation timeline).  If this number
@@ -23406,7 +23373,7 @@ rekapiModules.push(function (context) {
   Actor.prototype._afterKeyframePropertyInterpolate = noop;
 
   /**
-   * __[Example](../../../../docs/examples/actor_export_timeline.html)__
+   * __[Example](../../../../examples/actor_export_timeline.html)__
    * @method exportTimeline
    * @return {Object} A serializable Object of this actor's timeline property
    * tracks and `{{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}}`s.
@@ -23594,7 +23561,7 @@ rekapiModules.push(function (context) {
   };
 
   /**
-   * __[Example](../../../../docs/examples/keyprop_export_property_data.html)__
+   * __[Example](../../../../examples/keyprop_export_property_data.html)__
    * @method exportPropertyData
    * @return {Object} A serializable Object representation of this
    * `{{#crossLink "Rekapi.KeyframeProperty"}}{{/crossLink}}`.
@@ -23869,7 +23836,7 @@ rekapiModules.push(function (context) {
    * This method has no effect if an order function is set with `{{#crossLink
    * "Rekapi.CanvasRenderer/setOrderFunction:method"}}{{/crossLink}}`.
    *
-   * __[Example](../../../../docs/examples/canvas_move_actor_to_layer.html)__
+   * __[Example](../../../../examples/canvas_move_actor_to_layer.html)__
    * @method moveActorToLayer
    * @param {Rekapi.Actor} actor
    * @param {number} layer This should be within `0` and the total number of
@@ -23903,7 +23870,7 @@ rekapiModules.push(function (context) {
    *     rekapi.renderer.setOrderFunction(function (actor) {
    *       return actor.get().radius;
    *     });
-   * __[Example](../../../../docs/examples/canvas_set_order_function.html)__
+   * __[Example](../../../../examples/canvas_set_order_function.html)__
    * @method setOrderFunction
    * @param {function(Rekapi.Actor)} sortFunction
    * @return {Rekapi}
@@ -23919,7 +23886,7 @@ rekapiModules.push(function (context) {
    * render order defaults back to the order in which the actors were added to
    * the animation.
    *
-   * __[Example](../../../../docs/examples/canvas_unset_order_function.html)__
+   * __[Example](../../../../examples/canvas_unset_order_function.html)__
    * @method unsetOrderFunction
    * @return {Rekapi}
    */
@@ -25392,7 +25359,7 @@ if (typeof define === 'function' && define.amd) {
 
 } (this));
 
-define('rekapi-timeline.component.container/model',[
+define('rekapi-timeline/components/container/model',[
 
   'lateralus'
 
@@ -25421,9 +25388,8 @@ define('rekapi-timeline.component.container/model',[
 });
 
 /**
- * @license RequireJS text 2.0.14 Copyright (c) 2010-2014, The Dojo Foundation All Rights Reserved.
- * Available via the MIT or new BSD license.
- * see: http://github.com/requirejs/text for details
+ * @license text 2.0.15 Copyright jQuery Foundation and other contributors.
+ * Released under MIT license, http://github.com/requirejs/text/LICENSE
  */
 /*jslint regexp: true */
 /*global require, XMLHttpRequest, ActiveXObject,
@@ -25444,8 +25410,26 @@ define('text',['module'], function (module) {
         buildMap = {},
         masterConfig = (module.config && module.config()) || {};
 
+    function useDefault(value, defaultValue) {
+        return value === undefined || value === '' ? defaultValue : value;
+    }
+
+    //Allow for default ports for http and https.
+    function isSamePort(protocol1, port1, protocol2, port2) {
+        if (port1 === port2) {
+            return true;
+        } else if (protocol1 === protocol2) {
+            if (protocol1 === 'http') {
+                return useDefault(port1, '80') === useDefault(port2, '80');
+            } else if (protocol1 === 'https') {
+                return useDefault(port1, '443') === useDefault(port2, '443');
+            }
+        }
+        return false;
+    }
+
     text = {
-        version: '2.0.14',
+        version: '2.0.15',
 
         strip: function (content) {
             //Strips <?xml ...?> declarations so that external SVG and XML
@@ -25563,7 +25547,7 @@ define('text',['module'], function (module) {
 
             return (!uProtocol || uProtocol === protocol) &&
                    (!uHostName || uHostName.toLowerCase() === hostname.toLowerCase()) &&
-                   ((!uPort && !uHostName) || uPort === port);
+                   ((!uPort && !uHostName) || isSamePort(uProtocol, uPort, protocol, port));
         },
 
         finishLoad: function (name, strip, content, onLoad) {
@@ -25813,7 +25797,7 @@ define('text',['module'], function (module) {
 });
 
 
-define('text!rekapi-timeline.component.container/template.mustache',[],function () { return '<div class="$details"></div>\n<div class="$timeline fill"></div>\n<div class="fill bottom-frame">\n  <div class="$controlBar"></div>\n  <div class="$scrubberDetail"></div>\n</div>\n';});
+define('text!rekapi-timeline/components/container/template.mustache',[],function () { return '<div class="$details"></div>\n<div class="$timeline fill"></div>\n<div class="fill bottom-frame">\n  <div class="$controlBar"></div>\n  <div class="$scrubberDetail"></div>\n</div>\n';});
 
 define('rekapi-timeline/constant',[],function () {
   'use strict';
@@ -25836,14 +25820,14 @@ define('rekapi-timeline/constant',[],function () {
   return rekapiTimelineConstants;
 });
 
-define('rekapi-timeline.component.container/view',[
+define('rekapi-timeline/components/container/view',[
 
   'jquery'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -25919,7 +25903,7 @@ define('rekapi-timeline.component.container/view',[
   return ContainerComponentView;
 });
 
-define('rekapi-timeline.component.details/model',[
+define('rekapi-timeline/components/details/model',[
 
   'lateralus'
 
@@ -25948,9 +25932,9 @@ define('rekapi-timeline.component.details/model',[
 });
 
 
-define('text!rekapi-timeline.component.details/template.mustache',[],function () { return '<div class="$keyframePropertyDetail fill"></div>\n';});
+define('text!rekapi-timeline/components/details/template.mustache',[],function () { return '<div class="$keyframePropertyDetail fill"></div>\n';});
 
-define('rekapi-timeline.component.details/view',[
+define('rekapi-timeline/components/details/view',[
 
   'lateralus'
 
@@ -25982,7 +25966,7 @@ define('rekapi-timeline.component.details/view',[
   return DetailsComponentView;
 });
 
-define('rekapi-timeline.component.keyframe-property-detail/model',[
+define('rekapi-timeline/components/keyframe-property-detail/model',[
 
   'lateralus'
 
@@ -26011,23 +25995,27 @@ define('rekapi-timeline.component.keyframe-property-detail/model',[
 });
 
 
-define('text!rekapi-timeline.component.keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond" min="0">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
+define('text!rekapi-timeline/components/keyframe-property-detail/template.mustache',[],function () { return '<h1 class="$propertyName keyframe-property-name">Detail</h1>\n<div class="add-delete-wrapper">\n  <button class="icon-button add" title="Add a new keyframe to the current track">\n    <i class="glyphicon glyphicon-plus"></i>\n  </button>\n  <button class="icon-button delete" title="Remove the currently selected keyframe">\n    <i class="glyphicon glyphicon-minus"></i>\n  </button>\n</div>\n<label class="label-input-pair row keyframe-property-millisecond">\n  <p>Millisecond:</p>\n  <input class="$propertyMillisecond property-millisecond" type="number" value="" name="millisecond" min="0">\n</label>\n<label class="label-input-pair row keyframe-property-value">\n  <p>Value:</p>\n  <input class="$propertyValue property-value" type="text" value="" name="value">\n</label>\n<label class="label-input-pair row select-container keyframe-property-easing">\n  <p>Easing:</p>\n  <select class="$propertyEasing" name="easing"></select>\n</label>\n';});
 
 
-define('text!aenima.component.curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
+define('text!aenima/components/curve-selector/template.mustache',[],function () { return '{{#curves}}\n<option>{{.}}</option>\n{{/curves}}\n';});
 
-define('aenima.constant',[],function () {
+define('aenima/constant',[],function () {
   'use strict';
 
   return {
     CUSTOM_CURVE_PREFIX: 'customCurve'
+    ,HIDABLE_VIEW_TRANSITION_DURATION: 450
     ,NEW_KEYFRAME_MS_INCREASE: 1000
     ,NEW_KEYFRAME_X_INCREASE: 200
     ,UNDO_STACK_LIMIT: 50
+    ,MODAL_OPACITY: 0.95
+    ,CSS_DURATION_LIMIT: 1000 * 60 * 5
+    ,INVALID_CLASS: 'invalid'
   };
 });
 
-define('aenima.component.curve-selector/view',[
+define('aenima/components/curve-selector/view',[
 
   'underscore'
   ,'lateralus'
@@ -26035,7 +26023,7 @@ define('aenima.component.curve-selector/view',[
 
   ,'text!./template.mustache'
 
-  ,'aenima.constant'
+  ,'aenima/constant'
 
 ], function (
 
@@ -26101,7 +26089,7 @@ define('aenima.component.curve-selector/view',[
   return CurveSelectorComponentView;
 });
 
-define('aenima.component.curve-selector/main',[
+define('aenima/components/curve-selector/main',[
 
   'lateralus'
 
@@ -26129,9 +26117,7 @@ define('aenima.component.curve-selector/main',[
   return CurveSelectorComponent;
 });
 
-define('aenima.component.curve-selector', ['aenima.component.curve-selector/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.keyframe-property-detail/view',[
+define('rekapi-timeline/components/keyframe-property-detail/view',[
 
   'underscore'
   ,'lateralus'
@@ -26139,9 +26125,9 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
 
   ,'text!./template.mustache'
 
-  ,'aenima.component.curve-selector'
+  ,'aenima/components/curve-selector/main'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -26367,7 +26353,7 @@ define('rekapi-timeline.component.keyframe-property-detail/view',[
   return KeyframePropertyDetailComponentView;
 });
 
-define('rekapi-timeline.component.keyframe-property-detail/main',[
+define('rekapi-timeline/components/keyframe-property-detail/main',[
 
   'lateralus'
 
@@ -26398,9 +26384,7 @@ define('rekapi-timeline.component.keyframe-property-detail/main',[
   return KeyframePropertyDetailComponent;
 });
 
-define('rekapi-timeline.component.keyframe-property-detail', ['rekapi-timeline.component.keyframe-property-detail/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.details/main',[
+define('rekapi-timeline/components/details/main',[
 
   'lateralus'
 
@@ -26408,7 +26392,7 @@ define('rekapi-timeline.component.details/main',[
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.keyframe-property-detail'
+  ,'../keyframe-property-detail/main'
 
 ], function (
 
@@ -26442,9 +26426,7 @@ define('rekapi-timeline.component.details/main',[
   return DetailsComponent;
 });
 
-define('rekapi-timeline.component.details', ['rekapi-timeline.component.details/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.control-bar/model',[
+define('rekapi-timeline/components/control-bar/model',[
 
   'lateralus'
 
@@ -26473,9 +26455,9 @@ define('rekapi-timeline.component.control-bar/model',[
 });
 
 
-define('text!rekapi-timeline.component.control-bar/template.mustache',[],function () { return '<button class="icon-button play">\n  <i class="glyphicon glyphicon-play"></i>\n</button>\n<button class="icon-button pause">\n  <i class="glyphicon glyphicon-pause"></i>\n</button>\n<button class="icon-button stop">\n  <i class="glyphicon glyphicon-stop"></i>\n</button>\n';});
+define('text!rekapi-timeline/components/control-bar/template.mustache',[],function () { return '<button class="icon-button play">\n  <i class="glyphicon glyphicon-play"></i>\n</button>\n<button class="icon-button pause">\n  <i class="glyphicon glyphicon-pause"></i>\n</button>\n<button class="icon-button stop">\n  <i class="glyphicon glyphicon-stop"></i>\n</button>\n';});
 
-define('rekapi-timeline.component.control-bar/view',[
+define('rekapi-timeline/components/control-bar/view',[
 
   'lateralus'
 
@@ -26543,7 +26525,7 @@ define('rekapi-timeline.component.control-bar/view',[
   return ControlBarComponentView;
 });
 
-define('rekapi-timeline.component.control-bar/main',[
+define('rekapi-timeline/components/control-bar/main',[
 
   'lateralus'
 
@@ -26574,9 +26556,7 @@ define('rekapi-timeline.component.control-bar/main',[
   return ControlBarComponent;
 });
 
-define('rekapi-timeline.component.control-bar', ['rekapi-timeline.component.control-bar/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.timeline/model',[
+define('rekapi-timeline/components/timeline/model',[
 
   'lateralus'
 
@@ -26605,16 +26585,16 @@ define('rekapi-timeline.component.timeline/model',[
 });
 
 
-define('text!rekapi-timeline.component.timeline/template.mustache',[],function () { return '<div class="$timelineWrapper timeline-wrapper">\n  <div class="$scrubber"></div>\n  <div class="$animationTracks"></div>\n  <div class="$newTrackNameInputWrapper new-track-name-input-wrapper">\n    <button class="icon-button add" title="Add a new property to animate">\n      <i class="glyphicon glyphicon-plus"></i>\n    </button>\n    {{#supportedPropertiesAreRestricted}}\n    <select class="$newTrackName new-track-name">\n      {{#supportedProperties}}\n      <option>{{name}}</option>\n      {{/supportedProperties}}\n    </select>\n    {{/supportedPropertiesAreRestricted}}\n    {{^supportedPropertiesAreRestricted}}\n    <input class="$newTrackName new-track-name" value="newProperty"></input>\n    {{/supportedPropertiesAreRestricted}}\n  </div>\n</div>\n';});
+define('text!rekapi-timeline/components/timeline/template.mustache',[],function () { return '<div class="$timelineWrapper timeline-wrapper">\n  <div class="$scrubber"></div>\n  <div class="$animationTracks"></div>\n  <div class="$newTrackNameInputWrapper new-track-name-input-wrapper">\n    <button class="icon-button add" title="Add a new property to animate">\n      <i class="glyphicon glyphicon-plus"></i>\n    </button>\n    {{#supportedPropertiesAreRestricted}}\n    <select class="$newTrackName new-track-name">\n      {{#supportedProperties}}\n      <option>{{name}}</option>\n      {{/supportedProperties}}\n    </select>\n    {{/supportedPropertiesAreRestricted}}\n    {{^supportedPropertiesAreRestricted}}\n    <input class="$newTrackName new-track-name" value="newProperty"></input>\n    {{/supportedPropertiesAreRestricted}}\n  </div>\n</div>\n';});
 
-define('rekapi-timeline.component.timeline/view',[
+define('rekapi-timeline/components/timeline/view',[
 
   'underscore'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -26737,7 +26717,7 @@ define('rekapi-timeline.component.timeline/view',[
   return TimelineComponentView;
 });
 
-define('rekapi-timeline.component.scrubber/model',[
+define('rekapi-timeline/components/scrubber/model',[
 
   'lateralus'
 
@@ -26766,16 +26746,16 @@ define('rekapi-timeline.component.scrubber/model',[
 });
 
 
-define('text!rekapi-timeline.component.scrubber/template.mustache',[],function () { return '<div class="$scrubberWrapper scrubber-wrapper">\n  <div class="$scrubberHandle scrubber-handle">\n    <i class="glyphicon glyphicon-chevron-down scrubber-icon">&nbsp;</i>\n    <figure class="$scrubberGuide scrubber-guide"></figure>\n  </div>\n</div>\n';});
+define('text!rekapi-timeline/components/scrubber/template.mustache',[],function () { return '<div class="$scrubberWrapper scrubber-wrapper">\n  <div class="$scrubberHandle scrubber-handle">\n    <i class="glyphicon glyphicon-chevron-down scrubber-icon">&nbsp;</i>\n    <figure class="$scrubberGuide scrubber-guide"></figure>\n  </div>\n</div>\n';});
 
-define('rekapi-timeline.component.scrubber/view',[
+define('rekapi-timeline/components/scrubber/view',[
 
   'underscore'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -26909,7 +26889,7 @@ define('rekapi-timeline.component.scrubber/view',[
   return ScrubberComponentView;
 });
 
-define('rekapi-timeline.component.scrubber/main',[
+define('rekapi-timeline/components/scrubber/main',[
 
   'lateralus'
 
@@ -26940,9 +26920,7 @@ define('rekapi-timeline.component.scrubber/main',[
   return ScrubberComponent;
 });
 
-define('rekapi-timeline.component.scrubber', ['rekapi-timeline.component.scrubber/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.animation-tracks/model',[
+define('rekapi-timeline/components/animation-tracks/model',[
 
   'lateralus'
 
@@ -26971,9 +26949,9 @@ define('rekapi-timeline.component.animation-tracks/model',[
 });
 
 
-define('text!rekapi-timeline.component.animation-tracks/template.mustache',[],function () { return '';});
+define('text!rekapi-timeline/components/animation-tracks/template.mustache',[],function () { return '';});
 
-define('rekapi-timeline.component.actor-tracks/model',[
+define('rekapi-timeline/components/actor-tracks/model',[
 
   'lateralus'
 
@@ -27002,9 +26980,9 @@ define('rekapi-timeline.component.actor-tracks/model',[
 });
 
 
-define('text!rekapi-timeline.component.actor-tracks/template.mustache',[],function () { return '';});
+define('text!rekapi-timeline/components/actor-tracks/template.mustache',[],function () { return '';});
 
-define('rekapi-timeline.component.keyframe-property-track/model',[
+define('rekapi-timeline/components/keyframe-property-track/model',[
 
   'lateralus'
 
@@ -27036,18 +27014,18 @@ define('rekapi-timeline.component.keyframe-property-track/model',[
 });
 
 
-define('text!rekapi-timeline.component.keyframe-property-track/template.mustache',[],function () { return '';});
+define('text!rekapi-timeline/components/keyframe-property-track/template.mustache',[],function () { return '';});
 
 
-define('text!rekapi-timeline.component.keyframe-property/template.mustache',[],function () { return '<div class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" >&nbsp;</div>\n';});
+define('text!rekapi-timeline/components/keyframe-property/template.mustache',[],function () { return '<div class="$handle keyframe-property" data-name="{{keyframeProperty.name}}" >&nbsp;</div>\n';});
 
-define('rekapi-timeline.component.keyframe-property/view',[
+define('rekapi-timeline/components/keyframe-property/view',[
 
   'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
@@ -27263,7 +27241,7 @@ define('rekapi-timeline.component.keyframe-property/view',[
   return KeyframePropertyComponentView;
 });
 
-define('rekapi-timeline.component.keyframe-property/main',[
+define('rekapi-timeline/components/keyframe-property/main',[
 
   'lateralus'
 
@@ -27291,16 +27269,14 @@ define('rekapi-timeline.component.keyframe-property/main',[
   return KeyframePropertyComponent;
 });
 
-define('rekapi-timeline.component.keyframe-property', ['rekapi-timeline.component.keyframe-property/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.keyframe-property-track/view',[
+define('rekapi-timeline/components/keyframe-property-track/view',[
 
   'underscore'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.keyframe-property'
+  ,'../keyframe-property/main'
 
 ], function (
 
@@ -27439,7 +27415,7 @@ define('rekapi-timeline.component.keyframe-property-track/view',[
   return KeyframePropertyTrackComponentView;
 });
 
-define('rekapi-timeline.component.keyframe-property-track/main',[
+define('rekapi-timeline/components/keyframe-property-track/main',[
 
   'lateralus'
 
@@ -27482,15 +27458,13 @@ define('rekapi-timeline.component.keyframe-property-track/main',[
   return KeyframePropertyTrackComponent;
 });
 
-define('rekapi-timeline.component.keyframe-property-track', ['rekapi-timeline.component.keyframe-property-track/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.actor-tracks/view',[
+define('rekapi-timeline/components/actor-tracks/view',[
 
   'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.keyframe-property-track'
+  ,'../keyframe-property-track/main'
 
 ], function (
 
@@ -27556,7 +27530,7 @@ define('rekapi-timeline.component.actor-tracks/view',[
   return ActorTracksComponentView;
 });
 
-define('rekapi-timeline.component.actor-tracks/main',[
+define('rekapi-timeline/components/actor-tracks/main',[
 
   'lateralus'
 
@@ -27587,16 +27561,14 @@ define('rekapi-timeline.component.actor-tracks/main',[
   return ActorTracksComponent;
 });
 
-define('rekapi-timeline.component.actor-tracks', ['rekapi-timeline.component.actor-tracks/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.animation-tracks/view',[
+define('rekapi-timeline/components/animation-tracks/view',[
 
   'underscore'
   ,'lateralus'
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.actor-tracks'
+  ,'../actor-tracks/main'
 
 ], function (
 
@@ -27652,7 +27624,7 @@ define('rekapi-timeline.component.animation-tracks/view',[
   return AnimationTracksComponentView;
 });
 
-define('rekapi-timeline.component.animation-tracks/main',[
+define('rekapi-timeline/components/animation-tracks/main',[
 
   'lateralus'
 
@@ -27683,9 +27655,7 @@ define('rekapi-timeline.component.animation-tracks/main',[
   return AnimationTracksComponent;
 });
 
-define('rekapi-timeline.component.animation-tracks', ['rekapi-timeline.component.animation-tracks/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.timeline/main',[
+define('rekapi-timeline/components/timeline/main',[
 
   'lateralus'
 
@@ -27693,8 +27663,8 @@ define('rekapi-timeline.component.timeline/main',[
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.scrubber'
-  ,'rekapi-timeline.component.animation-tracks'
+  ,'../scrubber/main'
+  ,'../animation-tracks/main'
 
 ], function (
 
@@ -27733,9 +27703,7 @@ define('rekapi-timeline.component.timeline/main',[
   return TimelineComponent;
 });
 
-define('rekapi-timeline.component.timeline', ['rekapi-timeline.component.timeline/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.scrubber-detail/model',[
+define('rekapi-timeline/components/scrubber-detail/model',[
 
   'lateralus'
 
@@ -27764,9 +27732,9 @@ define('rekapi-timeline.component.scrubber-detail/model',[
 });
 
 
-define('text!rekapi-timeline.component.scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row scrubber-scale">\n  <p>Timeline zoom:</p>\n  <input type="number" class="$scrubberScale" value="{{initialZoom}}" min="0" step="10">\n</label>\n<p class="position-monitor">\n  <span class="$currentPosition"></span>ms / <span class="$animationLength"></span>ms\n</p>\n';});
+define('text!rekapi-timeline/components/scrubber-detail/template.mustache',[],function () { return '<label class="label-input-pair row scrubber-scale">\n  <p>Timeline zoom:</p>\n  <input type="number" class="$scrubberScale" value="{{initialZoom}}" min="0" step="10">\n</label>\n<p class="position-monitor">\n  <span class="$currentPosition"></span>ms / <span class="$animationLength"></span>ms\n</p>\n';});
 
-define('rekapi-timeline.component.scrubber-detail/view',[
+define('rekapi-timeline/components/scrubber-detail/view',[
 
   'underscore'
   ,'lateralus'
@@ -27847,7 +27815,7 @@ define('rekapi-timeline.component.scrubber-detail/view',[
   return ScrubberDetailComponentView;
 });
 
-define('rekapi-timeline.component.scrubber-detail/main',[
+define('rekapi-timeline/components/scrubber-detail/main',[
 
   'lateralus'
 
@@ -27878,9 +27846,7 @@ define('rekapi-timeline.component.scrubber-detail/main',[
   return ScrubberDetailComponent;
 });
 
-define('rekapi-timeline.component.scrubber-detail', ['rekapi-timeline.component.scrubber-detail/main'], function (main) { return main; });
-
-define('rekapi-timeline.component.container/main',[
+define('rekapi-timeline/components/container/main',[
 
   'lateralus'
 
@@ -27888,10 +27854,10 @@ define('rekapi-timeline.component.container/main',[
   ,'./view'
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline.component.details'
-  ,'rekapi-timeline.component.control-bar'
-  ,'rekapi-timeline.component.timeline'
-  ,'rekapi-timeline.component.scrubber-detail'
+  ,'../details/main'
+  ,'../control-bar/main'
+  ,'../timeline/main'
+  ,'../scrubber-detail/main'
 
 ], function (
 
@@ -27939,8 +27905,6 @@ define('rekapi-timeline.component.container/main',[
 
   return ContainerComponent;
 });
-
-define('rekapi-timeline.component.container', ['rekapi-timeline.component.container/main'], function (main) { return main; });
 
 define('rekapi-timeline/utils',[
 
@@ -27991,7 +27955,7 @@ define('rekapi-timeline/model',[
   'underscore'
   ,'lateralus'
 
-  ,'rekapi-timeline/constant'
+  ,'./constant'
 
 ], function (
 
@@ -28025,7 +27989,7 @@ define('rekapi-timeline/models/keyframe-property',[
   ,'lateralus'
   ,'rekapi'
 
-  ,'rekapi-timeline/utils'
+  ,'../utils'
 
 ], function (
 
@@ -28130,7 +28094,7 @@ define('rekapi-timeline/collections/keyframe-property',[
   'backbone'
   ,'lateralus'
 
-  ,'rekapi-timeline/models/keyframe-property'
+  ,'../models/keyframe-property'
 
 ], function (
 
@@ -28206,9 +28170,9 @@ define('rekapi-timeline/models/actor',[
   'lateralus'
   ,'rekapi'
 
-  ,'rekapi-timeline/collections/keyframe-property'
+  ,'../collections/keyframe-property'
 
-  ,'rekapi-timeline/utils'
+  ,'../utils'
 
 ], function (
 
@@ -28323,7 +28287,7 @@ define('rekapi-timeline/collections/actor',[
   ,'backbone'
   ,'lateralus'
 
-  ,'rekapi-timeline/models/actor'
+  ,'../models/actor'
 
 ], function (
 
@@ -28768,11 +28732,11 @@ define('rekapi-timeline/rekapi-timeline',[
   ,'lateralus'
   ,'rekapi'
 
-  ,'rekapi-timeline.component.container'
+  ,'./components/container/main'
 
-  ,'rekapi-timeline/utils'
-  ,'rekapi-timeline/model'
-  ,'rekapi-timeline/collections/actor'
+  ,'./utils'
+  ,'./model'
+  ,'./collections/actor'
 
   // Silent dependency
   ,'jquery-dragon'
