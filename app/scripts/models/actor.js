@@ -3,9 +3,9 @@ define([
   'lateralus'
   ,'rekapi'
 
-  ,'rekapi-timeline/collections/keyframe-property'
+  ,'../collections/keyframe-property'
 
-  ,'rekapi-timeline/utils'
+  ,'../utils'
 
 ], function (
 

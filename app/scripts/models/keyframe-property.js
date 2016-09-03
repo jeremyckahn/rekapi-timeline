@@ -5,7 +5,7 @@ define([
   ,'lateralus'
   ,'rekapi'
 
-  ,'rekapi-timeline/utils'
+  ,'../utils'
 
 ], function (
 

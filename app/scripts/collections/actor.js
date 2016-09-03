@@ -4,7 +4,7 @@ define([
   ,'backbone'
   ,'lateralus'
 
-  ,'rekapi-timeline/models/actor'
+  ,'../models/actor'
 
 ], function (
 

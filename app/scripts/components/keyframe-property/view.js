@@ -4,7 +4,7 @@ define([
 
   ,'text!./template.mustache'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 

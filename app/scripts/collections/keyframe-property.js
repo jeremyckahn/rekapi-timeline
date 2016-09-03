@@ -3,7 +3,7 @@ define([
   'backbone'
   ,'lateralus'
 
-  ,'rekapi-timeline/models/keyframe-property'
+  ,'../models/keyframe-property'
 
 ], function (
 

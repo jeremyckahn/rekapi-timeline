@@ -6,9 +6,9 @@ define([
 
   ,'./components/container/main'
 
-  ,'rekapi-timeline/utils'
-  ,'rekapi-timeline/model'
-  ,'rekapi-timeline/collections/actor'
+  ,'./utils'
+  ,'./model'
+  ,'./collections/actor'
 
   // Silent dependency
   ,'jquery-dragon'

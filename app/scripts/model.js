@@ -3,7 +3,7 @@ define([
   'underscore'
   ,'lateralus'
 
-  ,'rekapi-timeline/constant'
+  ,'./constant'
 
 ], function (
 

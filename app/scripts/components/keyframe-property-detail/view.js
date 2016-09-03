@@ -8,7 +8,7 @@ define([
 
   ,'aenima/components/curve-selector/main'
 
-  ,'rekapi-timeline/constant'
+  ,'../../constant'
 
 ], function (
 
