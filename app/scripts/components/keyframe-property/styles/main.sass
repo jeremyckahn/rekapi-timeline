@@ -1,5 +1,6 @@
 @import compass/css3/border-radius
 @import compass/css3/transform
+@import compass/css3/user-interface
 @import ../../../../styles/variables
 
 .keyframe-property-view
@@ -8,6 +9,7 @@
   position: relative
   width: $KEYFRAME_PROPERTY_DIMENSION
   z-index: 20
+  +user-select(none)
 
   &.active
     z-index: 40
