@@ -1,3 +1,4 @@
+@import compass/css3/user-interface
 @import ../../../../styles/variables
 
 .rekapi-timeline-container-view
@@ -11,6 +12,12 @@
   p,
   h1
     color: #fefefe
+
+  p,
+  h1,
+  i,
+  select
+    +user-select(none)
 
   p
     font-size: $FONT_SIZE
