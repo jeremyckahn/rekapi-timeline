@@ -445,6 +445,13 @@ define('rekapi-timeline/components/keyframe-property-detail/view',[
           currentValue.toString().replace(R_NUMBER_STRING, '');
         var newValueStructure = val.replace(R_NUMBER_STRING, '');
 
+        // Attempt to coerce the inputted value into the correct format
+        if (!newValueStructure && currentValueStructure.length) {
+          $target.val(val + currentValueStructure);
+          $target.change();
+          return;
+        }
+
         if (
           $.trim(val) === '' ||
           $.trim(rawNumberStringValue) === '' ||
