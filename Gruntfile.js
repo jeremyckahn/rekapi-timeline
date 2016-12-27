@@ -252,7 +252,7 @@ module.exports = function (grunt) {
         base: 'dist',
         message: 'Automated deploy commit.'
       },
-      src: '**/*'
+      src: ['**/*', 'index.html', '.nojekyll']
     },
     bump: {
       options: {
