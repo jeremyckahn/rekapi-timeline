@@ -237,6 +237,7 @@ define('aenima/constant',[],function () {
   return {
     CUSTOM_CURVE_PREFIX: 'customCurve'
     ,HIDABLE_VIEW_TRANSITION_DURATION: 450
+    ,HIDABLE_VIEW_TRANSITION_QUICK_DURATION: 250
     ,NEW_KEYFRAME_MS_INCREASE: 1000
     ,NEW_KEYFRAME_X_INCREASE: 200
     ,UNDO_STACK_LIMIT: 50
@@ -444,6 +445,13 @@ define('rekapi-timeline/components/keyframe-property-detail/view',[
         var currentValueStructure =
           currentValue.toString().replace(R_NUMBER_STRING, '');
         var newValueStructure = val.replace(R_NUMBER_STRING, '');
+
+        // Attempt to coerce the inputted value into the correct format
+        if (!newValueStructure && currentValueStructure.length) {
+          $target.val(val + currentValueStructure);
+          $target.change();
+          return;
+        }
 
         if (
           $.trim(val) === '' ||
