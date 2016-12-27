@@ -10,18 +10,18 @@ require.config({
     }
   }
   ,paths: {
-    text: 'bower_components/requirejs-text/text'
-    ,jquery: 'bower_components/jquery/dist/jquery'
-    ,'jquery-dragon': 'bower_components/jquery-dragon/src/jquery.dragon'
-    ,backbone: 'bower_components/backbone/backbone'
-    ,underscore: 'bower_components/lodash/dist/lodash'
-    ,mustache: 'bower_components/mustache/mustache'
-    ,shifty: 'bower_components/shifty/dist/shifty'
-    ,rekapi: 'bower_components/rekapi/dist/rekapi'
+    text: 'node_modules/requirejs-text/text'
+    ,jquery: 'node_modules/jquery/dist/jquery'
+    ,'jquery-dragon': 'node_modules/jquery-dragon/src/jquery.dragon'
+    ,backbone: 'node_modules/backbone/backbone'
+    ,underscore: 'node_modules/lodash/index'
+    ,mustache: 'node_modules/mustache/mustache'
+    ,shifty: 'node_modules/shifty/dist/shifty'
+    ,rekapi: 'node_modules/rekapi/dist/rekapi'
   }
   ,packages: [{
     name: 'lateralus'
-    ,location: 'bower_components/lateralus/scripts'
+    ,location: 'node_modules/lateralus/scripts'
     ,main: 'lateralus'
   }, {
     name: 'rekapi-timeline'
@@ -29,6 +29,6 @@ require.config({
     ,main: 'rekapi-timeline'
   }, {
     name: 'aenima'
-    ,location: 'bower_components/aenima'
+    ,location: 'node_modules/aenima'
   }]
 });

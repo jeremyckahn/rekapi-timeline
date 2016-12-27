@@ -18,10 +18,8 @@ rekapi-timeline is a general-purpose timeline-editing interface for [Rekapi](htt
 
 ## Installation
 
-Via bower:
-
 ````
-bower install rekapi-timeline
+npm install rekapi-timeline
 ````
 
 ## Integration

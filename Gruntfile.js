@@ -177,7 +177,7 @@ module.exports = function (grunt) {
     uglify: {
       'dist/scripts/rekapi-timeline.min.js': '<%= yeoman.dist %>/scripts/rekapi-timeline.js',
       'dist/scripts/rekapi-timeline.full.min.js': '<%= yeoman.dist %>/scripts/rekapi-timeline.full.js',
-      'dist/bower_components/requirejs/require.js': '<%= yeoman.app %>/bower_components/requirejs/require.js'
+      'dist/node_modules/requirejs/require.js': '<%= yeoman.app %>/node_modules/requirejs/require.js'
     },
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
@@ -241,14 +241,9 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
-            'bower_components/bootstrap-sass-official/assets/fonts/bootstrap/*'
+            'node_modules/bootstrap-sass/assets/fonts/bootstrap/*'
           ]
         }]
-      }
-    },
-    bower: {
-      all: {
-        rjsConfig: '<%= yeoman.app %>/scripts/main.js'
       }
     },
     'gh-pages': {
@@ -260,7 +255,7 @@ module.exports = function (grunt) {
     },
     bump: {
       options: {
-        files: ['package.json', 'bower.json'],
+        files: ['package.json'],
         commit: false,
         createTag: false,
         tagName: '%VERSION%',
