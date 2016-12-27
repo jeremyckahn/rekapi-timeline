@@ -241,7 +241,8 @@ module.exports = function (grunt) {
           cwd: '<%= yeoman.app %>',
           dest: '<%= yeoman.dist %>',
           src: [
-            'node_modules/bootstrap-sass/assets/fonts/bootstrap/*'
+            'node_modules/bootstrap-sass/assets/fonts/bootstrap/*',
+            '.nojekyll'
           ]
         }]
       }
