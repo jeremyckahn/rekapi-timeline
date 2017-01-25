@@ -42,9 +42,12 @@
     "style-loader": "^0.13.1",
     "time-grunt": "~0.2.8",
     "underscore": "^1.8.3",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
   },
-  "scripts": {},
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
   "engines": {
     "node": ">=0.10.0"
   }
