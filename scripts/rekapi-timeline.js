@@ -12,6 +12,7 @@ define([
 
   // Silent dependency
   ,'jquery-dragon'
+  ,'!style-loader!raw-loader!sass-loader!../styles/main.sass'
 
 ], function (
 
