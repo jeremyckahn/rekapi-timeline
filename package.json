@@ -8,7 +8,7 @@
     "lateralus": "~0.9.3",
     "lodash": "~3.10.1",
     "mustache": "^2.3.0",
-    "rekapi": "~1.7.1",
+    "rekapi": "~1.7.4",
     "jquery-dragon": "~0.4.7",
     "jquery": "2.1.4",
     "requirejs-text": "2.0.12"

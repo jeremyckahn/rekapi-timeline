@@ -10,10 +10,15 @@ const modulePaths = [
 ];
 
 module.exports = {
-  entry: 'rekapi-timeline.js',
+  entry: {
+    // For reasons that make no sense, this entry point must be in an array:
+    // https://github.com/webpack/webpack/issues/300#issuecomment-45313650
+    'rekapi-timeline': ['rekapi-timeline.js'],
+    demo: 'demo.js'
+  },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'main.js',
+    filename: '[name].js',
   },
   devtool: 'source-map',
   resolveLoader: {
