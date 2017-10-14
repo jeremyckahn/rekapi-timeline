@@ -116,7 +116,7 @@ define([
 
     ,syncHandleToTimelineLength: function () {
       var lastMillisecondUpdated =
-        this.lateralus.getLastPositionUpdated() *
+        this.lateralus.rekapi.getLastPositionUpdated() *
         this.lateralus.model.get('timelineDuration');
 
       var scaledLeftValue =

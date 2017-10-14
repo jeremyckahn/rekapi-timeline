@@ -18,7 +18,7 @@ define([
 
   _
   ,Lateralus
-  ,Rekapi
+  ,rekapi
 
   ,ContainerComponent
 
@@ -28,6 +28,8 @@ define([
 
 ) {
   'use strict';
+
+  const { Rekapi } = rekapi;
 
   /**
    * @param {Element} el
@@ -46,12 +48,12 @@ define([
     // This must happen in the RekapiTimelineModel constructor, rather than in
     // RekapiTimelineModel's initialize method, as this.lateralus.rekapi is not
     // set up when that method executes.
-    this.model.set('timelineDuration', this.getAnimationLength());
+    this.model.set('timelineDuration', this.rekapi.getAnimationLength());
 
     this.globalRenderData = this.model.pick('supportedProperties');
 
     // Amplify all Rekapi events to "rekapi:" lateralusEvents.
-    this.getEventNames().forEach(function (eventName) {
+    this.rekapi.getEventNames().forEach(function (eventName) {
       this.rekapi.on(eventName, function () {
         this.emit.apply(
           this, ['rekapi:' + eventName].concat(_.toArray(arguments)));
@@ -70,18 +72,19 @@ define([
   _.extend(RekapiTimeline.prototype, {
     lateralusEvents: {
       stopAnimation: function () {
-        this.stop().update(0);
+        this.rekapi.stop();
+        this.update(0);
       }
 
       ,'rekapi:removeKeyframePropertyComplete': function () {
-        if (!this.isPlaying()) {
+        if (!this.rekapi.isPlaying()) {
           // This operation needs to be deferred because Rekapi's
           // removeKeyframeProperty event is fired at point in the keyframe
           // removal process where calling update() would not reflect the new
           // state of the timeline.  However, this only needs to be done if the
           // animation is not already playing.
           var timelineDuration = this.model.get('timelineDuration');
-          var lastMillisecondUpdated = this.getLastMillisecondUpdated();
+          var lastMillisecondUpdated = this.rekapi.getLastMillisecondUpdated();
 
           // Passing undefined to Rekapi#update causes a re-render of the
           // previously rendered frame.  If the previously rendered frame is
@@ -96,15 +99,15 @@ define([
       }
 
       ,'rekapi:timelineModified': function () {
-        if (!this.isPlaying()) {
+        if (!this.rekapi.isPlaying()) {
           var timelineDuration = this.model.get('timelineDuration');
 
-          if (this.getLastMillisecondUpdated() > timelineDuration) {
+          if (this.rekapi.getLastMillisecondUpdated() > timelineDuration) {
             this.update(timelineDuration);
           }
         }
 
-        this.model.set('timelineDuration', this.getAnimationLength());
+        this.model.set('timelineDuration', this.rekapi.getAnimationLength());
       }
     }
 
@@ -145,13 +148,6 @@ define([
   Rekapi.prototype.createTimeline = function (el, config) {
     return new RekapiTimeline(el, this, config || {});
   };
-
-  utils.proxy(Rekapi, RekapiTimeline, {
-    blacklistedMethodNames: ['on', 'off', 'trigger', 'update']
-    ,subject: function () {
-      return this.rekapi;
-    }
-  });
 
   return RekapiTimeline;
 });

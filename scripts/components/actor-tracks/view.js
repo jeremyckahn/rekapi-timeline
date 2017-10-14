@@ -44,7 +44,10 @@ define([
       this.keyframePropertyTrackComponents = [];
 
       // Backfill any preexisting tracks
-      this.model.getTrackNames().forEach(
+      //
+      // TODO: getTrackNames needs to be accessed directly like this because of
+      // caller context issues.  The model needs to be re-architected.
+      this.model.attributes.getTrackNames().forEach(
         this.addKeyframePropertyTrackComponent, this);
     }
 

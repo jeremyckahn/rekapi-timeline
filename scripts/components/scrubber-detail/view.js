@@ -68,7 +68,7 @@ define([
     ,renderCurrentPosition: function () {
       var lateralus = this.lateralus;
       var currentPosition =
-        lateralus.getLastPositionUpdated() *
+        lateralus.rekapi.getLastPositionUpdated() *
         lateralus.model.get('timelineDuration');
 
       // Default the rendered value to 0, as currentPosition may be NaN.

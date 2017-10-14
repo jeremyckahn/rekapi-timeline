@@ -5,16 +5,12 @@ define([
 
   ,'../collections/keyframe-property'
 
-  ,'../utils'
-
 ], function (
 
   Lateralus
   ,Rekapi
 
   ,KeyframePropertyCollection
-
-  ,utils
 
 ) {
   'use strict';
@@ -75,10 +71,15 @@ define([
     ,initialize: function () {
       // Have all Backbone.Model.prototype methods act upon the
       // Rekapi.Actor instance.
+      //
+      // TODO: This is an extemely bad pattern and it should not be used.
       this.attributes = this.attributes.actor;
 
       this.id = this.attributes.id;
-      this.getTrackNames().forEach(this.addKeyframePropertyTrack, this);
+      this.attributes.getTrackNames().forEach(
+        this.addKeyframePropertyTrack,
+        this
+      );
 
       var keyframePropertyCollection = this.initCollection(
         KeyframePropertyCollection
@@ -90,8 +91,8 @@ define([
 
       // Backfill the collection with any keyframeProperties the actor may
       // already have.
-      this.getTrackNames().forEach(function (trackName) {
-        this.getPropertiesInTrack(trackName).forEach(
+      this.attributes.getTrackNames().forEach(function (trackName) {
+        this.attributes.getPropertiesInTrack(trackName).forEach(
           keyframePropertyCollection.addKeyframeProperty,
           keyframePropertyCollection);
       }, this);
@@ -102,12 +103,6 @@ define([
      */
     ,addKeyframePropertyTrack: function (trackName) {
       this.emit('keyframePropertyTrackAdded', trackName);
-    }
-  });
-
-  utils.proxy(Rekapi.Actor, ActorModel, {
-    subject: function () {
-      return this.attributes;
     }
   });
 

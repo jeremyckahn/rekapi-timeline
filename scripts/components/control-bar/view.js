@@ -49,17 +49,17 @@ define([
     ,initialize: function () {
       baseProto.initialize.apply(this, arguments);
 
-      if (this.lateralus.isPlaying()) {
+      if (this.lateralus.rekapi.isPlaying()) {
         this.$el.addClass('playing');
       }
     }
 
     ,play: function () {
-      this.lateralus.playFromCurrent();
+      this.lateralus.rekapi.playFromCurrent();
     }
 
     ,pause: function () {
-      this.lateralus.pause();
+      this.lateralus.rekapi.pause();
     }
   });
 

@@ -14,7 +14,7 @@ define([
 
   _
   ,Lateralus
-  ,Tweenable
+  ,shifty
 
   ,template
 
@@ -27,6 +27,8 @@ define([
 
   var Base = Lateralus.Component.View;
   var baseProto = Base.prototype;
+
+  const { Tweenable } = shifty;
 
   var R_NUMBER_STRING = /-?\d*\.?\d*/g;
 
@@ -47,7 +49,7 @@ define([
           this.render.bind(this));
 
         var inputs = [];
-        _.each(Tweenable.prototype.formula, function (formula, name) {
+        _.each(Tweenable.formulas, function (formula, name) {
           var option = document.createElement('option');
           option.innerHTML = name;
           inputs.push(option);

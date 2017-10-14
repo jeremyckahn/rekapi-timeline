@@ -1,8 +1,12 @@
 require([
   'rekapi'
   ,'./rekapi-timeline'
-], function (Rekapi) {
+], function (
+  rekapiLib
+) {
   'use strict';
+
+  const { Rekapi } = rekapiLib;
 
   var timelineEl = document.querySelector('#rekapi-timeline');
   var rekapi = new Rekapi(document.body);

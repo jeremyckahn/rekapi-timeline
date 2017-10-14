@@ -96,11 +96,5 @@ define([
     }
   });
 
-  utils.proxy(Rekapi.KeyframeProperty, KeyframePropertyModel, {
-    subject: function () {
-      return this.attributes;
-    }
-  });
-
   return KeyframePropertyModel;
 });
