@@ -6,7 +6,6 @@ define([
 
   ,'./components/container/main'
 
-  ,'./utils'
   ,'./model'
   ,'./collections/actor'
 
@@ -22,7 +21,6 @@ define([
 
   ,ContainerComponent
 
-  ,utils
   ,RekapiTimelineModel
   ,ActorCollection
 

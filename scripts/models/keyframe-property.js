@@ -5,16 +5,12 @@ define([
   ,'lateralus'
   ,'rekapi'
 
-  ,'../utils'
-
 ], function (
 
   _
   ,Backbone
   ,Lateralus
   ,Rekapi
-
-  ,utils
 
 ) {
   'use strict';
