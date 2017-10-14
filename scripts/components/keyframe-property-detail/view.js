@@ -194,7 +194,7 @@ define([
         }
 
         var keyframePropertyModel = this.keyframePropertyModel;
-        keyframePropertyModel.getOwnerActor().removeKeyframeProperty(
+        keyframePropertyModel.getOwnerActor().attributes.removeKeyframeProperty(
           keyframePropertyModel.get('name')
           ,keyframePropertyModel.get('millisecond'));
       }
