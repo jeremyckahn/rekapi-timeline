@@ -1,6 +1,7 @@
 const path = require('path');
 const Webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const { version } = require('./package.json');
 
@@ -90,6 +91,9 @@ module.exports = {
       },
       sourceMap: true
     }),
+    new CopyWebpackPlugin([
+      { from: 'index.html' }
+    ]),
     new Webpack.BannerPlugin(version)
   ],
   devServer: {
