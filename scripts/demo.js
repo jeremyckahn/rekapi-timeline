@@ -1,6 +1,6 @@
 require([
   'rekapi'
-  ,'rekapi-timeline'
+  ,'./rekapi-timeline'
 ], function (Rekapi) {
   'use strict';
 

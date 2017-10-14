@@ -1,20 +1,16 @@
 const path = require('path');
 const Webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const { version } = require('./package.json');
-const isProduction = process.env.NODE_ENV === 'production';
 
-const modulePaths = [
-  'scripts',
-  path.join(__dirname, 'node_modules')
-];
+const rootDir = modulePath => path.resolve(__dirname, modulePath);
 
 module.exports = {
+  //entry: './scripts/main.js',
   entry: {
-    // For reasons that make no sense, this entry point must be in an array:
-    // https://github.com/webpack/webpack/issues/300#issuecomment-45313650
-    'rekapi-timeline': ['rekapi-timeline.js'],
-    demo: 'demo.js'
+    demo: './scripts/demo.js',
+    'rekapi-timeline': './scripts/rekapi-timeline.js',
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -22,55 +18,81 @@ module.exports = {
   },
   devtool: 'source-map',
   resolveLoader: {
-
-    // http://webpack.github.io/docs/troubleshooting.html#npm-linked-modules-doesn-t-find-their-dependencies
-    fallback: modulePaths,
-
     alias: {
       text: 'raw-loader'
     }
   },
   resolve: {
-    modulesDirectories: modulePaths,
-
-    // http://webpack.github.io/docs/troubleshooting.html#npm-linked-modules-doesn-t-find-their-dependencies
-    fallback: modulePaths,
-
+    modules: [
+      'node_modules',
+    ],
+    symlinks: false,
     alias: {
-      underscore: 'lodash/index',
-      jquery: 'jquery/dist/jquery',
-      'jquery-dragon': 'jquery-dragon/src/jquery.dragon',
-      shifty: 'shifty/dist/shifty',
-      rekapi: 'rekapi/dist/rekapi',
-      keydrown: 'keydrown/dist/keydrown',
-      backbone: 'backbone/backbone',
-      lateralus: 'lateralus/dist/lateralus',
-      'lateralus.component.tabs': 'lateralus-components/tabs/main',
-      mustache: 'mustache/mustache',
-      aenima: 'aenima',
-      bezierizer: 'bezierizer/dist/bezierizer'
+      underscore: 'lodash',
+      lodash: rootDir('node_modules/lodash/index.js'),
+      'jquery-mousewheel': rootDir('node_modules/jquery-mousewheel/jquery.mousewheel'),
+      'jquery-dragon': rootDir('node_modules/jquery-dragon/src/jquery.dragon'),
+      'jquery-cubelet': rootDir('node_modules/jquery-cubelet/dist/jquery.cubelet'),
+      rekapi: rootDir('node_modules/rekapi/src/main'),
+      shifty: rootDir('node_modules/shifty/src/main'),
+      keydrown: rootDir('node_modules/keydrown/dist/keydrown'),
+      lateralus: rootDir('node_modules/lateralus/dist/lateralus'),
+      'lateralus.component.tabs': rootDir('node_modules/lateralus-components/tabs/main'),
+      aenima: rootDir('node_modules/aenima'),
+      bezierizer: rootDir('node_modules/bezierizer/dist/bezierizer')
     }
   },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: 'babel-loader',
+        include: [
+          rootDir('scripts'),
+          rootDir('node_modules/shifty'),
+          rootDir('node_modules/rekapi'),
+          rootDir('node_modules/aenima'),
+          rootDir('node_modules/webpack-dev-server')
+        ]
+      }, {
+        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+        use: [{
+          loader: 'file-loader'
+        }]
+      }, {
+        test: /\.(sass|scss|css)$/,
+        use: [{
+          loader: 'style-loader'
+        }, {
+          loader: 'css-loader'
+        }, {
+          loader: 'sass-loader',
+          options: {
+            sourceMap: true,
+            includePaths: [
+              path.resolve(__dirname, './node_modules/compass-mixins/lib')
+            ]
+          }
+        }]
+      }
+    ]
+  },
   plugins: [
+    new CleanWebpackPlugin([ 'dist' ]),
     new Webpack.optimize.UglifyJsPlugin({
       compress: {
         dead_code: true,
-        unused: true
+        unused: true,
+        warnings: false
       },
       output: {
         comments: false
-      }
+      },
+      sourceMap: true
     }),
     new Webpack.BannerPlugin(version)
   ],
   devServer: {
     port: 9013
-  },
-  sassLoader: {
-    includePaths: [
-      path.resolve(__dirname, './node_modules/compass-mixins/lib')
-    ],
-    outputStyle: isProduction ? 'compressed' : 'expanded',
-    sourceComments: !isProduction
   }
 };
