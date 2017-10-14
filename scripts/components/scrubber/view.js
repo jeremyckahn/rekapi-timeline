@@ -78,7 +78,7 @@ define([
           this.collectOne('timelineMillisecondForXOffset', evt.offsetX);
 
         var lateralus = this.lateralus;
-        lateralus.pause();
+        lateralus.rekapi.pause();
         lateralus.update(scaledMillisecond, true);
       }
     }

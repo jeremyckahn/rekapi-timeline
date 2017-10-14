@@ -44,7 +44,7 @@ define([
       requestNewKeyframeProperty: function (args) {
         var stateObj = {};
         stateObj[args.name] = args.value;
-        this.keyframe(args.millisecond, stateObj, args.easing);
+        this.attributes.keyframe(args.millisecond, stateObj, args.easing);
       }
 
       /**

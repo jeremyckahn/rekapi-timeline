@@ -122,7 +122,7 @@ define([
         : constant.DEFAULT_KEYFRAME_PROPERTY_VALUE;
 
       keyframeObject[newTrackName] = defaultValue;
-      currentActorModel.keyframe(
+      currentActorModel.attributes.keyframe(
         constant.DEFAULT_KEYFRAME_PROPERTY_MILLISECOND, keyframeObject);
     }
   });

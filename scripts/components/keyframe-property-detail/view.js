@@ -1,6 +1,7 @@
 define([
 
   'underscore'
+  ,'jquery'
   ,'lateralus'
   ,'shifty'
 
@@ -13,6 +14,7 @@ define([
 ], function (
 
   _
+  ,$
   ,Lateralus
   ,shifty
 
