@@ -8,7 +8,6 @@ const { version } = require('./package.json');
 const rootDir = modulePath => path.resolve(__dirname, modulePath);
 
 module.exports = {
-  //entry: './scripts/main.js',
   entry: {
     demo: './scripts/demo.js',
     'rekapi-timeline': './scripts/rekapi-timeline.js',

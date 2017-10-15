@@ -1,6 +1,7 @@
 require([
   'rekapi'
   ,'./rekapi-timeline'
+  ,'../styles/main.sass'
 ], function (
   rekapiLib
 ) {
