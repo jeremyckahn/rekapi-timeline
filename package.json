@@ -39,7 +39,9 @@
     "start": "webpack-dev-server",
     "build": "webpack",
     "lint": "jshint",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist",
+    "preversion": "npm run lint",
+    "postversion": "git push && git push --tags && npm run deploy && npm publish"
   },
   "engines": {
     "node": ">=8.7.0"
