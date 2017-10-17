@@ -28,18 +28,14 @@ module.exports = {
     ],
     symlinks: false,
     alias: {
-      underscore: 'lodash',
-      lodash: rootDir('node_modules/lodash/index.js'),
-      'jquery-mousewheel': rootDir('node_modules/jquery-mousewheel/jquery.mousewheel'),
       'jquery-dragon': rootDir('node_modules/jquery-dragon/src/jquery.dragon'),
-      'jquery-cubelet': rootDir('node_modules/jquery-cubelet/dist/jquery.cubelet'),
+      aenima: rootDir('node_modules/aenima'),
+      bezierizer: rootDir('node_modules/bezierizer/dist/bezierizer'),
+      lateralus: rootDir('node_modules/lateralus/dist/lateralus'),
+      lodash: rootDir('node_modules/lodash/index.js'),
       rekapi: rootDir('node_modules/rekapi/src/main'),
       shifty: rootDir('node_modules/shifty/src/main'),
-      keydrown: rootDir('node_modules/keydrown/dist/keydrown'),
-      lateralus: rootDir('node_modules/lateralus/dist/lateralus'),
-      'lateralus.component.tabs': rootDir('node_modules/lateralus-components/tabs/main'),
-      aenima: rootDir('node_modules/aenima'),
-      bezierizer: rootDir('node_modules/bezierizer/dist/bezierizer')
+      underscore: 'lodash'
     }
   },
   module: {
@@ -70,7 +66,7 @@ module.exports = {
           options: {
             sourceMap: true,
             includePaths: [
-              path.resolve(__dirname, './node_modules/compass-mixins/lib')
+              rootDir('node_modules/compass-mixins/lib')
             ]
           }
         }]
