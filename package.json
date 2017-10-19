@@ -12,7 +12,6 @@
     "lodash": "~3.10.1",
     "mustache": "^2.3.0",
     "rekapi": "~2.0.6",
-    "requirejs-text": "2.0.12",
     "shifty": "^2.3.0"
   },
   "devDependencies": {
