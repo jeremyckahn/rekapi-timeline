@@ -2,6 +2,11 @@
   "name": "rekapi-timeline",
   "version": "0.5.1",
   "main": "dist/rekapi-timeline.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeremyckahn/rekapi-timeline.git"
+  },
+  "license": "MIT",
   "dependencies": {
     "aenima": "0.8.0",
     "backbone": "1.2.1",
