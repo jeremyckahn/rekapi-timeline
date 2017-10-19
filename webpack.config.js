@@ -15,6 +15,9 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js',
+    library: 'rekapi-timeline',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
   },
   devtool: 'source-map',
   resolveLoader: {

@@ -146,5 +146,8 @@ define([
     return new RekapiTimeline(el, this, config || {});
   };
 
-  return RekapiTimeline;
+  return {
+    timeline: RekapiTimeline,
+    Rekapi
+  };
 });
