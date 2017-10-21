@@ -1,8 +1,8 @@
 /node_modules
+dist
 app/node_modules
 npm-debug.log
 test/temp
 .sass-cache
 .tmp
 .DS_Store
-.grunt

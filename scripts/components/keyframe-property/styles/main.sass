@@ -1,0 +1,32 @@
+@import compass/css3/border-radius
+@import compass/css3/transform
+@import compass/css3/user-interface
+@import variables
+
+.keyframe-property-view
+  float: left
+  height: $KEYFRAME_PROPERTY_DIMENSION
+  position: relative
+  width: $KEYFRAME_PROPERTY_DIMENSION
+  z-index: 20
+  +user-select(none)
+
+  &.active
+    z-index: 40
+
+    .keyframe-property
+      background-color: $KEYFRAME_PROPERTY_SLIDER_ACTIVE_COLOR
+      opacity: 1
+      outline: none
+
+  .keyframe-property
+    background-color: $KEYFRAME_PROPERTY_SLIDER_COLOR
+    border: none
+    cursor: move
+    height: 60%
+    left: -5px
+    opacity: 0.5
+    position: relative
+    top: 4px
+    width: 60%
+    +transform(rotate(45deg))
