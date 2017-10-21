@@ -1,6 +1,6 @@
 {
   "name": "rekapi-timeline",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "main": "dist/rekapi-timeline.js",
   "repository": {
     "type": "git",
