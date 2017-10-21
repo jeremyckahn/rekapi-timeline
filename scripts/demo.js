@@ -1,6 +1,5 @@
 require([
   './rekapi-timeline'
-  ,'../styles/main.sass'
 ], function (
   rekapiTimeline
 ) {

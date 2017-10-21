@@ -9,8 +9,9 @@ define([
   ,'./model'
   ,'./collections/actor'
 
-  // Silent dependency
+  // Silent dependencies
   ,'jquery-dragon'
+  ,'../styles/main.sass'
 
 ], function (
 
@@ -146,8 +147,7 @@ define([
     return new RekapiTimeline(el, this, config || {});
   };
 
-  return {
+  return _.extend({
     timeline: RekapiTimeline,
-    Rekapi
-  };
+  }, rekapi);
 });

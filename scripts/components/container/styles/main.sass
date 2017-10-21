@@ -26,6 +26,9 @@
     background: #555
     border-radius: 2px
     border: none
+    // box-sizing is needed for environments that do not specify a doctype:
+    // https://stackoverflow.com/a/8331164
+    box-sizing: content-box
     color: #ddd
     font-size: 0.8em
     height: 10px
