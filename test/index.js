@@ -1,22 +1,21 @@
-import MyClass from '../src/index';
+import React from 'react';
+import TestRenderer from 'react-test-renderer';
+import RekapiTimeline from '../src/rekapi-timeline';
 import assert from 'assert';
 
-describe('MyClass', () => {
-  let myClass;
+describe('RekapiTimeline', () => {
+  describe('render', () => {
+    let testRenderer, testInstance;
 
-  beforeEach(() => {
-    myClass = new MyClass();
-  });
-
-  describe('constructor', () => {
-    it('constructs', () => {
-      assert(myClass instanceof MyClass);
+    beforeEach(() => {
+      testRenderer = TestRenderer.create(<RekapiTimeline />);
+      testInstance = testRenderer.root;
     });
-  });
 
-  describe('sayHello', () => {
-    it('says hello', () => {
-      assert.equal(myClass.sayHello(), 'Hello, World!');
+    it('returns a react component', () => {
+      assert(
+        testInstance.findByProps({ className: 'rekapi-timeline' })
+      );
     });
   });
 });
