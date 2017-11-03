@@ -5,6 +5,7 @@ import assert from 'assert';
 import RekapiTimeline from '../src/rekapi-timeline';
 import Details from '../src/details';
 import Timeline from '../src/timeline';
+import BottomFrame from '../src/bottom-frame';
 
 let testRenderer, testInstance;
 
@@ -43,6 +44,19 @@ describe('Timeline', () => {
   it('is a react component', () => {
     assert(
       testInstance.findByProps({ className: 'timeline' })
+    );
+  });
+});
+
+describe('BottomFrame', () => {
+  beforeEach(() => {
+    testRenderer = TestRenderer.create(<BottomFrame />);
+    testInstance = testRenderer.root;
+  });
+
+  it('is a react component', () => {
+    assert(
+      testInstance.findByProps({ className: 'bottom-frame' })
     );
   });
 });
