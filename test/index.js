@@ -4,6 +4,7 @@ import assert from 'assert';
 
 import RekapiTimeline from '../src/rekapi-timeline';
 import Details from '../src/details';
+import Timeline from '../src/timeline';
 
 let testRenderer, testInstance;
 
@@ -29,6 +30,19 @@ describe('Details', () => {
   it('is a react component', () => {
     assert(
       testInstance.findByProps({ className: 'details' })
+    );
+  });
+});
+
+describe('Timeline', () => {
+  beforeEach(() => {
+    testRenderer = TestRenderer.create(<Timeline />);
+    testInstance = testRenderer.root;
+  });
+
+  it('is a react component', () => {
+    assert(
+      testInstance.findByProps({ className: 'timeline' })
     );
   });
 });
