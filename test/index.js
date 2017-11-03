@@ -1,21 +1,34 @@
 import React from 'react';
 import TestRenderer from 'react-test-renderer';
-import RekapiTimeline from '../src/rekapi-timeline';
 import assert from 'assert';
 
+import RekapiTimeline from '../src/rekapi-timeline';
+import Details from '../src/details';
+
+let testRenderer, testInstance;
+
 describe('RekapiTimeline', () => {
-  describe('render', () => {
-    let testRenderer, testInstance;
+  beforeEach(() => {
+    testRenderer = TestRenderer.create(<RekapiTimeline />);
+    testInstance = testRenderer.root;
+  });
 
-    beforeEach(() => {
-      testRenderer = TestRenderer.create(<RekapiTimeline />);
-      testInstance = testRenderer.root;
-    });
+  it('is a react component', () => {
+    assert(
+      testInstance.findByProps({ className: 'rekapi-timeline' })
+    );
+  });
+});
 
-    it('returns a react component', () => {
-      assert(
-        testInstance.findByProps({ className: 'rekapi-timeline' })
-      );
-    });
+describe('Details', () => {
+  beforeEach(() => {
+    testRenderer = TestRenderer.create(<Details />);
+    testInstance = testRenderer.root;
+  });
+
+  it('is a react component', () => {
+    assert(
+      testInstance.findByProps({ className: 'details' })
+    );
   });
 });
