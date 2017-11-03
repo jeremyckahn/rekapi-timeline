@@ -7,6 +7,10 @@ import Details from '../src/details';
 import Timeline from '../src/timeline';
 import BottomFrame from '../src/bottom-frame';
 
+import { basicRekapiExport } from './fixtures/basic-rekapi-export'
+
+const basicKeyframe1 = basicRekapiExport.actors[0].propertyTracks.transform[0];
+
 let testRenderer, testInstance;
 
 describe('RekapiTimeline', () => {
@@ -32,6 +36,27 @@ describe('Details', () => {
     assert(
       testInstance.findByProps({ className: 'details' })
     );
+  });
+
+  describe('title', () => {
+    describe('no keyframe property focused', () => {
+      it('has default content', () => {
+        let title = testInstance.findByProps({ className: 'keyframe-property-name' })
+        assert.deepEqual(title.children, ['Details']);
+      });
+    });
+
+    describe('with keyframe property focused', () => {
+      beforeEach(() => {
+        testRenderer = TestRenderer.create(<Details keyframeProperty={basicKeyframe1} />);
+        testInstance = testRenderer.root;
+      });
+
+      it('displays the property name', () => {
+        let title = testInstance.findByProps({ className: 'keyframe-property-name' })
+        assert.deepEqual(title.children, [basicKeyframe1.name]);
+      });
+    });
   });
 });
 

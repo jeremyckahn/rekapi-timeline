@@ -1,7 +1,13 @@
 import React from 'react';
 
-const Details = props => (
+const Details = ({
+  keyframeProperty = {}
+}) => (
   <div className="details">
-  </div>);
+    <h1 className="keyframe-property-name">
+      { keyframeProperty.name || 'Details' }
+    </h1>
+  </div>
+);
 
 export default Details;
