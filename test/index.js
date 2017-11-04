@@ -1,5 +1,8 @@
 import React from 'react';
+import Enzyme, { mount } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import TestRenderer from 'react-test-renderer';
+import sinon from 'sinon';
 import assert from 'assert';
 
 import RekapiTimeline from '../src/rekapi-timeline';
@@ -9,9 +12,11 @@ import BottomFrame from '../src/bottom-frame';
 
 import { basicRekapiExport } from './fixtures/basic-rekapi-export'
 
+Enzyme.configure({ adapter: new Adapter() });
+
 const basicKeyframe1 = basicRekapiExport.actors[0].propertyTracks.transform[0];
 
-let testRenderer, testInstance;
+let testRenderer, testInstance, wrapper;
 
 describe('RekapiTimeline', () => {
   beforeEach(() => {
@@ -53,9 +58,26 @@ describe('Details', () => {
       });
 
       it('displays the property name', () => {
-        let title = testInstance.findByProps({ className: 'keyframe-property-name' })
+        let title = testInstance.findByProps({ className: 'keyframe-property-name' });
         assert.deepEqual(title.children, [basicKeyframe1.name]);
       });
+    });
+  });
+
+  describe('add button', () => {
+    let handleAddKeyframeButtonClick;
+
+    beforeEach(() => {
+      handleAddKeyframeButtonClick = sinon.spy();
+      wrapper = mount(
+        <Details handleAddKeyframeButtonClick={handleAddKeyframeButtonClick} />
+      );
+
+      wrapper.find('.icon-button.add').simulate('click');
+    });
+
+    it('fires handleAddKeyframeButtonClick', () => {
+      assert(handleAddKeyframeButtonClick.called);
     });
   });
 });
