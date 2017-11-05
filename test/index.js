@@ -1,5 +1,5 @@
 import React from 'react';
-import Enzyme, { mount } from 'enzyme';
+import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import TestRenderer from 'react-test-renderer';
 import sinon from 'sinon';
@@ -16,50 +16,44 @@ Enzyme.configure({ adapter: new Adapter() });
 
 const basicKeyframe1 = basicRekapiExport.actors[0].propertyTracks.transform[0];
 
-let testRenderer, testInstance, wrapper;
+let component, testRenderer, testInstance;
 
 describe('RekapiTimeline', () => {
   beforeEach(() => {
-    testRenderer = TestRenderer.create(<RekapiTimeline />);
-    testInstance = testRenderer.root;
+    component = shallow(<RekapiTimeline />);
   });
 
   it('is a react component', () => {
-    assert(
-      testInstance.findByProps({ className: 'rekapi-timeline' })
-    );
+    assert.equal(component.length, 1);
   });
 });
 
 describe('Details', () => {
   beforeEach(() => {
-    testRenderer = TestRenderer.create(<Details />);
-    testInstance = testRenderer.root;
+    component = shallow(<Details />);
   });
 
   it('is a react component', () => {
-    assert(
-      testInstance.findByProps({ className: 'details' })
-    );
+    assert.equal(component.length, 1);
   });
 
   describe('title', () => {
+    let title;
     describe('no keyframe property focused', () => {
       it('has default content', () => {
-        let title = testInstance.findByProps({ className: 'keyframe-property-name' })
-        assert.deepEqual(title.children, ['Details']);
+        title = component.find('.keyframe-property-name');
+        assert.deepEqual(title.text(), 'Details');
       });
     });
 
     describe('with keyframe property focused', () => {
       beforeEach(() => {
-        testRenderer = TestRenderer.create(<Details keyframeProperty={basicKeyframe1} />);
-        testInstance = testRenderer.root;
+        component = shallow(<Details keyframeProperty={basicKeyframe1} />);
       });
 
       it('displays the property name', () => {
-        let title = testInstance.findByProps({ className: 'keyframe-property-name' });
-        assert.deepEqual(title.children, [basicKeyframe1.name]);
+        title = component.find('.keyframe-property-name');
+        assert.deepEqual(title.text(), basicKeyframe1.name);
       });
     });
   });
@@ -69,11 +63,11 @@ describe('Details', () => {
 
     beforeEach(() => {
       handleAddKeyframeButtonClick = sinon.spy();
-      wrapper = mount(
+      component = shallow(
         <Details handleAddKeyframeButtonClick={handleAddKeyframeButtonClick} />
       );
 
-      wrapper.find('.icon-button.add').simulate('click');
+      component.find('.icon-button.add').simulate('click');
     });
 
     it('fires handleAddKeyframeButtonClick', () => {
@@ -86,11 +80,11 @@ describe('Details', () => {
 
     beforeEach(() => {
       handleDeleteKeyframeButtonClick = sinon.spy();
-      wrapper = mount(
+      component = shallow(
         <Details handleDeleteKeyframeButtonClick={handleDeleteKeyframeButtonClick} />
       );
 
-      wrapper.find('.icon-button.delete').simulate('click');
+      component.find('.icon-button.delete').simulate('click');
     });
 
     it('fires handleDeleteKeyframeButtonClick', () => {
