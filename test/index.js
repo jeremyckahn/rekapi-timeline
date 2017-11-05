@@ -42,7 +42,7 @@ describe('Details', () => {
     describe('no keyframe property focused', () => {
       it('has default content', () => {
         title = component.find('.keyframe-property-name');
-        assert.deepEqual(title.text(), 'Details');
+        assert.equal(title.text(), 'Details');
       });
     });
 
@@ -53,7 +53,7 @@ describe('Details', () => {
 
       it('displays the property name', () => {
         title = component.find('.keyframe-property-name');
-        assert.deepEqual(title.text(), basicKeyframe1.name);
+        assert.equal(title.text(), basicKeyframe1.name);
       });
     });
   });
@@ -89,6 +89,45 @@ describe('Details', () => {
 
     it('fires handleDeleteKeyframeButtonClick', () => {
       assert(handleDeleteKeyframeButtonClick.called);
+    });
+  });
+
+  describe('millisecond field', () => {
+    let millisecondInput;
+    describe('no keyframe property focused', () => {
+      it('has default content', () => {
+        millisecondInput = component.find('.property-millisecond');
+        assert.strictEqual(millisecondInput.props().value, '');
+      });
+    });
+
+    describe('with keyframe property focused', () => {
+      beforeEach(() => {
+        component = shallow(<Details keyframeProperty={basicKeyframe1} />);
+      });
+
+      it('displays the property millisecond', () => {
+        millisecondInput = component.find('.property-millisecond');
+        assert.strictEqual(millisecondInput.props().value, basicKeyframe1.millisecond);
+      });
+    });
+
+    describe('handleMillisecondInputChange', () => {
+      let handleMillisecondInputChange;
+      beforeEach(() => {
+        handleMillisecondInputChange = sinon.spy();
+
+        component = shallow(
+          <Details handleMillisecondInputChange={handleMillisecondInputChange} />
+        );
+
+        millisecondInput = component.find('.property-millisecond');
+        millisecondInput.simulate('change', { target: { value: 5 } });
+      });
+
+      it('fires handleMillisecondInputChange', () => {
+        assert(handleMillisecondInputChange.called);
+      });
     });
   });
 });
