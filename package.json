@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server --config webpack.test.config.js --open",
-    "test": "mocha -r jsdom-global/register ./node_modules/babel-core/register.js test/index.js",
+    "test": "mocha -r jsdom-global/register ./node_modules/babel-core/register.js test/setup.js test/index.js",
     "test:watch": "nodemon --exec \"npm test\" --watch src --watch test",
     "preversion": "npm test",
     "postversion": "git push && git push --tags && npm run deploy",
@@ -36,6 +36,7 @@
     "live-server": "^1.2.0",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
+    "raf": "^3.4.0",
     "react-test-renderer": "^16.0.0",
     "sinon": "^4.1.1",
     "webpack": "^3.5.6",
