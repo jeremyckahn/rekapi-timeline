@@ -80,6 +80,23 @@ describe('Details', () => {
       assert(handleAddKeyframeButtonClick.called);
     });
   });
+
+  describe('delete button', () => {
+    let handleDeleteKeyframeButtonClick;
+
+    beforeEach(() => {
+      handleDeleteKeyframeButtonClick = sinon.spy();
+      wrapper = mount(
+        <Details handleDeleteKeyframeButtonClick={handleDeleteKeyframeButtonClick} />
+      );
+
+      wrapper.find('.icon-button.delete').simulate('click');
+    });
+
+    it('fires handleDeleteKeyframeButtonClick', () => {
+      assert(handleDeleteKeyframeButtonClick.called);
+    });
+  });
 });
 
 describe('Timeline', () => {

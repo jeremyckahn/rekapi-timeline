@@ -2,7 +2,8 @@ import React from 'react';
 
 const Details = ({
   keyframeProperty = {},
-  handleAddKeyframeButtonClick
+  handleAddKeyframeButtonClick,
+  handleDeleteKeyframeButtonClick
 }) => (
   <div className="details">
     <h1 className="keyframe-property-name">
@@ -15,6 +16,13 @@ const Details = ({
         onClick={handleAddKeyframeButtonClick}
       >
         <i className="glyphicon glyphicon-plus"></i>
+      </button>
+      <button
+        className="icon-button delete"
+        title="Remove the currently selected keyframe"
+        onClick={handleDeleteKeyframeButtonClick}
+      >
+        <i className="glyphicon glyphicon-minus"></i>
       </button>
     </div>
   </div>
