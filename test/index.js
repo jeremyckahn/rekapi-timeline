@@ -1,7 +1,6 @@
 import React from 'react';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import TestRenderer from 'react-test-renderer';
 import sinon from 'sinon';
 import assert from 'assert';
 
@@ -16,7 +15,7 @@ Enzyme.configure({ adapter: new Adapter() });
 
 const basicKeyframe1 = basicRekapiExport.actors[0].propertyTracks.transform[0];
 
-let component, testRenderer, testInstance;
+let component;
 
 describe('<RekapiTimeline />', () => {
   beforeEach(() => {
@@ -134,26 +133,20 @@ describe('<Details />', () => {
 
 describe('<Timeline />', () => {
   beforeEach(() => {
-    testRenderer = TestRenderer.create(<Timeline />);
-    testInstance = testRenderer.root;
+    component = shallow(<Timeline />);
   });
 
   it('is a react component', () => {
-    assert(
-      testInstance.findByProps({ className: 'timeline' })
-    );
+    assert.equal(component.length, 1);
   });
 });
 
 describe('<BottomFrame />', () => {
   beforeEach(() => {
-    testRenderer = TestRenderer.create(<BottomFrame />);
-    testInstance = testRenderer.root;
+    component = shallow(<BottomFrame />);
   });
 
   it('is a react component', () => {
-    assert(
-      testInstance.findByProps({ className: 'bottom-frame' })
-    );
+    assert.equal(component.length, 1);
   });
 });
