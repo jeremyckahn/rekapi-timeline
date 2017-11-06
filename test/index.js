@@ -129,6 +129,43 @@ describe('<Details />', () => {
       });
     });
   });
+
+  describe('easing selector', () => {
+    let easingCurves;
+
+    beforeEach(() => {
+      easingCurves = ['ease1', 'ease2', 'ease3'];
+
+      component = shallow(
+        <Details easingCurves={easingCurves} />
+      );
+    });
+
+    it('renders a list of easings', () => {
+      assert(
+        component.find('.keyframe-property-easing select option').length,
+        easingCurves.length
+      );
+    });
+
+    describe('handleEasingSelectChange', () => {
+      let handleEasingSelectChange;
+
+      beforeEach(() => {
+        handleEasingSelectChange = sinon.spy();
+        component = shallow(
+          <Details handleEasingSelectChange={handleEasingSelectChange} />
+        );
+
+        let select = component.find('.keyframe-property-easing select');
+        select.simulate('change', { target: { value: 5 } });
+      });
+
+      it('fires handleEasingSelectChange', () => {
+        assert(handleEasingSelectChange.called);
+      });
+    });
+  });
 });
 
 describe('<Timeline />', () => {

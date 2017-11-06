@@ -2,9 +2,11 @@ import React from 'react';
 
 const Details = ({
   keyframeProperty = {},
+  easingCurves = [],
   handleAddKeyframeButtonClick,
   handleDeleteKeyframeButtonClick,
-  handleMillisecondInputChange
+  handleMillisecondInputChange,
+  handleEasingSelectChange
 }) => (
   <div className="details">
     <h1 className="keyframe-property-name">
@@ -39,6 +41,17 @@ const Details = ({
           min="0"
           onChange={handleMillisecondInputChange}
         />
+      </label>
+      <label className="label-input-pair row select-container keyframe-property-easing">
+        <p>Easing:</p>
+        <select
+          name="easing"
+          onChange={handleEasingSelectChange}
+        >
+          {easingCurves.map(
+            easingCurve => <option key={easingCurve}>{easingCurve}</option>
+          )}
+        </select>
       </label>
     </div>
   </div>
