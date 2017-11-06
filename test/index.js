@@ -18,7 +18,7 @@ const basicKeyframe1 = basicRekapiExport.actors[0].propertyTracks.transform[0];
 
 let component, testRenderer, testInstance;
 
-describe('RekapiTimeline', () => {
+describe('<RekapiTimeline />', () => {
   beforeEach(() => {
     component = shallow(<RekapiTimeline />);
   });
@@ -28,7 +28,7 @@ describe('RekapiTimeline', () => {
   });
 });
 
-describe('Details', () => {
+describe('<Details />', () => {
   beforeEach(() => {
     component = shallow(<Details />);
   });
@@ -132,7 +132,7 @@ describe('Details', () => {
   });
 });
 
-describe('Timeline', () => {
+describe('<Timeline />', () => {
   beforeEach(() => {
     testRenderer = TestRenderer.create(<Timeline />);
     testInstance = testRenderer.root;
@@ -145,7 +145,7 @@ describe('Timeline', () => {
   });
 });
 
-describe('BottomFrame', () => {
+describe('<BottomFrame />', () => {
   beforeEach(() => {
     testRenderer = TestRenderer.create(<BottomFrame />);
     testInstance = testRenderer.root;
