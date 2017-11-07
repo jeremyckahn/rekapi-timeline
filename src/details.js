@@ -36,6 +36,21 @@ const MillisecondInput = ({ millisecond, handleMillisecondInputChange }) =>
     />
   </label>
 
+const ValueInput = ({
+  value,
+  handleValueInputChange = () => {}
+}) =>
+  <label className="label-input-pair row keyframe-property-value">
+    <p>Value:</p>
+    <input
+      className="property-value"
+      type="text"
+      value={value === undefined ?  '' : value}
+      name="value"
+      onChange={handleValueInputChange}
+    />
+  </label>
+
 const EasingSelect = ({ easingCurves, handleEasingSelectChange }) =>
   <label className="label-input-pair row select-container keyframe-property-easing">
     <p>Easing:</p>
@@ -55,6 +70,7 @@ const Details = ({
   handleAddKeyframeButtonClick,
   handleDeleteKeyframeButtonClick,
   handleMillisecondInputChange,
+  handleValueInputChange,
   handleEasingSelectChange
 }) => (
   <div className="details">
@@ -66,6 +82,10 @@ const Details = ({
     <MillisecondInput
       millisecond={keyframeProperty.millisecond}
       handleMillisecondInputChange={handleMillisecondInputChange}
+    />
+    <ValueInput
+      value={keyframeProperty.value}
+      handleValueInputChange={handleValueInputChange}
     />
     <EasingSelect
       easingCurves={easingCurves}

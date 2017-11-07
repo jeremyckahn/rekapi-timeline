@@ -130,6 +130,45 @@ describe('<Details />', () => {
     });
   });
 
+  describe('value field', () => {
+    let valueInput;
+    describe('no keyframe property focused', () => {
+      it('has default content', () => {
+        valueInput = component.find('.property-value');
+        assert.strictEqual(valueInput.props().value, '');
+      });
+    });
+
+    describe('with keyframe property focused', () => {
+      beforeEach(() => {
+        component = mount(<Details keyframeProperty={basicKeyframe1} />);
+      });
+
+      it('displays the property value', () => {
+        valueInput = component.find('.property-value');
+        assert.strictEqual(valueInput.props().value, basicKeyframe1.value);
+      });
+    });
+
+    describe('handleValueInputChange', () => {
+      let handleValueInputChange;
+      beforeEach(() => {
+        handleValueInputChange = sinon.spy();
+
+        component = mount(
+          <Details handleValueInputChange={handleValueInputChange} />
+        );
+
+        valueInput = component.find('.property-value');
+        valueInput.simulate('change', { target: { value: '5' } });
+      });
+
+      it('fires handleValueInputChange', () => {
+        assert(handleValueInputChange.called);
+      });
+    });
+  });
+
   describe('easing selector', () => {
     let easingCurves;
 
