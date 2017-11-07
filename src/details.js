@@ -23,13 +23,16 @@ const DeleteButton = ({ handleDeleteKeyframeButtonClick }) =>
     <i className="glyphicon glyphicon-minus"></i>
   </button>
 
-const MillisecondInput = ({ millisecond, handleMillisecondInputChange }) =>
+const MillisecondInput = ({
+  handleMillisecondInputChange,
+  millisecond = ''
+}) =>
   <label className="label-input-pair row keyframe-property-millisecond">
     <p>Millisecond:</p>
     <input
       className="property-millisecond"
       type="number"
-      value={millisecond === undefined ?  '' : millisecond}
+      value={millisecond}
       name="millisecond"
       min="0"
       onChange={handleMillisecondInputChange}
@@ -37,15 +40,15 @@ const MillisecondInput = ({ millisecond, handleMillisecondInputChange }) =>
   </label>
 
 const ValueInput = ({
-  value,
-  handleValueInputChange = () => {}
+  handleValueInputChange = () => {},
+  value = ''
 }) =>
   <label className="label-input-pair row keyframe-property-value">
     <p>Value:</p>
     <input
       className="property-value"
       type="text"
-      value={value === undefined ?  '' : value}
+      value={value}
       name="value"
       onChange={handleValueInputChange}
     />
@@ -65,13 +68,13 @@ const EasingSelect = ({ easingCurves, handleEasingSelectChange }) =>
   </label>
 
 const Details = ({
-  keyframeProperty = {},
   easingCurves = [],
   handleAddKeyframeButtonClick,
   handleDeleteKeyframeButtonClick,
+  handleEasingSelectChange,
   handleMillisecondInputChange,
   handleValueInputChange,
-  handleEasingSelectChange
+  keyframeProperty = {}
 }) => (
   <div className="details">
     <Header name={keyframeProperty.name} />
