@@ -1,5 +1,5 @@
 import React from 'react';
-import Enzyme, { shallow } from 'enzyme';
+import Enzyme, { mount, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import sinon from 'sinon';
 import assert from 'assert';
@@ -29,7 +29,7 @@ describe('<RekapiTimeline />', () => {
 
 describe('<Details />', () => {
   beforeEach(() => {
-    component = shallow(<Details />);
+    component = mount(<Details />);
   });
 
   it('is a react component', () => {
@@ -47,7 +47,7 @@ describe('<Details />', () => {
 
     describe('with keyframe property focused', () => {
       beforeEach(() => {
-        component = shallow(<Details keyframeProperty={basicKeyframe1} />);
+        component = mount(<Details keyframeProperty={basicKeyframe1} />);
       });
 
       it('displays the property name', () => {
@@ -62,7 +62,7 @@ describe('<Details />', () => {
 
     beforeEach(() => {
       handleAddKeyframeButtonClick = sinon.spy();
-      component = shallow(
+      component = mount(
         <Details handleAddKeyframeButtonClick={handleAddKeyframeButtonClick} />
       );
 
@@ -79,7 +79,7 @@ describe('<Details />', () => {
 
     beforeEach(() => {
       handleDeleteKeyframeButtonClick = sinon.spy();
-      component = shallow(
+      component = mount(
         <Details handleDeleteKeyframeButtonClick={handleDeleteKeyframeButtonClick} />
       );
 
@@ -102,7 +102,7 @@ describe('<Details />', () => {
 
     describe('with keyframe property focused', () => {
       beforeEach(() => {
-        component = shallow(<Details keyframeProperty={basicKeyframe1} />);
+        component = mount(<Details keyframeProperty={basicKeyframe1} />);
       });
 
       it('displays the property millisecond', () => {
@@ -116,7 +116,7 @@ describe('<Details />', () => {
       beforeEach(() => {
         handleMillisecondInputChange = sinon.spy();
 
-        component = shallow(
+        component = mount(
           <Details handleMillisecondInputChange={handleMillisecondInputChange} />
         );
 
@@ -136,7 +136,7 @@ describe('<Details />', () => {
     beforeEach(() => {
       easingCurves = ['ease1', 'ease2', 'ease3'];
 
-      component = shallow(
+      component = mount(
         <Details easingCurves={easingCurves} />
       );
     });
@@ -153,7 +153,7 @@ describe('<Details />', () => {
 
       beforeEach(() => {
         handleEasingSelectChange = sinon.spy();
-        component = shallow(
+        component = mount(
           <Details handleEasingSelectChange={handleEasingSelectChange} />
         );
 
