@@ -4,6 +4,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import sinon from 'sinon';
 import assert from 'assert';
 
+import { Rekapi } from 'rekapi';
+
 import RekapiTimeline from '../src/rekapi-timeline';
 import Details from '../src/details';
 import Timeline from '../src/timeline';
@@ -24,6 +26,16 @@ describe('<RekapiTimeline />', () => {
 
   it('is a react component', () => {
     assert.equal(component.length, 1);
+  });
+
+  describe.only('rekapi data source', () => {
+    beforeEach(() => {
+      component = mount(<RekapiTimeline rekapi={new Rekapi()}/>);
+    });
+
+    it('accepts and stores a rekapi', () => {
+      assert(component.props().rekapi instanceof Rekapi);
+    });
   });
 });
 
