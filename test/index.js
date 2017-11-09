@@ -28,7 +28,7 @@ describe('<RekapiTimeline />', () => {
     assert.equal(component.length, 1);
   });
 
-  describe.only('rekapi data source', () => {
+  describe('rekapi data source', () => {
     beforeEach(() => {
       component = mount(<RekapiTimeline rekapi={new Rekapi()}/>);
     });
