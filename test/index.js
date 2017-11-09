@@ -29,12 +29,24 @@ describe('<RekapiTimeline />', () => {
   });
 
   describe('rekapi data source', () => {
+    let rekapi;
     beforeEach(() => {
-      component = mount(<RekapiTimeline rekapi={new Rekapi()}/>);
+      rekapi = new Rekapi();
+      component = mount(<RekapiTimeline rekapi={rekapi}/>);
     });
 
     it('accepts and stores a rekapi', () => {
       assert(component.props().rekapi instanceof Rekapi);
+    });
+
+    describe('rekapi modification', () => {
+      beforeEach(() => {
+        rekapi.addActor().keyframe(0, { x: 0 });
+      });
+
+      it('updates component state when rekapi timeline is modified', () => {
+        assert.deepEqual(component.state().rekapi, rekapi.exportTimeline());
+      });
     });
   });
 });

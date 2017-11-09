@@ -1,3 +1,4 @@
+import { Rekapi } from 'rekapi';
 import React, { Component } from 'react';
 import Details from './details';
 import Timeline from './timeline';
@@ -12,8 +13,18 @@ export default class RekapiTimeline extends Component {
    * @param {Object} props
    * @param {rekapi} [props.rekapi]
    */
-  constructor (props) {
-    super(props);
+  constructor ({ rekapi = new Rekapi() }) {
+    super(arguments[0]);
+
+    this.state = {
+      rekapi: rekapi.exportTimeline()
+    };
+
+    rekapi.on('timelineModified', () => {
+      this.setState({
+        rekapi: rekapi.exportTimeline()
+      });
+    });
   }
 
   render () {
