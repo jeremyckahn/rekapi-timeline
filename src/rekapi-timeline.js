@@ -11,30 +11,29 @@ import BottomFrame from './bottom-frame';
  * @property {number} millisecond
  */
 
-/**
- * @typedef RekapiTimeline#props.rekapi
- * @type {external:rekapi.Rekapi}
- */
-
 export default class RekapiTimeline extends Component {
   /**
-   * @constructs RekapiTimeline
-   * @extends {external:React.Component}
    * @param {Object} props
    * @param {rekapi.Rekapi} [props.rekapi]
+   * @constructs RekapiTimeline
    */
   constructor ({ rekapi = new Rekapi() }) {
     super(arguments[0]);
 
+    /**
+     * @member RekapiTimeline."props.rekapi"
+     * @type {external:rekapi.Rekapi}
+     */
+
     this.state = {
       /**
-       * @member RekapiTimeline#state.rekapi
+       * @member RekapiTimeline."state.rekapi"
        * @type {external:rekapi.Rekapi}
        */
       rekapi: rekapi.exportTimeline(),
 
       /**
-       * @member RekapiTimeline#state.keyframeCursor
+       * @member RekapiTimeline."state.keyframeCursor"
        * @type {RekapiTimeline.keyframeCursor|{}}
        */
       keyframeCursor: {}
@@ -58,11 +57,11 @@ export default class RekapiTimeline extends Component {
   }
 
   /**
-   * @method RekapiTimeline#computeHighlightedKeyframe
-   * Compute a {@link external:rekapi.propertyData} from {@link
-   * RekapiTimeline#state.keyframeCursor} and {@link
-   * RekapiTimeline#props.rekapi} or an empty object if none is found.
+   * Compute a {@link external:rekapi.propertyData} from
+   * {@link RekapiTimeline."state.keyframeCursor"} and
+   * {@link RekapiTimeline."props.rekapi"} or an empty object if none is found.
    * @return {external:rekapi.propertyData|{}}
+   * @method RekapiTimeline#computeHighlightedKeyframe
    */
   computeHighlightedKeyframe () {
     const { rekapi } = this.props;
