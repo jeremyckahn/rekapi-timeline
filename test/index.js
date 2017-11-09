@@ -20,6 +20,7 @@ const basicKeyframe1 = basicRekapiExport.actors[0].propertyTracks.transform[0];
 let component;
 
 describe('<RekapiTimeline />', () => {
+  let rekapi;
   beforeEach(() => {
     component = shallow(<RekapiTimeline />);
   });
@@ -30,7 +31,6 @@ describe('<RekapiTimeline />', () => {
 
   describe('props', () => {
     describe('rekapi', () => {
-      let rekapi;
       beforeEach(() => {
         rekapi = new Rekapi();
         component = mount(<RekapiTimeline rekapi={rekapi}/>);
@@ -47,6 +47,67 @@ describe('<RekapiTimeline />', () => {
 
         it('updates rekapi state when rekapi prop is modified', () => {
           assert.deepEqual(component.state().rekapi, rekapi.exportTimeline());
+        });
+      });
+    });
+  });
+
+  describe('state', () => {
+    describe('keyframeCursor', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('is empty by default', () => {
+        assert.deepEqual(component.state().keyframeCursor, {});
+      });
+    });
+  });
+
+  describe('#computeHighlightedKeyframe', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      component = mount(<RekapiTimeline rekapi={rekapi}/>);
+    });
+
+    it('is a function', () => {
+      assert(component.instance().computeHighlightedKeyframe instanceof Function);
+    });
+
+    describe('return values', () => {
+      describe('when state.keyframeCursor is empty', () => {
+        it('returns undefined', () => {
+          assert.deepEqual(component.instance().computeHighlightedKeyframe(), {});
+        });
+      });
+
+      describe('when state.keyframeCursor references a keyframe that does not exist', () => {
+        beforeEach(() => {
+          component.setState({ keyframeCursor: { property: 'x', millisecond: 0 } });
+        });
+
+        it('returns undefined', () => {
+          assert.deepEqual(component.instance().computeHighlightedKeyframe(), {});
+        });
+      });
+
+      describe('when state.keyframeCursor references a keyframe that does exist', () => {
+        beforeEach(() => {
+          rekapi.addActor().keyframe(0, { x: 5 });
+          component.setState({ keyframeCursor: { property: 'x', millisecond: 0 } });
+        });
+
+        it('returns KeyframeProperty data', () => {
+          assert.deepEqual(
+            component.instance().computeHighlightedKeyframe(),
+            {
+              value: 5,
+              name: 'x',
+              easing: 'linear',
+              millisecond: 0
+            }
+          );
         });
       });
     });
