@@ -28,24 +28,26 @@ describe('<RekapiTimeline />', () => {
     assert.equal(component.length, 1);
   });
 
-  describe('rekapi data source', () => {
-    let rekapi;
-    beforeEach(() => {
-      rekapi = new Rekapi();
-      component = mount(<RekapiTimeline rekapi={rekapi}/>);
-    });
-
-    it('accepts and stores a rekapi', () => {
-      assert(component.props().rekapi instanceof Rekapi);
-    });
-
-    describe('rekapi modification', () => {
+  describe('props', () => {
+    describe('rekapi', () => {
+      let rekapi;
       beforeEach(() => {
-        rekapi.addActor().keyframe(0, { x: 0 });
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
       });
 
-      it('updates component state when rekapi timeline is modified', () => {
-        assert.deepEqual(component.state().rekapi, rekapi.exportTimeline());
+      it('accepts and stores a rekapi', () => {
+        assert(component.props().rekapi instanceof Rekapi);
+      });
+
+      describe('timeline modification', () => {
+        beforeEach(() => {
+          rekapi.addActor().keyframe(0, { x: 0 });
+        });
+
+        it('updates rekapi state when rekapi prop is modified', () => {
+          assert.deepEqual(component.state().rekapi, rekapi.exportTimeline());
+        });
       });
     });
   });
