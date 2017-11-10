@@ -55,24 +55,30 @@ export default class RekapiTimeline extends Component {
       </div>
     );
   }
+}
 
+Object.assign(RekapiTimeline, {
   /**
-   * Compute a {@link external:rekapi.propertyData} from
-   * {@link RekapiTimeline."state.keyframeCursor"} and
-   * {@link RekapiTimeline."props.rekapi"} or an empty object if none is found.
-   * @return {external:rekapi.propertyData|{}}
-   * @method RekapiTimeline#computeHighlightedKeyframe
+   * Compute a {@link external:rekapi.propertyData} from a
+   * {@link RekapiTimeline.keyframeCursor} and a
+   * {@link external:rekapi.Rekapi}.
+   * @returns {external:rekapi.propertyData|{}} Is `{}` if the
+   * {@link external:rekapi.KeyframeProperty} referenced by `keyframeCursor`
+   * cannot be found.
+   * @method RekapiTimeline.computeHighlightedKeyframe
+   * @param {external:rekapi.Rekapi} rekapi
+   * @param {RekapiTimeline.keyframeCursor} keyframeCursor
+   * @static
    */
-  computeHighlightedKeyframe () {
-    const { rekapi } = this.props;
+  computeHighlightedKeyframe (rekapi, keyframeCursor) {
     const [ actor ] = rekapi.getAllActors();
 
     if (!actor) {
       return {};
     }
 
-    const { property, millisecond } = this.state.keyframeCursor;
+    const { property, millisecond } = keyframeCursor;
     const keyframeProperty = actor.getKeyframeProperty(property, millisecond);
     return keyframeProperty ? keyframeProperty.exportPropertyData() : {};
   }
-}
+});

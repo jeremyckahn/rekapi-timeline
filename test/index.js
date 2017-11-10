@@ -65,42 +65,45 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('#computeHighlightedKeyframe', () => {
+  describe('RekapiTimeline.computeHighlightedKeyframe', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
-      component = mount(<RekapiTimeline rekapi={rekapi}/>);
     });
 
     it('is a function', () => {
-      assert(component.instance().computeHighlightedKeyframe instanceof Function);
+      assert(RekapiTimeline.computeHighlightedKeyframe instanceof Function);
     });
 
     describe('return values', () => {
-      describe('when state.keyframeCursor is empty', () => {
+      describe('when keyframeCursor is empty', () => {
         it('returns undefined', () => {
-          assert.deepEqual(component.instance().computeHighlightedKeyframe(), {});
+          assert.deepEqual(RekapiTimeline.computeHighlightedKeyframe(rekapi, {}), {});
         });
       });
 
-      describe('when state.keyframeCursor references a keyframe that does not exist', () => {
-        beforeEach(() => {
-          component.setState({ keyframeCursor: { property: 'x', millisecond: 0 } });
-        });
-
+      describe('when keyframeCursor references a keyframe that does not exist', () => {
         it('returns undefined', () => {
-          assert.deepEqual(component.instance().computeHighlightedKeyframe(), {});
+          assert.deepEqual(
+            RekapiTimeline.computeHighlightedKeyframe(
+              rekapi,
+              { property: 'x', millisecond: 0 }
+            ),
+            {}
+          );
         });
       });
 
-      describe('when state.keyframeCursor references a keyframe that does exist', () => {
+      describe('when keyframeCursor references a keyframe that does exist', () => {
         beforeEach(() => {
           rekapi.addActor().keyframe(0, { x: 5 });
-          component.setState({ keyframeCursor: { property: 'x', millisecond: 0 } });
         });
 
         it('returns KeyframeProperty data', () => {
           assert.deepEqual(
-            component.instance().computeHighlightedKeyframe(),
+            RekapiTimeline.computeHighlightedKeyframe(
+              rekapi,
+              { property: 'x', millisecond: 0 }
+            ),
             {
               value: 5,
               name: 'x',
