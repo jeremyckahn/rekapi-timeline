@@ -11,31 +11,29 @@ import BottomFrame from './bottom-frame';
  * @property {number} millisecond
  */
 
+/**
+ * @typedef RekapiTimeline.props
+ * @type {Object}
+ * @property {external:rekapi.Rekapi} rekapi
+ */
+
+/**
+ * @typedef RekapiTimeline.state
+ * @type {Object}
+ * @property {external:rekapi.timelineData} rekapi
+ * @property {RekapiTimeline.keyframeCursor|{}} keyframeCursor
+ */
+
 export default class RekapiTimeline extends Component {
   /**
-   * @param {Object} props
-   * @param {rekapi.Rekapi} [props.rekapi]
+   * @param {RekapiTimeline.props} props
    * @constructs RekapiTimeline
    */
   constructor ({ rekapi = new Rekapi() }) {
     super(arguments[0]);
 
-    /**
-     * @member RekapiTimeline."props.rekapi"
-     * @type {external:rekapi.Rekapi}
-     */
-
     this.state = {
-      /**
-       * @member RekapiTimeline."state.rekapi"
-       * @type {external:rekapi.Rekapi}
-       */
       rekapi: rekapi.exportTimeline(),
-
-      /**
-       * @member RekapiTimeline."state.keyframeCursor"
-       * @type {RekapiTimeline.keyframeCursor|{}}
-       */
       keyframeCursor: {}
     };
 
