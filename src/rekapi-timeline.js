@@ -68,14 +68,13 @@ Object.assign(RekapiTimeline, {
    * @param {RekapiTimeline.keyframeCursor} keyframeCursor
    * @static
    */
-  computeHighlightedKeyframe (rekapi, keyframeCursor) {
+  computeHighlightedKeyframe (rekapi, { property, millisecond }) {
     const [ actor ] = rekapi.getAllActors();
 
     if (!actor) {
       return {};
     }
 
-    const { property, millisecond } = keyframeCursor;
     const keyframeProperty = actor.getKeyframeProperty(property, millisecond);
     return keyframeProperty ? keyframeProperty.exportPropertyData() : {};
   }
