@@ -2,17 +2,20 @@ const path = require('path');
 const Webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-const package = require('./package.json');
-const { name, version } = package;
+const { name, version } = require('./package.json');
 
 const dist = 'dist';
 
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    'rekapi-timeline': './src/rekapi-timeline.js',
+    tests: './test/index.js',
+    demo: './demo/index.js'
+  },
   output: {
     path: path.join(__dirname, `${dist}`),
-    filename: `app.js`,
-    library: `${name}`,
+    filename: '[name].js',
+    library: 'rekapi-timeline',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },

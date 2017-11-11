@@ -1,14 +1,15 @@
 const path = require('path');
 const Webpack = require('webpack');
 
-const package = require('./package.json');
-
 module.exports = {
-  entry: './test/index.js',
+  entry: {
+    tests: './test/index.js',
+    demo: './demo/index.js'
+  },
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/assets/',
-    filename: 'index.js'
+    filename: '[name].js'
   },
   devtool: 'source-map',
   module: {
