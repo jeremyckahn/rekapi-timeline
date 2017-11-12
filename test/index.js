@@ -5,6 +5,10 @@ import sinon from 'sinon';
 import assert from 'assert';
 
 import { Rekapi } from 'rekapi';
+import {
+  setBezierFunction,
+  unsetBezierFunction
+} from 'shifty';
 
 import RekapiTimeline from '../src/rekapi-timeline';
 import Details from '../src/details';
@@ -129,6 +133,25 @@ describe('<RekapiTimeline />', () => {
           );
         });
       });
+    });
+  });
+
+  describe('RekapiTimeline#updateEasingList', () => {
+    beforeEach(() => {
+      setBezierFunction('testCurve', 0, 0, 0, 0);
+      component.instance().updateEasingList();
+    });
+
+    afterEach(() => {
+      unsetBezierFunction('testCurve');
+    });
+
+    it('is a function', () => {
+      assert(component.instance().updateEasingList instanceof Function);
+    });
+
+    it('reflects changes to Tweenable.formulas', () => {
+      assert(component.state().easingCurves.indexOf('testCurve') > -1);
     });
   });
 });

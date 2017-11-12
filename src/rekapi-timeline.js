@@ -47,6 +47,21 @@ export default class RekapiTimeline extends Component {
     });
   }
 
+  /**
+   * Method to be called after {@link external:shifty.setBezierFunction} and
+   * {@link external:shifty.unsetBezierFunction} are called.  This is needed to
+   * update the easing list after {@link external:shifty.Tweenable.formulas} is
+   * modified which cannot be done automatically in a cross-browser compatible,
+   * performant way.
+   * @method RekapiTimeline#updateEasingList
+   * @returns {undefined}
+   */
+  updateEasingList () {
+    this.setState({
+      easingCurves: Object.keys(Tweenable.formulas)
+    });
+  }
+
   render () {
     const { props, state } = this;
 
