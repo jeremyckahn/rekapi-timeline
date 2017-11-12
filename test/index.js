@@ -76,13 +76,29 @@ describe('<RekapiTimeline />', () => {
 
     describe('return values', () => {
       describe('when keyframeCursor is empty', () => {
-        it('returns undefined', () => {
-          assert.deepEqual(RekapiTimeline.computeHighlightedKeyframe(rekapi, {}), {});
+        it('returns empty object', () => {
+          assert.deepEqual(
+            RekapiTimeline.computeHighlightedKeyframe(rekapi, {}),
+            {}
+          );
+        });
+      });
+
+      describe('when rekapi has an actor and keyframeCursor is empty', () => {
+        beforeEach(() => {
+          rekapi.addActor();
+        });
+
+        it('returns empty object', () => {
+          assert.deepEqual(
+            RekapiTimeline.computeHighlightedKeyframe(rekapi, {}),
+            {}
+          );
         });
       });
 
       describe('when keyframeCursor references a keyframe that does not exist', () => {
-        it('returns undefined', () => {
+        it('returns empty object', () => {
           assert.deepEqual(
             RekapiTimeline.computeHighlightedKeyframe(
               rekapi,

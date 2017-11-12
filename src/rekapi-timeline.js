@@ -48,12 +48,20 @@ export default class RekapiTimeline extends Component {
   }
 
   render () {
-    const { state } = this;
+    const { props, state } = this;
+
+    const keyframeProperty = props.rekapi ?
+      RekapiTimeline.computeHighlightedKeyframe(
+        props.rekapi,
+        state.keyframeCursor
+      ) :
+      {};
 
     return (
       <div className="rekapi-timeline">
         <Details
           easingCurves={state.easingCurves}
+          keyframeProperty={keyframeProperty}
         />
         <Timeline />
         <BottomFrame />
@@ -78,7 +86,7 @@ Object.assign(RekapiTimeline, {
   computeHighlightedKeyframe (rekapi, { property, millisecond }) {
     const [ actor ] = rekapi.getAllActors();
 
-    if (!actor) {
+    if (!actor || property === undefined || millisecond === undefined) {
       return {};
     }
 
