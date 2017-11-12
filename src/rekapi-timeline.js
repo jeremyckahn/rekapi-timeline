@@ -1,4 +1,5 @@
 import { Rekapi } from 'rekapi';
+import { Tweenable } from 'shifty';
 import React, { Component } from 'react';
 import Details from './details';
 import Timeline from './timeline';
@@ -22,6 +23,7 @@ import BottomFrame from './bottom-frame';
  * @type {Object}
  * @property {external:rekapi.timelineData} rekapi
  * @property {RekapiTimeline.keyframeCursor|{}} keyframeCursor
+ * @property {Array.<string>} easingCurves
  */
 
 export default class RekapiTimeline extends Component {
@@ -34,7 +36,8 @@ export default class RekapiTimeline extends Component {
 
     this.state = {
       rekapi: rekapi.exportTimeline(),
-      keyframeCursor: {}
+      keyframeCursor: {},
+      easingCurves: Object.keys(Tweenable.formulas)
     };
 
     rekapi.on('timelineModified', () => {
@@ -45,9 +48,13 @@ export default class RekapiTimeline extends Component {
   }
 
   render () {
+    const { state } = this;
+
     return (
       <div className="rekapi-timeline">
-        <Details />
+        <Details
+          easingCurves={state.easingCurves}
+        />
         <Timeline />
         <BottomFrame />
       </div>
