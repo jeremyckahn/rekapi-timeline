@@ -15,6 +15,10 @@ import Details from '../src/details';
 import Timeline from '../src/timeline';
 import BottomFrame from '../src/bottom-frame';
 
+import {
+  newPropertyMillisecondBuffer
+} from '../src/constants';
+
 import { basicRekapiExport } from './fixtures/basic-rekapi-export'
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -25,6 +29,9 @@ let component;
 
 describe('<RekapiTimeline />', () => {
   let rekapi;
+
+  const getActor = () => rekapi.getAllActors()[0];
+
   beforeEach(() => {
     component = shallow(<RekapiTimeline />);
   });
@@ -152,6 +159,65 @@ describe('<RekapiTimeline />', () => {
 
     it('reflects changes to Tweenable.formulas', () => {
       assert(component.state().easingCurves.indexOf('testCurve') > -1);
+    });
+  });
+
+  describe('RekapiTimeline#handleAddKeyframeButtonClick', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+    });
+
+    describe('with keyframeCursor that does not reference a keyframeProperty', () => {
+      beforeEach(() => {
+        rekapi.importTimeline(basicRekapiExport);
+        component.instance().handleAddKeyframeButtonClick();
+      });
+
+      it('does not add a new keyframe property', () => {
+        assert.equal(
+          rekapi.getAllActors()[0].getPropertiesInTrack('transform').length,
+          2
+        );
+      });
+    });
+
+    describe('with keyframeCursor that does reference a keyframeProperty', () => {
+      let currentKeyframeProperty, newKeyframeProperty;
+      beforeEach(() => {
+        rekapi.importTimeline(basicRekapiExport);
+        currentKeyframeProperty = getActor().getKeyframeProperty('transform', 0)
+        component.setState({
+          keyframeCursor: { property: 'transform', millisecond: 0 }
+        });
+
+        component.instance().handleAddKeyframeButtonClick();
+
+        newKeyframeProperty = getActor().getPropertiesInTrack('transform').find(
+          property => property.millisecond === newPropertyMillisecondBuffer
+        );
+      });
+
+      it('does add a new keyframe property', () => {
+        assert.equal(
+          getActor().getPropertiesInTrack('transform').length,
+          3
+        );
+      });
+
+      it('the new property is placed after the current property', () => {
+        assert.equal(
+          newKeyframeProperty.millisecond,
+          currentKeyframeProperty.millisecond + newPropertyMillisecondBuffer
+        );
+      });
+
+      it('the new property has the same value as the current property', () => {
+        assert.equal(
+          newKeyframeProperty.value,
+          currentKeyframeProperty.value
+        );
+      });
     });
   });
 });

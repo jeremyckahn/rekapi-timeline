@@ -5,6 +5,10 @@ import Details from './details';
 import Timeline from './timeline';
 import BottomFrame from './bottom-frame';
 
+import {
+  newPropertyMillisecondBuffer
+} from './constants';
+
 /**
  * @typedef RekapiTimeline.keyframeCursor
  * @type {Object}
@@ -60,6 +64,38 @@ export default class RekapiTimeline extends Component {
     this.setState({
       easingCurves: Object.keys(Tweenable.formulas)
     });
+  }
+
+  /**
+   * Returns the current {@link external:rekapi.Actor}.
+   * @method RekapiTimeline#getActor
+   * @returns {external:rekapi.Actor|undefined}
+   */
+  getActor () {
+    return this.props.rekapi.getAllActors()[0];
+  }
+
+  /**
+   * @method RekapiTimeline#handleAddKeyframeButtonClick
+   * @returns {undefined}
+   */
+  handleAddKeyframeButtonClick () {
+    const { props, state } = this;
+    const { keyframeCursor } = state;
+
+    const keyframeProperty = RekapiTimeline.computeHighlightedKeyframe(
+      props.rekapi,
+      keyframeCursor
+    );
+
+    this.getActor().keyframe(
+      keyframeCursor.millisecond + newPropertyMillisecondBuffer,
+      {
+        [keyframeCursor.property]: keyframeProperty.value
+      }
+    );
+
+    // TODO: Hightlight the newly-created property
   }
 
   render () {
