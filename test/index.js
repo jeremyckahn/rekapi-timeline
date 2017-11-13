@@ -64,14 +64,14 @@ describe('<RekapiTimeline />', () => {
   });
 
   describe('state', () => {
-    describe('keyframeCursor', () => {
+    describe('propertyCursor', () => {
       beforeEach(() => {
         rekapi = new Rekapi();
         component = mount(<RekapiTimeline rekapi={rekapi}/>);
       });
 
       it('is empty by default', () => {
-        assert.deepEqual(component.state().keyframeCursor, {});
+        assert.deepEqual(component.state().propertyCursor, {});
       });
     });
   });
@@ -86,7 +86,7 @@ describe('<RekapiTimeline />', () => {
     });
 
     describe('return values', () => {
-      describe('when keyframeCursor is empty', () => {
+      describe('when propertyCursor is empty', () => {
         it('returns empty object', () => {
           assert.deepEqual(
             RekapiTimeline.computeHighlightedKeyframe(rekapi, {}),
@@ -95,7 +95,7 @@ describe('<RekapiTimeline />', () => {
         });
       });
 
-      describe('when rekapi has an actor and keyframeCursor is empty', () => {
+      describe('when rekapi has an actor and propertyCursor is empty', () => {
         beforeEach(() => {
           rekapi.addActor();
         });
@@ -108,7 +108,7 @@ describe('<RekapiTimeline />', () => {
         });
       });
 
-      describe('when keyframeCursor references a keyframe that does not exist', () => {
+      describe('when propertyCursor references a keyframe that does not exist', () => {
         it('returns empty object', () => {
           assert.deepEqual(
             RekapiTimeline.computeHighlightedKeyframe(
@@ -120,7 +120,7 @@ describe('<RekapiTimeline />', () => {
         });
       });
 
-      describe('when keyframeCursor references a keyframe that does exist', () => {
+      describe('when propertyCursor references a keyframe that does exist', () => {
         beforeEach(() => {
           rekapi.addActor().keyframe(0, { x: 5 });
         });
@@ -168,7 +168,7 @@ describe('<RekapiTimeline />', () => {
       component = shallow(<RekapiTimeline rekapi={rekapi}/>);
     });
 
-    describe('with keyframeCursor that does not reference a keyframeProperty', () => {
+    describe('with propertyCursor that does not reference a keyframeProperty', () => {
       beforeEach(() => {
         rekapi.importTimeline(basicRekapiExport);
         component.instance().handleAddKeyframeButtonClick();
@@ -182,13 +182,13 @@ describe('<RekapiTimeline />', () => {
       });
     });
 
-    describe('with keyframeCursor that does reference a keyframeProperty', () => {
+    describe('with propertyCursor that does reference a keyframeProperty', () => {
       let currentKeyframeProperty, newKeyframeProperty;
       beforeEach(() => {
         rekapi.importTimeline(basicRekapiExport);
         currentKeyframeProperty = getActor().getKeyframeProperty('transform', 0)
         component.setState({
-          keyframeCursor: { property: 'transform', millisecond: 0 }
+          propertyCursor: { property: 'transform', millisecond: 0 }
         });
 
         component.instance().handleAddKeyframeButtonClick();
@@ -219,9 +219,9 @@ describe('<RekapiTimeline />', () => {
         );
       });
 
-      it('sets state.keyframeCursor to the newly created property', () => {
+      it('sets state.propertyCursor to the newly created property', () => {
         assert.deepEqual(
-          component.state().keyframeCursor,
+          component.state().propertyCursor,
           {
             property: 'transform',
             millisecond: newPropertyMillisecondBuffer

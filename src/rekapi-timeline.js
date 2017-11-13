@@ -10,7 +10,7 @@ import {
 } from './constants';
 
 /**
- * @typedef RekapiTimeline.keyframeCursor
+ * @typedef RekapiTimeline.propertyCursor
  * @type {Object}
  * @property {string} property
  * @property {number} millisecond
@@ -26,7 +26,7 @@ import {
  * @typedef RekapiTimeline.state
  * @type {Object}
  * @property {external:rekapi.timelineData} rekapi
- * @property {RekapiTimeline.keyframeCursor|{}} keyframeCursor
+ * @property {RekapiTimeline.propertyCursor|{}} propertyCursor
  * @property {Array.<string>} easingCurves
  */
 
@@ -40,7 +40,7 @@ export default class RekapiTimeline extends Component {
 
     this.state = {
       rekapi: rekapi.exportTimeline(),
-      keyframeCursor: {},
+      propertyCursor: {},
       easingCurves: Object.keys(Tweenable.formulas)
     };
 
@@ -82,26 +82,26 @@ export default class RekapiTimeline extends Component {
    */
   handleAddKeyframeButtonClick () {
     const { props, state } = this;
-    const { keyframeCursor } = state;
+    const { propertyCursor } = state;
 
     const keyframeProperty = RekapiTimeline.computeHighlightedKeyframe(
       props.rekapi,
-      keyframeCursor
+      propertyCursor
     );
 
     const newPropertyMillisecond =
-      keyframeCursor.millisecond + newPropertyMillisecondBuffer;
+      propertyCursor.millisecond + newPropertyMillisecondBuffer;
 
     this.getActor().keyframe(
       newPropertyMillisecond,
       {
-        [keyframeCursor.property]: keyframeProperty.value
+        [propertyCursor.property]: keyframeProperty.value
       }
     );
 
     this.setState({
-      keyframeCursor: {
-        property: keyframeCursor.property,
+      propertyCursor: {
+        property: propertyCursor.property,
         millisecond: newPropertyMillisecond
       }
     });
@@ -113,7 +113,7 @@ export default class RekapiTimeline extends Component {
     const keyframeProperty = props.rekapi ?
       RekapiTimeline.computeHighlightedKeyframe(
         props.rekapi,
-        state.keyframeCursor
+        state.propertyCursor
       ) :
       {};
 
@@ -133,14 +133,14 @@ export default class RekapiTimeline extends Component {
 Object.assign(RekapiTimeline, {
   /**
    * Compute a {@link external:rekapi.propertyData} from a
-   * {@link RekapiTimeline.keyframeCursor} and a
+   * {@link RekapiTimeline.propertyCursor} and a
    * {@link external:rekapi.Rekapi}.
    * @returns {external:rekapi.propertyData|{}} Is `{}` if the
-   * {@link external:rekapi.KeyframeProperty} referenced by `keyframeCursor`
+   * {@link external:rekapi.KeyframeProperty} referenced by `propertyCursor`
    * cannot be found.
    * @method RekapiTimeline.computeHighlightedKeyframe
    * @param {external:rekapi.Rekapi} rekapi
-   * @param {RekapiTimeline.keyframeCursor} keyframeCursor
+   * @param {RekapiTimeline.propertyCursor} propertyCursor
    * @static
    */
   computeHighlightedKeyframe (rekapi, { property, millisecond }) {
