@@ -120,6 +120,19 @@ export default class RekapiTimeline extends Component {
     });
   }
 
+  /**
+   * @method RekapiTimeline#handleDeleteKeyframeButtonClick
+   * @returns {undefined}
+   */
+  handleDeleteKeyframeButtonClick () {
+    const { propertyCursor } = this.state;
+
+    this.getActor().removeKeyframeProperty(
+      propertyCursor.property,
+      propertyCursor.millisecond
+    );
+  }
+
   render () {
     const { props, state } = this;
 

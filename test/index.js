@@ -230,6 +230,57 @@ describe('<RekapiTimeline />', () => {
       });
     });
   });
+
+  describe('RekapiTimeline#handleDeleteKeyframeButtonClick', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+    });
+
+    describe('with propertyCursor that does not reference a keyframeProperty', () => {
+      beforeEach(() => {
+        rekapi.importTimeline(basicRekapiExport);
+        component.instance().handleDeleteKeyframeButtonClick();
+      });
+
+      it('does not remove a new keyframe property', () => {
+        assert.equal(
+          rekapi.getAllActors()[0].getPropertiesInTrack('transform').length,
+          2
+        );
+      });
+    });
+
+    describe('with propertyCursor that does reference a keyframeProperty', () => {
+      let currentKeyframeProperty;
+      beforeEach(() => {
+        rekapi.importTimeline(basicRekapiExport);
+        currentKeyframeProperty = getActor().getKeyframeProperty('transform', 0)
+        component.setState({
+          propertyCursor: { property: 'transform', millisecond: 0 }
+        });
+
+        component.instance().handleDeleteKeyframeButtonClick();
+      });
+
+      it('does remove a new keyframe property', () => {
+        assert.equal(
+          getActor().getPropertiesInTrack('transform').length,
+          1
+        );
+      });
+
+      describe('updating state.propertyCursor', () => {
+        describe('when there is a property that comes before the removed property', () => {
+          xit('state.propertyCursor is set to the prior property', () => {});
+        });
+
+        describe('when there is not a property that comes before the removed property', () => {
+          xit('state.propertyCursor is set emptied', () => {});
+        });
+      });
+    });
+  });
 });
 
 describe('<Details />', () => {
