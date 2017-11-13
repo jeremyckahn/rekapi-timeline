@@ -111,7 +111,23 @@ describe('<RekapiTimeline />', () => {
         });
       });
 
-      describe('when propertyCursor references a keyframe that does not exist', () => {
+      describe('when propertyCursor references a property track that does not exist', () => {
+        beforeEach(() => {
+          rekapi.addActor().keyframe(0, { x: 5 });
+        });
+
+        it('returns empty object', () => {
+          assert.deepEqual(
+            RekapiTimeline.computeHighlightedKeyframe(
+              rekapi,
+              { property: 'y', millisecond: 0 }
+            ),
+            {}
+          );
+        });
+      });
+
+      describe('when propertyCursor references a property that does not exist', () => {
         it('returns empty object', () => {
           assert.deepEqual(
             RekapiTimeline.computeHighlightedKeyframe(
@@ -123,7 +139,7 @@ describe('<RekapiTimeline />', () => {
         });
       });
 
-      describe('when propertyCursor references a keyframe that does exist', () => {
+      describe('when propertyCursor references a property that does exist', () => {
         beforeEach(() => {
           rekapi.addActor().keyframe(0, { x: 5 });
         });

@@ -193,7 +193,11 @@ Object.assign(RekapiTimeline, {
   computeHighlightedKeyframe (rekapi, { property, millisecond }) {
     const [ actor ] = rekapi.getAllActors();
 
-    if (!actor || property === undefined || millisecond === undefined) {
+    if (!actor
+      || property === undefined
+      || millisecond === undefined
+      || !actor.getPropertiesInTrack(property).length
+    ) {
       return {};
     }
 
