@@ -273,11 +273,15 @@ describe('<RekapiTimeline />', () => {
 
       describe('updating state.propertyCursor', () => {
         describe('when there is not a property that comes before the removed property', () => {
-          xit('state.propertyCursor is set emptied', () => {});
+          it('state.propertyCursor is set emptied', () => {
+            assert.deepEqual(component.state().propertyCursor, {});
+          });
         });
 
         describe('when there is a property that comes before the removed property', () => {
           beforeEach(() => {
+            rekapi = new Rekapi();
+            component = shallow(<RekapiTimeline rekapi={rekapi}/>);
             rekapi.importTimeline(basicRekapiExport);
             component.setState({
               propertyCursor: {
@@ -289,7 +293,15 @@ describe('<RekapiTimeline />', () => {
             component.instance().handleDeleteKeyframeButtonClick();
           });
 
-          xit('state.propertyCursor is set to the prior property', () => {});
+          it('state.propertyCursor is set to the prior property', () => {
+            assert.deepEqual(
+              component.state().propertyCursor,
+              {
+                property: 'transform',
+                millisecond: 0
+              }
+            );
+          });
         });
       });
     });

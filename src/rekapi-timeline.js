@@ -125,12 +125,27 @@ export default class RekapiTimeline extends Component {
    * @returns {undefined}
    */
   handleDeleteKeyframeButtonClick () {
-    const { propertyCursor } = this.state;
+    const { millisecond, property } = this.state.propertyCursor;
+
+    const priorProperty = this.getActor().getPropertiesInTrack(property).find(
+      ({ nextProperty }) =>
+        nextProperty && nextProperty.millisecond === millisecond
+    );
 
     this.getActor().removeKeyframeProperty(
-      propertyCursor.property,
-      propertyCursor.millisecond
+      property,
+      millisecond
     );
+
+    this.setState({
+      propertyCursor: (priorProperty ?
+        {
+          property: priorProperty.name,
+          millisecond: priorProperty.millisecond
+        } :
+        {}
+      )
+    });
   }
 
   render () {
