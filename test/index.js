@@ -23,7 +23,10 @@ import { basicRekapiExport } from './fixtures/basic-rekapi-export'
 
 Enzyme.configure({ adapter: new Adapter() });
 
-const basicKeyframe1 = basicRekapiExport.actors[0].propertyTracks.transform[0];
+const [
+  basicKeyframe1,
+  basicKeyframe2
+] = basicRekapiExport.actors[0].propertyTracks.transform;
 
 let component;
 
@@ -252,10 +255,8 @@ describe('<RekapiTimeline />', () => {
     });
 
     describe('with propertyCursor that does reference a keyframeProperty', () => {
-      let currentKeyframeProperty;
       beforeEach(() => {
         rekapi.importTimeline(basicRekapiExport);
-        currentKeyframeProperty = getActor().getKeyframeProperty('transform', 0)
         component.setState({
           propertyCursor: { property: 'transform', millisecond: 0 }
         });
@@ -271,12 +272,24 @@ describe('<RekapiTimeline />', () => {
       });
 
       describe('updating state.propertyCursor', () => {
-        describe('when there is a property that comes before the removed property', () => {
-          xit('state.propertyCursor is set to the prior property', () => {});
-        });
-
         describe('when there is not a property that comes before the removed property', () => {
           xit('state.propertyCursor is set emptied', () => {});
+        });
+
+        describe('when there is a property that comes before the removed property', () => {
+          beforeEach(() => {
+            rekapi.importTimeline(basicRekapiExport);
+            component.setState({
+              propertyCursor: {
+                property: 'transform',
+                millisecond: basicKeyframe2.millisecond
+              }
+            });
+
+            component.instance().handleDeleteKeyframeButtonClick();
+          });
+
+          xit('state.propertyCursor is set to the prior property', () => {});
         });
       });
     });
