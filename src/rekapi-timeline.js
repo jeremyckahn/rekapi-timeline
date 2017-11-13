@@ -70,6 +70,7 @@ export default class RekapiTimeline extends Component {
    * Returns the current {@link external:rekapi.Actor}.
    * @method RekapiTimeline#getActor
    * @returns {external:rekapi.Actor|undefined}
+   * @private
    */
   getActor () {
     return this.props.rekapi.getAllActors()[0];
@@ -88,14 +89,22 @@ export default class RekapiTimeline extends Component {
       keyframeCursor
     );
 
+    const newPropertyMillisecond =
+      keyframeCursor.millisecond + newPropertyMillisecondBuffer;
+
     this.getActor().keyframe(
-      keyframeCursor.millisecond + newPropertyMillisecondBuffer,
+      newPropertyMillisecond,
       {
         [keyframeCursor.property]: keyframeProperty.value
       }
     );
 
-    // TODO: Hightlight the newly-created property
+    this.setState({
+      keyframeCursor: {
+        property: keyframeCursor.property,
+        millisecond: newPropertyMillisecond
+      }
+    });
   }
 
   render () {

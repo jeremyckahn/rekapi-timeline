@@ -218,6 +218,16 @@ describe('<RekapiTimeline />', () => {
           currentKeyframeProperty.value
         );
       });
+
+      it('sets state.keyframeCursor to the newly created property', () => {
+        assert.deepEqual(
+          component.state().keyframeCursor,
+          {
+            property: 'transform',
+            millisecond: newPropertyMillisecondBuffer
+          }
+        );
+      });
     });
   });
 });
