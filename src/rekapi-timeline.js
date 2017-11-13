@@ -38,6 +38,8 @@ export default class RekapiTimeline extends Component {
   constructor ({ rekapi = new Rekapi() }) {
     super(arguments[0]);
 
+    this.bindMethods();
+
     this.state = {
       rekapi: rekapi.exportTimeline(),
       propertyCursor: {},
@@ -49,6 +51,17 @@ export default class RekapiTimeline extends Component {
         rekapi: rekapi.exportTimeline()
       });
     });
+  }
+
+  /**
+   * @method RekapiTimeline#bindMethods
+   * @returns {undefined}
+   * @private
+   */
+  bindMethods () {
+    [
+      'handleAddKeyframeButtonClick'
+    ].forEach(method => this[method] = this[method].bind(this));
   }
 
   /**
@@ -122,6 +135,7 @@ export default class RekapiTimeline extends Component {
         <Details
           easingCurves={state.easingCurves}
           keyframeProperty={keyframeProperty}
+          handleAddKeyframeButtonClick={this.handleAddKeyframeButtonClick}
         />
         <Timeline />
         <BottomFrame />
