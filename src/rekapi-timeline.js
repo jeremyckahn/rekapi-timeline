@@ -162,10 +162,12 @@ export default class RekapiTimeline extends Component {
       ) :
       {};
 
+    const isAnyKeyframeHighlighted = !!Object.keys(keyframeProperty).length;
+
     return (
       <div className="rekapi-timeline">
         <Details
-          easingCurves={state.easingCurves}
+          easingCurves={isAnyKeyframeHighlighted ? state.easingCurves : []}
           keyframeProperty={keyframeProperty}
           handleAddKeyframeButtonClick={this.handleAddKeyframeButtonClick}
           handleDeleteKeyframeButtonClick={this.handleDeleteKeyframeButtonClick}
