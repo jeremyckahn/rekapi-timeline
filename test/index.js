@@ -322,6 +322,29 @@ describe('<RekapiTimeline />', () => {
       });
     });
   });
+
+  describe('RekapiTimeline#handleEasingSelectChange', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.importTimeline(basicRekapiExport);
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+
+      component.setState({
+        propertyCursor: { property: 'transform', millisecond: 0 }
+      });
+
+      component.instance().handleEasingSelectChange({
+        target: { value: 'easeInQuad' }
+      });
+    });
+
+    it('sets the new easing upon the highlighted property', () => {
+      assert.equal(
+        getActor().getKeyframeProperty('transform', 0).easing,
+        'easeInQuad'
+      );
+    });
+  });
 });
 
 describe('<Details />', () => {

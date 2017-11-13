@@ -64,7 +64,8 @@ export default class RekapiTimeline extends Component {
   bindMethods () {
     [
       'handleAddKeyframeButtonClick',
-      'handleDeleteKeyframeButtonClick'
+      'handleDeleteKeyframeButtonClick',
+      'handleEasingSelectChange'
     ].forEach(method => this[method] = this[method].bind(this));
   }
 
@@ -152,6 +153,24 @@ export default class RekapiTimeline extends Component {
     });
   }
 
+  /**
+   * @method RekapiTimeline#handleEasingSelectChange
+   * @param {external:React.SyntheticEvent} e
+   * @returns {undefined}
+   */
+  handleEasingSelectChange (e) {
+    const { value: easing } = e.target;
+    const { propertyCursor: { property, millisecond } } = this.state;
+
+    this.getActor().modifyKeyframeProperty(
+      property,
+      millisecond,
+      {
+        easing
+      }
+    );
+  }
+
   render () {
     const { props, state } = this;
 
@@ -171,6 +190,7 @@ export default class RekapiTimeline extends Component {
           keyframeProperty={keyframeProperty}
           handleAddKeyframeButtonClick={this.handleAddKeyframeButtonClick}
           handleDeleteKeyframeButtonClick={this.handleDeleteKeyframeButtonClick}
+          handleEasingSelectChange={this.handleEasingSelectChange}
         />
         <Timeline />
         <BottomFrame />
