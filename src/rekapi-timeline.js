@@ -1,3 +1,6 @@
+// TODO: This code depends on some ES6 built-ins so document the need for this
+// environment dependency: https://babeljs.io/docs/usage/polyfill/
+
 import { Rekapi } from 'rekapi';
 import { Tweenable } from 'shifty';
 import React, { Component } from 'react';
