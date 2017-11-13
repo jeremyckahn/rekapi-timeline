@@ -63,7 +63,8 @@ export default class RekapiTimeline extends Component {
    */
   bindMethods () {
     [
-      'handleAddKeyframeButtonClick'
+      'handleAddKeyframeButtonClick',
+      'handleDeleteKeyframeButtonClick'
     ].forEach(method => this[method] = this[method].bind(this));
   }
 
@@ -167,6 +168,7 @@ export default class RekapiTimeline extends Component {
           easingCurves={state.easingCurves}
           keyframeProperty={keyframeProperty}
           handleAddKeyframeButtonClick={this.handleAddKeyframeButtonClick}
+          handleDeleteKeyframeButtonClick={this.handleDeleteKeyframeButtonClick}
         />
         <Timeline />
         <BottomFrame />
