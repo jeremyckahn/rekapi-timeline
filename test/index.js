@@ -199,6 +199,13 @@ describe('<RekapiTimeline />', () => {
           2
         );
       });
+
+      it('does not add an "undefined" keyframe property', () => {
+        assert.equal(
+          rekapi.getAllActors()[0].getPropertiesInTrack('undefined').length,
+          0
+        );
+      });
     });
 
     describe('with propertyCursor that does reference a keyframeProperty', () => {

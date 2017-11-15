@@ -102,6 +102,10 @@ export default class RekapiTimeline extends Component {
     const { props, state } = this;
     const { propertyCursor } = state;
 
+    if (!Object.keys(propertyCursor).length) {
+      return;
+    }
+
     const keyframeProperty = RekapiTimeline.computeHighlightedKeyframe(
       props.rekapi,
       propertyCursor
