@@ -57,7 +57,9 @@ const ValueInput = ({
 const EasingSelect = ({
   easing = '',
   easingCurves,
-  handleEasingSelectChange
+  // handleEasingSelectChange must be defaulted to a noop here to prevent
+  // spurious warnings in the unit tests
+  handleEasingSelectChange = () => {}
 }) =>
   <label className="label-input-pair row select-container keyframe-property-easing">
     <p>Easing:</p>
