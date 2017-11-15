@@ -195,14 +195,14 @@ describe('<RekapiTimeline />', () => {
 
       it('does not add a new keyframe property', () => {
         assert.equal(
-          rekapi.getAllActors()[0].getPropertiesInTrack('transform').length,
+          getActor().getPropertiesInTrack('transform').length,
           2
         );
       });
 
       it('does not add an "undefined" keyframe property', () => {
         assert.equal(
-          rekapi.getAllActors()[0].getPropertiesInTrack('undefined').length,
+          getActor().getPropertiesInTrack('undefined').length,
           0
         );
       });
@@ -271,7 +271,7 @@ describe('<RekapiTimeline />', () => {
 
       it('does not remove a new keyframe property', () => {
         assert.equal(
-          rekapi.getAllActors()[0].getPropertiesInTrack('transform').length,
+          getActor().getPropertiesInTrack('transform').length,
           2
         );
       });
