@@ -494,17 +494,54 @@ describe('<Details />', () => {
 
     beforeEach(() => {
       easingCurves = ['ease1', 'ease2', 'ease3'];
-
-      component = mount(
-        <Details easingCurves={easingCurves} />
-      );
     });
 
-    it('renders a list of easings', () => {
-      assert(
-        component.find('.keyframe-property-easing select option').length,
-        easingCurves.length
-      );
+
+    describe('no keyframe property focused', () => {
+      beforeEach(() => {
+        component = mount(<Details
+          easingCurves={easingCurves}
+        />);
+      });
+
+      it('does not render a list of easings', () => {
+        assert.equal(
+          component.find('.keyframe-property-easing select option').length,
+          0
+        );
+      });
+    });
+
+    describe('with keyframe property focused', () => {
+      beforeEach(() => {
+        component = mount(<Details
+          keyframeProperty={basicKeyframe1}
+          easingCurves={easingCurves}
+        />);
+      });
+
+      it('renders a list of easings', () => {
+        assert.equal(
+          component.find('.keyframe-property-easing select option').length,
+          easingCurves.length
+        );
+      });
+
+      describe('property has non-default easing', () => {
+        beforeEach(() => {
+          component = mount(<Details
+            keyframeProperty={{ easing: 'ease2' }}
+            easingCurves={easingCurves}
+          />);
+        });
+
+        it('matches the internal state', () => {
+          assert.equal(
+            component.find('.keyframe-property-easing select').prop('value'),
+            'ease2'
+          );
+        });
+      });
     });
 
     describe('handleEasingSelectChange', () => {

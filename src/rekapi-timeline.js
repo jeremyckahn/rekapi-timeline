@@ -165,9 +165,7 @@ export default class RekapiTimeline extends Component {
     this.getActor().modifyKeyframeProperty(
       property,
       millisecond,
-      {
-        easing
-      }
+      { easing }
     );
   }
 
@@ -186,7 +184,7 @@ export default class RekapiTimeline extends Component {
     return (
       <div className="rekapi-timeline">
         <Details
-          easingCurves={isAnyKeyframeHighlighted ? state.easingCurves : []}
+          easingCurves={state.easingCurves}
           keyframeProperty={keyframeProperty}
           handleAddKeyframeButtonClick={this.handleAddKeyframeButtonClick}
           handleDeleteKeyframeButtonClick={this.handleDeleteKeyframeButtonClick}

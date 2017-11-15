@@ -54,14 +54,19 @@ const ValueInput = ({
     />
   </label>
 
-const EasingSelect = ({ easingCurves, handleEasingSelectChange }) =>
+const EasingSelect = ({
+  easing = '',
+  easingCurves,
+  handleEasingSelectChange
+}) =>
   <label className="label-input-pair row select-container keyframe-property-easing">
     <p>Easing:</p>
     <select
       name="easing"
       onChange={handleEasingSelectChange}
+      value={easing}
     >
-      {easingCurves.map(
+      {easing && easingCurves.map(
         easingCurve => <option key={easingCurve}>{easingCurve}</option>
       )}
     </select>
@@ -92,6 +97,7 @@ const Details = ({
     />
     <EasingSelect
       easingCurves={easingCurves}
+      easing={keyframeProperty.easing}
       handleEasingSelectChange={handleEasingSelectChange}
     />
   </div>
