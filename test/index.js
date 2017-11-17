@@ -352,6 +352,37 @@ describe('<RekapiTimeline />', () => {
       );
     });
   });
+
+  describe('RekapiTimeline#handleMillisecondInputChange', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+    });
+
+    describe('with propertyCursor that does reference a keyframeProperty', () => {
+      let keyframeProperty;
+      beforeEach(() => {
+        rekapi.importTimeline(basicRekapiExport);
+        component.setState({
+          propertyCursor: { property: 'transform', millisecond: 0 }
+        });
+
+        keyframeProperty = getActor().getKeyframeProperty('transform', 0);
+
+        component.instance().handleMillisecondInputChange({
+          target: { value: 5 }
+        });
+      });
+
+      it('sets the current property millisecond to the indicated number', () => {
+        assert.equal(keyframeProperty.millisecond, 5);
+      });
+
+      it('updates the propertyCursor', () => {
+        assert.equal(component.state().propertyCursor.millisecond, 5);
+      });
+    });
+  });
 });
 
 describe('<Details />', () => {

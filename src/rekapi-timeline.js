@@ -65,7 +65,8 @@ export default class RekapiTimeline extends Component {
     [
       'handleAddKeyframeButtonClick',
       'handleDeleteKeyframeButtonClick',
-      'handleEasingSelectChange'
+      'handleEasingSelectChange',
+      'handleMillisecondInputChange'
     ].forEach(method => this[method] = this[method].bind(this));
   }
 
@@ -173,6 +174,35 @@ export default class RekapiTimeline extends Component {
     );
   }
 
+  /**
+   * @method RekapiTimeline#handleMillisecondInputChange
+   * @param {external:React.SyntheticEvent} e
+   * @returns {undefined}
+   */
+  handleMillisecondInputChange (e) {
+    const { value } = e.target;
+    const { property, millisecond } = this.state.propertyCursor;
+
+    if (!this.getActor().getKeyframeProperty(property, millisecond)) {
+      return;
+    }
+
+    // Modify the property through the actor so that actor-level cleanup is
+    // performed
+    this.getActor().modifyKeyframeProperty(
+      property,
+      millisecond,
+      { millisecond: value }
+    );
+
+    this.setState({
+      propertyCursor: {
+        property,
+        millisecond: value
+      }
+    });
+  }
+
   render () {
     const { props, state } = this;
 
@@ -193,6 +223,7 @@ export default class RekapiTimeline extends Component {
           handleAddKeyframeButtonClick={this.handleAddKeyframeButtonClick}
           handleDeleteKeyframeButtonClick={this.handleDeleteKeyframeButtonClick}
           handleEasingSelectChange={this.handleEasingSelectChange}
+          handleMillisecondInputChange={this.handleMillisecondInputChange}
         />
         <Timeline />
         <BottomFrame />
