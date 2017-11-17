@@ -21,6 +21,9 @@ import {
 
 import { basicRekapiExport } from './fixtures/basic-rekapi-export'
 import {
+  decoupledRekapiExport
+} from './fixtures/decoupled-rekapi-export'
+import {
   decoupledRekapiExportWithNumberValues
 } from './fixtures/decoupled-rekapi-export-with-number-values'
 
@@ -395,24 +398,23 @@ describe('<RekapiTimeline />', () => {
 
     describe('with propertyCursor that does reference a keyframeProperty', () => {
       let keyframeProperty;
-      beforeEach(() => {
-        rekapi.importTimeline(decoupledRekapiExportWithNumberValues);
-        component.setState({
-          propertyCursor: { property: 'translateX', millisecond: 0 }
-        });
-
-        keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
-      });
 
       describe('number values', () => {
         beforeEach(() => {
+          rekapi.importTimeline(decoupledRekapiExportWithNumberValues);
+          component.setState({
+            propertyCursor: { property: 'translateX', millisecond: 0 }
+          });
+
+          keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+
           component.instance().handleValueInputChange({
             target: { value: 5 }
           });
         });
 
         describe('valid values', () => {
-          it('sets the current property millisecond to the indicated number', () => {
+          it('sets the current property value to the indicated number', () => {
             assert.equal(keyframeProperty.value, 5);
           });
         });
@@ -420,8 +422,26 @@ describe('<RekapiTimeline />', () => {
         xdescribe('invalid values', () => {});
       });
 
-      xdescribe('string values', () => {
-        xdescribe('valid values', () => {});
+      describe('string values', () => {
+        beforeEach(() => {
+          rekapi.importTimeline(decoupledRekapiExport);
+          component.setState({
+            propertyCursor: { property: 'translateX', millisecond: 0 }
+          });
+
+          keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+
+          component.instance().handleValueInputChange({
+            target: { value: '5px' }
+          });
+        });
+
+        describe('valid values', () => {
+          it('sets the current property value to the indicated string', () => {
+            assert.equal(keyframeProperty.value, '5px');
+          });
+        });
+
         xdescribe('invalid values', () => {});
       });
     });
