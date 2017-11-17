@@ -20,6 +20,9 @@ import {
 } from '../src/constants';
 
 import { basicRekapiExport } from './fixtures/basic-rekapi-export'
+import {
+  decoupledRekapiExportWithNumberValues
+} from './fixtures/decoupled-rekapi-export-with-number-values'
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -380,6 +383,46 @@ describe('<RekapiTimeline />', () => {
 
       it('updates the propertyCursor', () => {
         assert.equal(component.state().propertyCursor.millisecond, 5);
+      });
+    });
+  });
+
+  describe('RekapiTimeline#handleValueInputChange', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+    });
+
+    describe('with propertyCursor that does reference a keyframeProperty', () => {
+      let keyframeProperty;
+      beforeEach(() => {
+        rekapi.importTimeline(decoupledRekapiExportWithNumberValues);
+        component.setState({
+          propertyCursor: { property: 'translateX', millisecond: 0 }
+        });
+
+        keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+      });
+
+      describe('number values', () => {
+        beforeEach(() => {
+          component.instance().handleValueInputChange({
+            target: { value: 5 }
+          });
+        });
+
+        describe('valid values', () => {
+          it('sets the current property millisecond to the indicated number', () => {
+            assert.equal(keyframeProperty.value, 5);
+          });
+        });
+
+        xdescribe('invalid values', () => {});
+      });
+
+      xdescribe('string values', () => {
+        xdescribe('valid values', () => {});
+        xdescribe('invalid values', () => {});
       });
     });
   });

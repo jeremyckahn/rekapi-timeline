@@ -203,6 +203,30 @@ export default class RekapiTimeline extends Component {
     });
   }
 
+  /**
+   * @method RekapiTimeline#handleValueInputChange
+   * @param {external:React.SyntheticEvent} e
+   * @returns {undefined}
+   */
+  handleValueInputChange (e) {
+    // TODO: Try to consolidate the logic here with
+    // handleMillisecondInputChange
+    const { value } = e.target;
+    const { property, millisecond } = this.state.propertyCursor;
+
+    if (!this.getActor().getKeyframeProperty(property, millisecond)) {
+      return;
+    }
+
+    // Modify the property through the actor so that actor-level cleanup is
+    // performed
+    this.getActor().modifyKeyframeProperty(
+      property,
+      millisecond,
+      { value }
+    );
+  }
+
   render () {
     const { props, state } = this;
 
