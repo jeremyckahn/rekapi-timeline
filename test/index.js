@@ -468,6 +468,10 @@ describe('<RekapiTimeline />', () => {
           it('sets the current property value to the indicated string', () => {
             assert.equal(keyframeProperty.value, '5px');
           });
+
+          xdescribe('negative numbers within strings', () => {});
+
+          xdescribe('floating point numbers within strings', () => {});
         });
 
         describe('invalid values', () => {
