@@ -489,6 +489,59 @@ describe('<RekapiTimeline />', () => {
               assert.equal(keyframeProperty.value, translateXStringProperty1.value);
             });
           });
+
+          describe('token mismatches', () => {
+            beforeEach(() => {
+              rekapi.importTimeline(decoupledRekapiStringExport);
+              component.setState({
+                propertyCursor: { property: 'translateX', millisecond: 0 }
+              });
+
+              keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+            });
+
+            describe('extra spaces', () => {
+              describe('leading spaces', () => {
+                beforeEach(() => {
+                  component.instance().handleValueInputChange({
+                    target: { value: ' 5px' }
+                  });
+                });
+
+                it('does not set the current property value to the indicated string', () => {
+                  assert.equal(keyframeProperty.value, translateXStringProperty1.value);
+                });
+              });
+
+              describe('spaces in the middle', () => {
+                beforeEach(() => {
+                  component.instance().handleValueInputChange({
+                    target: { value: '5 px' }
+                  });
+                });
+
+                it('does not set the current property value to the indicated string', () => {
+                  assert.equal(keyframeProperty.value, translateXStringProperty1.value);
+                });
+              });
+
+              describe('trailing spaces', () => {
+                beforeEach(() => {
+                  component.instance().handleValueInputChange({
+                    target: { value: '5px ' }
+                  });
+                });
+
+                it('does not set the current property value to the indicated string', () => {
+                  assert.equal(keyframeProperty.value, translateXStringProperty1.value);
+                });
+              });
+            });
+
+            xdescribe('missing string components', () => {});
+
+            xdescribe('missing number components', () => {});
+          });
         });
       });
     });

@@ -33,6 +33,8 @@ import {
  * @property {Array.<string>} easingCurves
  */
 
+const rTokenChunks = /\D+/g;
+
 export default class RekapiTimeline extends Component {
   /**
    * @param {RekapiTimeline.props} props
@@ -239,9 +241,19 @@ export default class RekapiTimeline extends Component {
    */
   isNewPropertyValueValid (keyframeProperty, newValue) {
     const { value: currentValue } = keyframeProperty;
+    const typeOfNewValue = typeof newValue;
 
-    if (typeof currentValue !== typeof newValue) {
+    if (typeof currentValue !== typeOfNewValue) {
       return false;
+    }
+
+    if (typeOfNewValue === 'string') {
+      const currentTokenChunks = currentValue.match(rTokenChunks);
+      const newTokenChunks = newValue.match(rTokenChunks);
+
+      if (currentTokenChunks.join('') !== newTokenChunks.join('')) {
+        return false;
+      }
     }
 
     return true;
