@@ -21,11 +21,11 @@ import {
 
 import { basicRekapiExport } from './fixtures/basic-rekapi-export'
 import {
-  decoupledRekapiExport
-} from './fixtures/decoupled-rekapi-export'
+  decoupledRekapiStringExport
+} from './fixtures/decoupled-rekapi-string-export'
 import {
-  decoupledRekapiExportWithNumberValues
-} from './fixtures/decoupled-rekapi-export-with-number-values'
+  decoupledRekapiNumberExport
+} from './fixtures/decoupled-rekapi-number-export'
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -36,11 +36,11 @@ const [
 
 const [
   translateXStringProperty1
-] = decoupledRekapiExport.actors[0].propertyTracks.translateX;
+] = decoupledRekapiStringExport.actors[0].propertyTracks.translateX;
 
 const [
   translateXNumberProperty1
-] = decoupledRekapiExportWithNumberValues.actors[0].propertyTracks.translateX;
+] = decoupledRekapiNumberExport.actors[0].propertyTracks.translateX;
 
 let component;
 
@@ -410,7 +410,7 @@ describe('<RekapiTimeline />', () => {
       describe('number values', () => {
         describe('valid values', () => {
           beforeEach(() => {
-            rekapi.importTimeline(decoupledRekapiExportWithNumberValues);
+            rekapi.importTimeline(decoupledRekapiNumberExport);
             component.setState({
               propertyCursor: { property: 'translateX', millisecond: 0 }
             });
@@ -430,7 +430,7 @@ describe('<RekapiTimeline />', () => {
         describe('invalid values', () => {
           describe('type mismatch', () => {
             beforeEach(() => {
-              rekapi.importTimeline(decoupledRekapiExportWithNumberValues);
+              rekapi.importTimeline(decoupledRekapiNumberExport);
               component.setState({
                 propertyCursor: { property: 'translateX', millisecond: 0 }
               });
@@ -453,7 +453,7 @@ describe('<RekapiTimeline />', () => {
       describe('string values', () => {
         describe('valid values', () => {
           beforeEach(() => {
-            rekapi.importTimeline(decoupledRekapiExport);
+            rekapi.importTimeline(decoupledRekapiStringExport);
             component.setState({
               propertyCursor: { property: 'translateX', millisecond: 0 }
             });
@@ -473,7 +473,7 @@ describe('<RekapiTimeline />', () => {
         describe('invalid values', () => {
           describe('type mismatch', () => {
             beforeEach(() => {
-              rekapi.importTimeline(decoupledRekapiExport);
+              rekapi.importTimeline(decoupledRekapiStringExport);
               component.setState({
                 propertyCursor: { property: 'translateX', millisecond: 0 }
               });

@@ -1,4 +1,4 @@
-export const decoupledRekapiExportWithNumberValues = {
+export const decoupledRekapiNumberExport = {
   "duration": 1000,
   "actors": [
     {
