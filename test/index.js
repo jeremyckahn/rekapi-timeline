@@ -538,9 +538,29 @@ describe('<RekapiTimeline />', () => {
               });
             });
 
-            xdescribe('missing string components', () => {});
+            describe('missing string components', () => {
+              beforeEach(() => {
+                component.instance().handleValueInputChange({
+                  target: { value: '5x' }
+                });
+              });
 
-            xdescribe('missing number components', () => {});
+              it('does not set the current property value to the indicated string', () => {
+                assert.equal(keyframeProperty.value, translateXStringProperty1.value);
+              });
+            });
+
+            describe('missing number components', () => {
+              beforeEach(() => {
+                component.instance().handleValueInputChange({
+                  target: { value: 'px' }
+                });
+              });
+
+              it('does not set the current property value to the indicated string', () => {
+                assert.equal(keyframeProperty.value, translateXStringProperty1.value);
+              });
+            });
           });
         });
       });
