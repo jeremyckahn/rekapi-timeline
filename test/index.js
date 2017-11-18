@@ -30,8 +30,8 @@ import {
 Enzyme.configure({ adapter: new Adapter() });
 
 const [
-  basicKeyframe1,
-  basicKeyframe2
+  basicProperty1,
+  basicProperty2
 ] = basicRekapiExport.actors[0].propertyTracks.transform;
 
 const [
@@ -319,7 +319,7 @@ describe('<RekapiTimeline />', () => {
             component.setState({
               propertyCursor: {
                 property: 'transform',
-                millisecond: basicKeyframe2.millisecond
+                millisecond: basicProperty2.millisecond
               }
             });
 
@@ -492,12 +492,12 @@ describe('<Details />', () => {
 
     describe('with keyframe property focused', () => {
       beforeEach(() => {
-        component = mount(<Details keyframeProperty={basicKeyframe1} />);
+        component = mount(<Details keyframeProperty={basicProperty1} />);
       });
 
       it('displays the property name', () => {
         title = component.find('.keyframe-property-name');
-        assert.equal(title.text(), basicKeyframe1.name);
+        assert.equal(title.text(), basicProperty1.name);
       });
     });
   });
@@ -547,12 +547,12 @@ describe('<Details />', () => {
 
     describe('with keyframe property focused', () => {
       beforeEach(() => {
-        component = mount(<Details keyframeProperty={basicKeyframe1} />);
+        component = mount(<Details keyframeProperty={basicProperty1} />);
       });
 
       it('displays the property millisecond', () => {
         millisecondInput = component.find('.property-millisecond');
-        assert.strictEqual(millisecondInput.props().value, basicKeyframe1.millisecond);
+        assert.strictEqual(millisecondInput.props().value, basicProperty1.millisecond);
       });
     });
 
@@ -586,12 +586,12 @@ describe('<Details />', () => {
 
     describe('with keyframe property focused', () => {
       beforeEach(() => {
-        component = mount(<Details keyframeProperty={basicKeyframe1} />);
+        component = mount(<Details keyframeProperty={basicProperty1} />);
       });
 
       it('displays the property value', () => {
         valueInput = component.find('.property-value');
-        assert.strictEqual(valueInput.props().value, basicKeyframe1.value);
+        assert.strictEqual(valueInput.props().value, basicProperty1.value);
       });
     });
 
@@ -640,7 +640,7 @@ describe('<Details />', () => {
     describe('with keyframe property focused', () => {
       beforeEach(() => {
         component = mount(<Details
-          keyframeProperty={basicKeyframe1}
+          keyframeProperty={basicProperty1}
           easingCurves={easingCurves}
         />);
       });
