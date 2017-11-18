@@ -35,6 +35,10 @@ const [
 ] = basicRekapiExport.actors[0].propertyTracks.transform;
 
 const [
+  translateXStringProperty1
+] = decoupledRekapiExport.actors[0].propertyTracks.translateX;
+
+const [
   translateXNumberProperty1
 ] = decoupledRekapiExportWithNumberValues.actors[0].propertyTracks.translateX;
 
@@ -447,26 +451,45 @@ describe('<RekapiTimeline />', () => {
       });
 
       describe('string values', () => {
-        beforeEach(() => {
-          rekapi.importTimeline(decoupledRekapiExport);
-          component.setState({
-            propertyCursor: { property: 'translateX', millisecond: 0 }
-          });
-
-          keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
-
-          component.instance().handleValueInputChange({
-            target: { value: '5px' }
-          });
-        });
-
         describe('valid values', () => {
+          beforeEach(() => {
+            rekapi.importTimeline(decoupledRekapiExport);
+            component.setState({
+              propertyCursor: { property: 'translateX', millisecond: 0 }
+            });
+
+            keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+
+            component.instance().handleValueInputChange({
+              target: { value: '5px' }
+            });
+          });
+
           it('sets the current property value to the indicated string', () => {
             assert.equal(keyframeProperty.value, '5px');
           });
         });
 
-        xdescribe('invalid values', () => {});
+        describe('invalid values', () => {
+          describe('type mismatch', () => {
+            beforeEach(() => {
+              rekapi.importTimeline(decoupledRekapiExport);
+              component.setState({
+                propertyCursor: { property: 'translateX', millisecond: 0 }
+              });
+
+              keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+
+              component.instance().handleValueInputChange({
+                target: { value: 5 }
+              });
+            });
+
+            it('does not set the current property value to the indicated string', () => {
+              assert.equal(keyframeProperty.value, translateXStringProperty1.value);
+            });
+          });
+        });
       });
     });
   });
