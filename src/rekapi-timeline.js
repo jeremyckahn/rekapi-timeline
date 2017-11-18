@@ -69,7 +69,8 @@ export default class RekapiTimeline extends Component {
       'handleAddKeyframeButtonClick',
       'handleDeleteKeyframeButtonClick',
       'handleEasingSelectChange',
-      'handleMillisecondInputChange'
+      'handleMillisecondInputChange',
+      'handleValueInputChange'
     ].forEach(method => this[method] = this[method].bind(this));
   }
 
@@ -291,6 +292,7 @@ export default class RekapiTimeline extends Component {
           handleDeleteKeyframeButtonClick={this.handleDeleteKeyframeButtonClick}
           handleEasingSelectChange={this.handleEasingSelectChange}
           handleMillisecondInputChange={this.handleMillisecondInputChange}
+          handleValueInputChange={this.handleValueInputChange}
         />
         <Timeline />
         <BottomFrame />
