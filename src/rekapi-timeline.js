@@ -213,8 +213,12 @@ export default class RekapiTimeline extends Component {
     // handleMillisecondInputChange
     const { value } = e.target;
     const { property, millisecond } = this.state.propertyCursor;
+    const currentProperty =
+      this.getActor().getKeyframeProperty(property, millisecond);
 
-    if (!this.getActor().getKeyframeProperty(property, millisecond)) {
+    if (!currentProperty
+      || !this.isNewPropertyValueValid(currentProperty, value)
+    ) {
       return;
     }
 
@@ -225,6 +229,22 @@ export default class RekapiTimeline extends Component {
       millisecond,
       { value }
     );
+  }
+
+  /**
+   * @method RekapiTimeline#isNewPropertyValueValid
+   * @param {external:rekapi.KeyframeProperty} keyframeProperty
+   * @param {number|string} newValue
+   * @returns {undefined}
+   */
+  isNewPropertyValueValid (keyframeProperty, newValue) {
+    const { value: currentValue } = keyframeProperty;
+
+    if (typeof currentValue !== typeof newValue) {
+      return false;
+    }
+
+    return true;
   }
 
   render () {

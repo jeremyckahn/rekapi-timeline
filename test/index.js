@@ -34,6 +34,10 @@ const [
   basicKeyframe2
 ] = basicRekapiExport.actors[0].propertyTracks.transform;
 
+const [
+  translateXNumberProperty1
+] = decoupledRekapiExportWithNumberValues.actors[0].propertyTracks.translateX;
+
 let component;
 
 describe('<RekapiTimeline />', () => {
@@ -400,26 +404,46 @@ describe('<RekapiTimeline />', () => {
       let keyframeProperty;
 
       describe('number values', () => {
-        beforeEach(() => {
-          rekapi.importTimeline(decoupledRekapiExportWithNumberValues);
-          component.setState({
-            propertyCursor: { property: 'translateX', millisecond: 0 }
-          });
-
-          keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
-
-          component.instance().handleValueInputChange({
-            target: { value: 5 }
-          });
-        });
-
         describe('valid values', () => {
+          beforeEach(() => {
+            rekapi.importTimeline(decoupledRekapiExportWithNumberValues);
+            component.setState({
+              propertyCursor: { property: 'translateX', millisecond: 0 }
+            });
+
+            keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+
+            component.instance().handleValueInputChange({
+              target: { value: 5 }
+            });
+          });
+
           it('sets the current property value to the indicated number', () => {
             assert.equal(keyframeProperty.value, 5);
           });
         });
 
-        xdescribe('invalid values', () => {});
+        describe('invalid values', () => {
+          describe('type mismatch', () => {
+            beforeEach(() => {
+              rekapi.importTimeline(decoupledRekapiExportWithNumberValues);
+              component.setState({
+                propertyCursor: { property: 'translateX', millisecond: 0 }
+              });
+
+              keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+
+              component.instance().handleValueInputChange({
+                target: { value: '5' }
+              });
+            });
+
+
+            it('does not set the current property value to the indicated string', () => {
+              assert.equal(keyframeProperty.value, translateXNumberProperty1.value);
+            });
+          });
+        });
       });
 
       describe('string values', () => {
