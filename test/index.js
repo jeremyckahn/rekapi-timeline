@@ -452,24 +452,43 @@ describe('<RekapiTimeline />', () => {
 
       describe('string values', () => {
         describe('valid values', () => {
-          beforeEach(() => {
-            rekapi.importTimeline(decoupledRekapiStringExport);
-            component.setState({
-              propertyCursor: { property: 'translateX', millisecond: 0 }
+          describe('straight token match', () => {
+            beforeEach(() => {
+              rekapi.importTimeline(decoupledRekapiStringExport);
+              component.setState({
+                propertyCursor: { property: 'translateX', millisecond: 0 }
+              });
+
+              keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+
+              component.instance().handleValueInputChange({
+                target: { value: '5px' }
+              });
             });
 
-            keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
-
-            component.instance().handleValueInputChange({
-              target: { value: '5px' }
+            it('sets the current property value to the indicated string', () => {
+              assert.equal(keyframeProperty.value, '5px');
             });
           });
 
-          it('sets the current property value to the indicated string', () => {
-            assert.equal(keyframeProperty.value, '5px');
-          });
+          describe('negative numbers within strings', () => {
+            beforeEach(() => {
+              rekapi.importTimeline(decoupledRekapiStringExport);
+              component.setState({
+                propertyCursor: { property: 'translateX', millisecond: 0 }
+              });
 
-          xdescribe('negative numbers within strings', () => {});
+              keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+
+              component.instance().handleValueInputChange({
+                target: { value: '-5px' }
+              });
+            });
+
+            it('sets the current property value to the indicated string', () => {
+              assert.equal(keyframeProperty.value, '-5px');
+            });
+          });
 
           xdescribe('floating point numbers within strings', () => {});
         });

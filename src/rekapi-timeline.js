@@ -33,7 +33,7 @@ import {
  * @property {Array.<string>} easingCurves
  */
 
-const rTokenStringChunks = /\D+/g;
+const rTokenStringChunks = /([^(-?\d)]+)/g;
 const rTokenNumberChunks = /\d+/g;
 
 export default class RekapiTimeline extends Component {
