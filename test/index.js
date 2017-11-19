@@ -490,7 +490,24 @@ describe('<RekapiTimeline />', () => {
             });
           });
 
-          xdescribe('floating point numbers within strings', () => {});
+          describe('floating point numbers within strings', () => {
+            beforeEach(() => {
+              rekapi.importTimeline(decoupledRekapiStringExport);
+              component.setState({
+                propertyCursor: { property: 'translateX', millisecond: 0 }
+              });
+
+              keyframeProperty = getActor().getKeyframeProperty('translateX', 0);
+
+              component.instance().handleValueInputChange({
+                target: { value: '5.px' }
+              });
+            });
+
+            it('sets the current property value to the indicated string', () => {
+              assert.equal(keyframeProperty.value, '5.0px');
+            });
+          });
         });
 
         describe('invalid values', () => {

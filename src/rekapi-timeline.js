@@ -34,7 +34,16 @@ import {
  */
 
 const rTokenStringChunks = /([^(-?\d)]+)/g;
-const rTokenNumberChunks = /\d+/g;
+const rTokenNumberChunks = /\d+(\.\d+)?/g;
+
+/**
+ * @param {string} numberString
+ * @returns {string}
+ */
+const sanitizeDanglingDecimals =
+  numberString => numberString.replace(/\d+\.(?=\D)/g,
+    match => `${match}0`
+  );
 
 export default class RekapiTimeline extends Component {
   /**
@@ -220,8 +229,12 @@ export default class RekapiTimeline extends Component {
     const currentProperty =
       this.getActor().getKeyframeProperty(property, millisecond);
 
+    const sanitizedInput = typeof value === 'string' ?
+      sanitizeDanglingDecimals(value) :
+      value;
+
     if (!currentProperty
-      || !this.isNewPropertyValueValid(currentProperty, value)
+      || !this.isNewPropertyValueValid(currentProperty, sanitizedInput)
     ) {
       return;
     }
@@ -231,7 +244,7 @@ export default class RekapiTimeline extends Component {
     this.getActor().modifyKeyframeProperty(
       property,
       millisecond,
-      { value }
+      { value: sanitizedInput }
     );
   }
 
