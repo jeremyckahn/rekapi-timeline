@@ -222,8 +222,10 @@ export default class RekapiTimeline extends Component {
    * @returns {undefined}
    */
   handleValueInputChange (e) {
-    // TODO: Try to consolidate the logic here with
-    // handleMillisecondInputChange
+    // TODO: A quirk of this logic is that invalid inputs reset the cursor
+    // position, which is a pretty bad UX.  This can be addressed with
+    // something like the sample provided here:
+    // https://github.com/facebook/react/issues/955#issuecomment-160831548
     const { value } = e.target;
     const { property, millisecond } = this.state.propertyCursor;
     const currentProperty =
