@@ -65,6 +65,8 @@ export default class RekapiTimeline extends Component {
       this.setState({
         rekapi: rekapi.exportTimeline()
       });
+
+      rekapi.update();
     });
   }
 
