@@ -843,4 +843,15 @@ describe('<BottomFrame />', () => {
   it('is a react component', () => {
     assert.equal(component.length, 1);
   });
+
+  xdescribe('control bar', () => {
+    xdescribe('play button', () => { });
+    xdescribe('pause button', () => { });
+    xdescribe('stop button', () => { });
+  });
+
+  xdescribe('scrubber detail', () => {
+    xdescribe('scrubber scale', () => { });
+    xdescribe('position monitor', () => { });
+  });
 });
