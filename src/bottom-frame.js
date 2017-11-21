@@ -1,20 +1,32 @@
 import React from 'react';
 
-const Button = ({ name }) =>
-  <button className={`icon-button ${name}`}>
+const Button = ({ name, handleClick }) =>
+  <button
+    className={`icon-button ${name}`}
+    onClick={handleClick}
+  >
     <i className={`glyphicon glyphicon-${name}`}></i>
   </button>
 
-const ControlBar = () =>
+const ControlBar = ({
+  handlePlayButtonClick
+}) =>
   <div className="control-bar">
-    <Button name="play" />
+    <Button
+      name="play"
+      handleClick={handlePlayButtonClick}
+    />
     <Button name="pause" />
     <Button name="stop" />
   </div>
 
-const BottomFrame = props => (
+const BottomFrame = ({
+  handlePlayButtonClick
+}) => (
   <div className="fill bottom-frame">
-    <ControlBar />
+    <ControlBar
+      handlePlayButtonClick={handlePlayButtonClick}
+    />
     <div className="scrubber-detail"><label className="label-input-pair row scrubber-scale">
       <p>Timeline zoom:</p>
       <input type="number" value="100" min="0" step="10" onChange={() => {}} />

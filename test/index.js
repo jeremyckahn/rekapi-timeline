@@ -853,6 +853,23 @@ describe('<BottomFrame />', () => {
       it('is a react component', () => {
         assert(component.find('.control-bar .play').length);
       });
+
+      describe('handlePlayButtonClick', () => {
+        let handlePlayButtonClick;
+
+        beforeEach(() => {
+          handlePlayButtonClick = sinon.spy();
+          component = mount(
+            <BottomFrame handlePlayButtonClick={handlePlayButtonClick} />
+          );
+
+          component.find('.control-bar .play').simulate('click');
+        });
+
+        it('fires', () => {
+          assert(handlePlayButtonClick.called);
+        });
+      });
     });
 
     describe('pause button', () => {
