@@ -899,6 +899,23 @@ describe('<BottomFrame />', () => {
       it('is a react component', () => {
         assert(component.find('.control-bar .stop').length);
       });
+
+      describe('handleStopButtonClick', () => {
+        let handleStopButtonClick;
+
+        beforeEach(() => {
+          handleStopButtonClick = sinon.spy();
+          component = mount(
+            <BottomFrame handleStopButtonClick={handleStopButtonClick} />
+          );
+
+          component.find('.control-bar .stop').simulate('click');
+        });
+
+        it('fires', () => {
+          assert(handleStopButtonClick.called);
+        });
+      });
     });
   });
 
