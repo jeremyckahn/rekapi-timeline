@@ -3,7 +3,7 @@ import React from 'react';
 const Header = ({ name }) =>
   <h1 className="keyframe-property-name">
     { name || 'Details' }
-  </h1>;
+  </h1>
 
 const AddButton = ({ handleAddKeyframeButtonClick }) =>
   <button

@@ -837,7 +837,7 @@ describe('<Timeline />', () => {
 
 describe('<BottomFrame />', () => {
   beforeEach(() => {
-    component = shallow(<BottomFrame />);
+    component = mount(<BottomFrame />);
   });
 
   it('is a react component', () => {
@@ -849,9 +849,23 @@ describe('<BottomFrame />', () => {
       assert(component.find('.control-bar').length);
     });
 
-    xdescribe('play button', () => { });
-    xdescribe('pause button', () => { });
-    xdescribe('stop button', () => { });
+    describe('play button', () => {
+      it('is a react component', () => {
+        assert(component.find('.control-bar .play').length);
+      });
+    });
+
+    describe('pause button', () => {
+      it('is a react component', () => {
+        assert(component.find('.control-bar .pause').length);
+      });
+    });
+
+    describe('stop button', () => {
+      it('is a react component', () => {
+        assert(component.find('.control-bar .stop').length);
+      });
+    });
   });
 
   xdescribe('scrubber detail', () => {
