@@ -228,6 +228,9 @@ export default class RekapiTimeline extends Component {
     // position, which is a pretty bad UX.  This can be addressed with
     // something like the sample provided here:
     // https://github.com/facebook/react/issues/955#issuecomment-160831548
+    //
+    // This may also be good solution:
+    // https://github.com/text-mask/text-mask/tree/master/react#readme
     const { value } = e.target;
     const { property, millisecond } = this.state.propertyCursor;
     const currentProperty =
