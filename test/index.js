@@ -844,7 +844,11 @@ describe('<BottomFrame />', () => {
     assert.equal(component.length, 1);
   });
 
-  xdescribe('control bar', () => {
+  describe('control bar', () => {
+    it('is a react component', () => {
+      assert(component.find('.control-bar').length);
+    });
+
     xdescribe('play button', () => { });
     xdescribe('pause button', () => { });
     xdescribe('stop button', () => { });
