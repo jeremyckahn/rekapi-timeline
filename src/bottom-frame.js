@@ -11,17 +11,20 @@ const Button = ({ name, handleClick }) =>
 const ControlBar = ({
   handlePlayButtonClick,
   handlePauseButtonClick,
-  handleStopButtonClick
+  handleStopButtonClick,
+  isPlaying
 }) =>
   <div className="control-bar">
-    <Button
-      name="play"
-      handleClick={handlePlayButtonClick}
-    />
-    <Button
-      name="pause"
-      handleClick={handlePauseButtonClick}
-    />
+    {isPlaying ?
+      <Button
+        name="pause"
+        handleClick={handlePauseButtonClick}
+      /> :
+      <Button
+        name="play"
+        handleClick={handlePlayButtonClick}
+      />
+    }
     <Button
       name="stop"
       handleClick={handleStopButtonClick}
@@ -31,13 +34,15 @@ const ControlBar = ({
 const BottomFrame = ({
   handlePlayButtonClick,
   handlePauseButtonClick,
-  handleStopButtonClick
+  handleStopButtonClick,
+  isPlaying
 }) => (
   <div className="fill bottom-frame">
     <ControlBar
       handlePlayButtonClick={handlePlayButtonClick}
       handlePauseButtonClick={handlePauseButtonClick}
       handleStopButtonClick={handleStopButtonClick}
+      isPlaying={isPlaying}
     />
     <div className="scrubber-detail"><label className="label-input-pair row scrubber-scale">
       <p>Timeline zoom:</p>

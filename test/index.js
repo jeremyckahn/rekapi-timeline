@@ -870,20 +870,43 @@ describe('<BottomFrame />', () => {
           assert(handlePlayButtonClick.called);
         });
       });
+
+      describe('when animation is not playing', () => {
+        beforeEach(() => {
+          component = mount(
+            <BottomFrame isPlaying={false} />
+          );
+        });
+
+        it('is shown', () => {
+          assert.equal(component.find('.control-bar .play').length, 1);
+        });
+      });
+
+      describe('when animation is playing', () => {
+        beforeEach(() => {
+          component = mount(
+            <BottomFrame isPlaying={true} />
+          );
+        });
+
+        it('is not shown', () => {
+          assert.equal(component.find('.control-bar .play').length, 0);
+        });
+      });
     });
 
     describe('pause button', () => {
-      it('is a react component', () => {
-        assert(component.find('.control-bar .pause').length);
-      });
-
       describe('handlePauseButtonClick', () => {
         let handlePauseButtonClick;
 
         beforeEach(() => {
           handlePauseButtonClick = sinon.spy();
           component = mount(
-            <BottomFrame handlePauseButtonClick={handlePauseButtonClick} />
+            <BottomFrame
+              handlePauseButtonClick={handlePauseButtonClick}
+              isPlaying={true}
+            />
           );
 
           component.find('.control-bar .pause').simulate('click');
@@ -891,6 +914,30 @@ describe('<BottomFrame />', () => {
 
         it('fires', () => {
           assert(handlePauseButtonClick.called);
+        });
+      });
+
+      describe('when animation is not playing', () => {
+        beforeEach(() => {
+          component = mount(
+            <BottomFrame isPlaying={false} />
+          );
+        });
+
+        it('is not shown', () => {
+          assert.equal(component.find('.control-bar .pause').length, 0);
+        });
+      });
+
+      describe('when animation is playing', () => {
+        beforeEach(() => {
+          component = mount(
+            <BottomFrame isPlaying={true} />
+          );
+        });
+
+        it('is shown', () => {
+          assert.equal(component.find('.control-bar .pause').length, 1);
         });
       });
     });
