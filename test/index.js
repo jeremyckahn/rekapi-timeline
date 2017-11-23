@@ -91,6 +91,31 @@ describe('<RekapiTimeline />', () => {
         assert.deepEqual(component.state().propertyCursor, {});
       });
     });
+
+    describe('isPlaying', () => {
+      describe('when animation is not playing', () => {
+        it('reflects Rekapi#isPlaying', () => {
+          assert.equal(component.state().isPlaying, false);
+        });
+      });
+
+      describe('when animation is playing', () => {
+        beforeEach(() => {
+          rekapi = new Rekapi();
+          component = mount(<RekapiTimeline rekapi={rekapi}/>);
+
+          rekapi.play();
+        });
+
+        afterEach(() => {
+          rekapi.stop();
+        });
+
+        it('reflects Rekapi#isPlaying', () => {
+          assert.equal(component.state().isPlaying, true);
+        });
+      });
+    });
   });
 
   describe('RekapiTimeline.computeHighlightedKeyframe', () => {

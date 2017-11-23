@@ -58,16 +58,23 @@ export default class RekapiTimeline extends Component {
     this.state = {
       rekapi: rekapi.exportTimeline(),
       propertyCursor: {},
-      easingCurves: Object.keys(Tweenable.formulas)
+      easingCurves: Object.keys(Tweenable.formulas),
+      isPlaying: rekapi.isPlaying()
     };
 
-    rekapi.on('timelineModified', () => {
-      this.setState({
-        rekapi: rekapi.exportTimeline()
-      });
+    rekapi
+      .on('timelineModified', () => {
+        this.setState({
+          rekapi: rekapi.exportTimeline()
+        });
 
-      rekapi.update();
-    });
+        rekapi.update();
+      })
+      .on('playStateChange', () => {
+        this.setState({
+          isPlaying: rekapi.isPlaying()
+        });
+      });
   }
 
   /**
@@ -315,7 +322,9 @@ export default class RekapiTimeline extends Component {
           handleValueInputChange={this.handleValueInputChange}
         />
         <Timeline />
-        <BottomFrame />
+        <BottomFrame
+          isPlaying={state.isPlaying}
+        />
       </div>
     );
   }
