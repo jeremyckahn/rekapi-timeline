@@ -34,13 +34,28 @@ const ControlBar = ({
     />
   </div>
 
+const ScrubberScale = ({
+  timelineScale = 0,
+  handleTimelineScaleChange = () => {}
+}) =>
+  <label className="label-input-pair row scrubber-scale">
+    <p>Timeline zoom:</p>
+    <input
+      type="number"
+      value={timelineScale * 100}
+      min="0"
+      step="10"
+      onChange={handleTimelineScaleChange}
+    />
+  </label>
+
 const BottomFrame = ({
   handlePlayButtonClick,
   handlePauseButtonClick,
   handleStopButtonClick,
-  handleTimelineScaleChange = () => {},
+  handleTimelineScaleChange,
   isPlaying,
-  timelineScale = 0
+  timelineScale
 }) => (
   <div className="fill bottom-frame">
     <ControlBar
@@ -50,16 +65,10 @@ const BottomFrame = ({
       isPlaying={isPlaying}
     />
     <div className="scrubber-detail">
-      <label className="label-input-pair row scrubber-scale">
-        <p>Timeline zoom:</p>
-        <input
-          type="number"
-          value={timelineScale * 100}
-          min="0"
-          step="10"
-          onChange={handleTimelineScaleChange}
-        />
-      </label>
+      <ScrubberScale
+        timelineScale={timelineScale}
+        handleTimelineScaleChange={handleTimelineScaleChange}
+      />
       <p className="position-monitor">
         <span>1000</span>ms / <span>1000</span>ms
       </p>
