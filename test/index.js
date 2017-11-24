@@ -1003,8 +1003,20 @@ describe('<BottomFrame />', () => {
     });
   });
 
-  xdescribe('scrubber detail', () => {
-    xdescribe('scrubber scale', () => { });
+  describe('scrubber detail', () => {
+    describe('scrubber scale', () => {
+      beforeEach(() => {
+        component = mount(<BottomFrame timelineScale={defaultTimelineScale}/>);
+      });
+
+      it('reflects timelineScale prop', () => {
+        assert.equal(
+          component.find('.scrubber-scale input').props().value,
+          String(defaultTimelineScale * 100)
+        );
+      });
+    });
+
     xdescribe('position monitor', () => { });
   });
 });
