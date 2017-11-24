@@ -16,7 +16,8 @@ import Timeline from '../src/timeline';
 import BottomFrame from '../src/bottom-frame';
 
 import {
-  newPropertyMillisecondBuffer
+  newPropertyMillisecondBuffer,
+  defaultTimelineScale
 } from '../src/constants';
 
 import { basicRekapiExport } from './fixtures/basic-rekapi-export'
@@ -114,6 +115,17 @@ describe('<RekapiTimeline />', () => {
         it('reflects Rekapi#isPlaying', () => {
           assert.equal(component.state().isPlaying, true);
         });
+      });
+    });
+
+    describe('timelineScale', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('gets a default value', () => {
+        assert.equal(component.state().timelineScale, defaultTimelineScale);
       });
     });
   });

@@ -9,7 +9,8 @@ import Timeline from './timeline';
 import BottomFrame from './bottom-frame';
 
 import {
-  newPropertyMillisecondBuffer
+  newPropertyMillisecondBuffer,
+  defaultTimelineScale
 } from './constants';
 
 /**
@@ -59,7 +60,8 @@ export default class RekapiTimeline extends Component {
       rekapi: rekapi.exportTimeline(),
       propertyCursor: {},
       easingCurves: Object.keys(Tweenable.formulas),
-      isPlaying: rekapi.isPlaying()
+      isPlaying: rekapi.isPlaying(),
+      timelineScale: defaultTimelineScale
     };
 
     rekapi
