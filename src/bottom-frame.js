@@ -38,6 +38,7 @@ const BottomFrame = ({
   handlePlayButtonClick,
   handlePauseButtonClick,
   handleStopButtonClick,
+  handleTimelineScaleChange = () => {},
   isPlaying,
   timelineScale = 0
 }) => (
@@ -56,7 +57,7 @@ const BottomFrame = ({
           value={timelineScale * 100}
           min="0"
           step="10"
-          onChange={() => {}}
+          onChange={handleTimelineScaleChange}
         />
       </label>
       <p className="position-monitor">

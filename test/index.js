@@ -1015,6 +1015,23 @@ describe('<BottomFrame />', () => {
           String(defaultTimelineScale * 100)
         );
       });
+
+      describe('handleTimelineScaleChange', () => {
+        let handleTimelineScaleChange;
+        beforeEach(() => {
+          handleTimelineScaleChange = sinon.spy();
+          component = mount(
+            <BottomFrame handleTimelineScaleChange={handleTimelineScaleChange}/>
+          );
+
+          component.find('.scrubber-scale input')
+            .simulate('change', { target: { value: 5 } });
+        });
+
+        it('fires', () => {
+          assert(handleTimelineScaleChange.called);
+        });
+      });
     });
 
     xdescribe('position monitor', () => { });
