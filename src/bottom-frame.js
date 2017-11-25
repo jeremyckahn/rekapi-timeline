@@ -73,7 +73,7 @@ const BottomFrame = ({
       />
       <p className="position-monitor">
         <span className="current-position">
-          {Math.floor(animationLength * currentPosition)}
+          {Math.floor(animationLength * currentPosition) || 0}
         </span>ms
         {' / '}
         <span className="animation-length">
