@@ -56,7 +56,8 @@ const BottomFrame = ({
   handleTimelineScaleChange,
   isPlaying,
   timelineScale,
-  currentPosition
+  currentPosition,
+  animationLength
 }) => (
   <div className="fill bottom-frame">
     <ControlBar
@@ -73,7 +74,7 @@ const BottomFrame = ({
       <p className="position-monitor">
         <span className="current-position">{currentPosition}</span>ms
         {' / '}
-        <span className="animation-length">1000</span>ms
+        <span className="animation-length">{animationLength}</span>ms
       </p>
     </div>
   </div>

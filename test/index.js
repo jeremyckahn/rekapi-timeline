@@ -1045,7 +1045,15 @@ describe('<BottomFrame />', () => {
         });
       });
 
-      xdescribe('animationLength', () => {});
+      describe('animationLength', () => {
+        beforeEach(() => {
+          component = mount(<BottomFrame animationLength={100}/>);
+        });
+
+        it('displays the animationLength', () => {
+          assert.equal(component.find('.animation-length').text(), '100');
+        });
+      });
     });
   });
 });
