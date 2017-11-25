@@ -1084,11 +1084,15 @@ describe('<BottomFrame />', () => {
     describe('position monitor', () => {
       describe('currentPosition', () => {
         beforeEach(() => {
-          component = mount(<BottomFrame currentPosition={5}/>);
+          component = mount(<BottomFrame
+            currentPosition={.5}
+            animationLength={1000}
+            />
+          );
         });
 
         it('displays the current millisecond', () => {
-          assert.equal(component.find('.current-position').text(), '5');
+          assert.equal(component.find('.current-position').text(), '500');
         });
       });
 

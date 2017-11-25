@@ -335,7 +335,7 @@ export default class RekapiTimeline extends Component {
         <BottomFrame
           isPlaying={state.isPlaying}
           animationLength={state.animationLength}
-          currentPosition={Math.floor(state.animationLength * state.currentPosition)}
+          currentPosition={state.currentPosition}
         />
       </div>
     );

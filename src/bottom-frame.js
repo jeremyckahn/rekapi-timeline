@@ -72,9 +72,13 @@ const BottomFrame = ({
         handleTimelineScaleChange={handleTimelineScaleChange}
       />
       <p className="position-monitor">
-        <span className="current-position">{currentPosition}</span>ms
+        <span className="current-position">
+          {Math.floor(animationLength * currentPosition)}
+        </span>ms
         {' / '}
-        <span className="animation-length">{animationLength}</span>ms
+        <span className="animation-length">
+          {animationLength}
+        </span>ms
       </p>
     </div>
   </div>
