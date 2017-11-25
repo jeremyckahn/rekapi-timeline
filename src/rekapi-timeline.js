@@ -61,13 +61,15 @@ export default class RekapiTimeline extends Component {
       propertyCursor: {},
       easingCurves: Object.keys(Tweenable.formulas),
       isPlaying: rekapi.isPlaying(),
-      timelineScale: defaultTimelineScale
+      timelineScale: defaultTimelineScale,
+      animationLength: rekapi.getAnimationLength()
     };
 
     rekapi
       .on('timelineModified', () => {
         this.setState({
-          rekapi: rekapi.exportTimeline()
+          rekapi: rekapi.exportTimeline(),
+          animationLength: rekapi.getAnimationLength()
         });
 
         rekapi.update();
@@ -326,6 +328,7 @@ export default class RekapiTimeline extends Component {
         <Timeline />
         <BottomFrame
           isPlaying={state.isPlaying}
+          animationLength={state.animationLength}
         />
       </div>
     );

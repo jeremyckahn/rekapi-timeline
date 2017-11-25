@@ -128,6 +128,33 @@ describe('<RekapiTimeline />', () => {
         assert.equal(component.state().timelineScale, defaultTimelineScale);
       });
     });
+
+    xdescribe('currentPosition', () => {
+    });
+
+    describe('animationLength', () => {
+      let actor;
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+
+        actor = rekapi.addActor().keyframe(1000, { x: 1 });
+      });
+
+      it('reflects the animation length', () => {
+        assert.equal(component.state().animationLength, 1000);
+      });
+
+      describe('timeline changes', () => {
+        beforeEach(() => {
+          actor.keyframe(2000, { x: 2 });
+        });
+
+        it('reflects animation length changes', () => {
+          assert.equal(component.state().animationLength, 2000);
+        });
+      });
+    });
   });
 
   describe('RekapiTimeline.computeHighlightedKeyframe', () => {
