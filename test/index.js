@@ -129,7 +129,27 @@ describe('<RekapiTimeline />', () => {
       });
     });
 
-    xdescribe('currentPosition', () => {
+    describe('currentPosition', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+
+        rekapi.addActor().keyframe(1000, { x: 1 });
+      });
+
+      it('reflects the current animation position', () => {
+        assert.equal(component.state().currentPosition, 0);
+      });
+
+      describe('position changes', () => {
+        beforeEach(() => {
+          rekapi.update(500);
+        });
+
+        it('reflects the animation position changed', () => {
+          assert.equal(component.state().currentPosition, .5);
+        });
+      });
     });
 
     describe('animationLength', () => {
