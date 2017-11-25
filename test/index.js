@@ -1034,6 +1034,18 @@ describe('<BottomFrame />', () => {
       });
     });
 
-    xdescribe('position monitor', () => { });
+    describe('position monitor', () => {
+      describe('currentPosition', () => {
+        beforeEach(() => {
+          component = mount(<BottomFrame currentPosition={5}/>);
+        });
+
+        it('displays the current millisecond', () => {
+          assert.equal(component.find('.current-position').text(), '5');
+        });
+      });
+
+      xdescribe('animationLength', () => {});
+    });
   });
 });
