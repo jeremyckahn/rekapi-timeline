@@ -49,6 +49,20 @@ const ScrubberScale = ({
     />
   </label>
 
+const PositionMonitor = ({
+  animationLength,
+  currentPosition
+}) =>
+  <p className="position-monitor">
+    <span className="current-position">
+      {Math.floor(animationLength * currentPosition) || 0}
+    </span>ms
+    {' / '}
+    <span className="animation-length">
+      {animationLength}
+    </span>ms
+  </p>
+
 const BottomFrame = ({
   handlePlayButtonClick,
   handlePauseButtonClick,
@@ -71,15 +85,10 @@ const BottomFrame = ({
         timelineScale={timelineScale}
         handleTimelineScaleChange={handleTimelineScaleChange}
       />
-      <p className="position-monitor">
-        <span className="current-position">
-          {Math.floor(animationLength * currentPosition) || 0}
-        </span>ms
-        {' / '}
-        <span className="animation-length">
-          {animationLength}
-        </span>ms
-      </p>
+      <PositionMonitor
+        animationLength={animationLength}
+        currentPosition={currentPosition}
+      />
     </div>
   </div>
 );
