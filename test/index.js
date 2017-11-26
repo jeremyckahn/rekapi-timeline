@@ -705,7 +705,18 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  xdescribe('RekapiTimeline#handlePauseButtonClick', () => {
+  describe('RekapiTimeline#handlePauseButtonClick', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      sinon.spy(rekapi, 'pause');
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+
+      component.instance().handlePauseButtonClick();
+    });
+
+    it('pauses the animation', () => {
+      assert(rekapi.pause.called);
+    });
   });
 
   xdescribe('RekapiTimeline#handleStopButtonClick', () => {
