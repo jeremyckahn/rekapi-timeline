@@ -690,6 +690,29 @@ describe('<RekapiTimeline />', () => {
       });
     });
   });
+
+  describe('RekapiTimeline#handlePlayButtonClick', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      sinon.spy(rekapi, 'play');
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+
+      component.instance().handlePlayButtonClick();
+    });
+
+    it('plays the animation', () => {
+      assert(rekapi.play.called);
+    });
+  });
+
+  xdescribe('RekapiTimeline#handlePauseButtonClick', () => {
+  });
+
+  xdescribe('RekapiTimeline#handleStopButtonClick', () => {
+  });
+
+  xdescribe('RekapiTimeline#handleTimelineScaleChange', () => {
+  });
 });
 
 describe('<Details />', () => {
