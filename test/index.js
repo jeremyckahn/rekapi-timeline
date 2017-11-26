@@ -740,7 +740,36 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  xdescribe('RekapiTimeline#handleTimelineScaleChange', () => {
+  describe('RekapiTimeline#handleTimelineScaleChange', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+
+      component.instance().handleTimelineScaleChange(
+        { target: { value: '50' } }
+      );
+    });
+
+    it('updates timelineScale state', () => {
+      assert.equal(component.state().timelineScale, .5);
+    });
+
+    describe('invalid inputs', () => {
+      describe('negative numbers', () => {
+        beforeEach(() => {
+          rekapi = new Rekapi();
+          component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+
+          component.instance().handleTimelineScaleChange(
+            { target: { value: '-50' } }
+          );
+        });
+
+        it('converts number to positive value', () => {
+          assert.equal(component.state().timelineScale, .5);
+        });
+      });
+    });
   });
 });
 
@@ -1124,7 +1153,7 @@ describe('<BottomFrame />', () => {
           );
 
           component.find('.scrubber-scale input')
-            .simulate('change', { target: { value: 5 } });
+            .simulate('change', { target: { value: '5' } });
         });
 
         it('fires', () => {

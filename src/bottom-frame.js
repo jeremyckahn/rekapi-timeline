@@ -42,7 +42,7 @@ const ScrubberScale = ({
     <p>Timeline zoom:</p>
     <input
       type="number"
-      value={timelineScale * 100}
+      value={Math.round(timelineScale * 100)}
       min="0"
       step="10"
       onChange={handleTimelineScaleChange}

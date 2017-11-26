@@ -101,7 +101,8 @@ export default class RekapiTimeline extends Component {
       'handleValueInputChange',
       'handlePlayButtonClick',
       'handlePauseButtonClick',
-      'handleStopButtonClick'
+      'handleStopButtonClick',
+      'handleTimelineScaleChange'
     ].forEach(method => this[method] = this[method].bind(this));
   }
 
@@ -302,6 +303,19 @@ export default class RekapiTimeline extends Component {
   }
 
   /**
+   * @method RekapiTimeline#handleTimelineScaleChange
+   * @param {external:React.SyntheticEvent} e
+   * @returns {undefined}
+   */
+  handleTimelineScaleChange (e) {
+    const { value } = e.target;
+
+    this.setState({
+      timelineScale: Math.abs(Number(value) / 100)
+    });
+  }
+
+  /**
    * @method RekapiTimeline#isNewPropertyValueValid
    * @param {external:rekapi.KeyframeProperty} keyframeProperty
    * @param {number|string} newValue
@@ -365,9 +379,11 @@ export default class RekapiTimeline extends Component {
           isPlaying={state.isPlaying}
           animationLength={state.animationLength}
           currentPosition={state.currentPosition}
+          timelineScale={state.timelineScale}
           handlePlayButtonClick={this.handlePlayButtonClick}
           handlePauseButtonClick={this.handlePauseButtonClick}
           handleStopButtonClick={this.handleStopButtonClick}
+          handleTimelineScaleChange={this.handleTimelineScaleChange}
         />
       </div>
     );
