@@ -719,7 +719,25 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  xdescribe('RekapiTimeline#handleStopButtonClick', () => {
+  describe('RekapiTimeline#handleStopButtonClick', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      sinon.spy(rekapi, 'stop');
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+
+      rekapi.addActor().keyframe(1000, { x: 1 });
+      rekapi.update(500);
+
+      component.instance().handleStopButtonClick();
+    });
+
+    it('stop the animation', () => {
+      assert(rekapi.stop.called);
+    });
+
+    it('resets the animation', () => {
+      assert.equal(rekapi.getLastPositionUpdated(), 0);
+    });
   });
 
   xdescribe('RekapiTimeline#handleTimelineScaleChange', () => {

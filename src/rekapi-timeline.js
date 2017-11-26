@@ -100,7 +100,8 @@ export default class RekapiTimeline extends Component {
       'handleMillisecondInputChange',
       'handleValueInputChange',
       'handlePlayButtonClick',
-      'handlePauseButtonClick'
+      'handlePauseButtonClick',
+      'handleStopButtonClick'
     ].forEach(method => this[method] = this[method].bind(this));
   }
 
@@ -291,6 +292,16 @@ export default class RekapiTimeline extends Component {
   }
 
   /**
+   * @method RekapiTimeline#handleStopButtonClick
+   * @returns {undefined}
+   */
+  handleStopButtonClick () {
+    this.props.rekapi
+      .stop()
+      .update(0);
+  }
+
+  /**
    * @method RekapiTimeline#isNewPropertyValueValid
    * @param {external:rekapi.KeyframeProperty} keyframeProperty
    * @param {number|string} newValue
@@ -356,6 +367,7 @@ export default class RekapiTimeline extends Component {
           currentPosition={state.currentPosition}
           handlePlayButtonClick={this.handlePlayButtonClick}
           handlePauseButtonClick={this.handlePauseButtonClick}
+          handleStopButtonClick={this.handleStopButtonClick}
         />
       </div>
     );
