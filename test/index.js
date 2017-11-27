@@ -10,7 +10,7 @@ import {
   unsetBezierFunction
 } from 'shifty';
 
-import RekapiTimeline from '../src/rekapi-timeline';
+import { RekapiTimeline } from '../src/rekapi-timeline';
 import Details from '../src/details';
 import Timeline from '../src/timeline';
 import BottomFrame from '../src/bottom-frame';

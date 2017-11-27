@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Rekapi } from 'rekapi';
 
-import RekapiTimeline from '../src/rekapi-timeline.js';
+import { RekapiTimeline } from '../src/index.js';
 
 const rekapi = new Rekapi(document.body);
 

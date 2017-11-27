@@ -46,7 +46,7 @@ const sanitizeDanglingDecimals =
     match => `${match}0`
   );
 
-export default class RekapiTimeline extends Component {
+export class RekapiTimeline extends Component {
   /**
    * @param {RekapiTimeline.props} props
    * @constructs RekapiTimeline
