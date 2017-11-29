@@ -84,24 +84,26 @@ const Details = ({
   keyframeProperty = {}
 }) => (
   <div className="details">
-    <Header name={keyframeProperty.name} />
-    <div className="add-delete-wrapper">
-      <AddButton handleAddKeyframeButtonClick={handleAddKeyframeButtonClick} />
-      <DeleteButton handleDeleteKeyframeButtonClick={handleDeleteKeyframeButtonClick} />
+    <div className="fill keyframe-property-detail">
+      <Header name={keyframeProperty.name} />
+      <div className="add-delete-wrapper">
+        <AddButton handleAddKeyframeButtonClick={handleAddKeyframeButtonClick} />
+        <DeleteButton handleDeleteKeyframeButtonClick={handleDeleteKeyframeButtonClick} />
+      </div>
+      <MillisecondInput
+        millisecond={keyframeProperty.millisecond}
+        handleMillisecondInputChange={handleMillisecondInputChange}
+      />
+      <ValueInput
+        value={keyframeProperty.value}
+        handleValueInputChange={handleValueInputChange}
+      />
+      <EasingSelect
+        easingCurves={easingCurves}
+        easing={keyframeProperty.easing}
+        handleEasingSelectChange={handleEasingSelectChange}
+      />
     </div>
-    <MillisecondInput
-      millisecond={keyframeProperty.millisecond}
-      handleMillisecondInputChange={handleMillisecondInputChange}
-    />
-    <ValueInput
-      value={keyframeProperty.value}
-      handleValueInputChange={handleValueInputChange}
-    />
-    <EasingSelect
-      easingCurves={easingCurves}
-      easing={keyframeProperty.easing}
-      handleEasingSelectChange={handleEasingSelectChange}
-    />
   </div>
 );
 

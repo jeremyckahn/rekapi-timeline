@@ -364,7 +364,7 @@ export class RekapiTimeline extends Component {
     const isAnyKeyframeHighlighted = !!Object.keys(keyframeProperty).length;
 
     return (
-      <div className="rekapi-timeline">
+      <div className="rekapi-timeline-container">
         <Details
           easingCurves={state.easingCurves}
           keyframeProperty={keyframeProperty}
