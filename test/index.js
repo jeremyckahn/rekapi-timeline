@@ -1032,6 +1032,21 @@ describe('<Timeline />', () => {
   it('is a react component', () => {
     assert.equal(component.length, 1);
   });
+
+  describe('timeline wrapper', () => {
+    beforeEach(() => {
+      component = shallow(<Timeline timelineWrapperWidth={1000} />);
+    });
+
+    describe('width', () => {
+      it('is determined by timelineWrapperWidth prop', () => {
+        assert.equal(
+          component.find('.timeline-wrapper').props().style.width,
+          1000
+        );
+      });
+    });
+  });
 });
 
 describe('<BottomFrame />', () => {

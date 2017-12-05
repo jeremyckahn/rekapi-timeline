@@ -1,16 +1,13 @@
 import React from 'react';
 
-// FIXME: The .timeline-wrapper div will need the auto-resizing logic ported
-// from the original verison, but that should wait until the nested components
-// are implement as there may be better approaches to use than inline style
-// updates.
-//
-// Additionally, there is quite a bit of weird JavaScript-powered styling that
-// needs to be ported/adapted from the original version.
+// FIXME: There is quite a bit of weird JavaScript-powered styling that needs
+// to be ported/adapted from the original version.
 
-const Timeline = props => (
+const Timeline = ({
+  timelineWrapperWidth
+}) => (
   <div className="fill timeline">
-    <div className="timeline-wrapper">
+    <div className="timeline-wrapper" style={{ width: timelineWrapperWidth }}>
 
       <div className="scrubber">
         <div className="scrubber-wrapper">

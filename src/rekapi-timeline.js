@@ -363,6 +363,10 @@ export class RekapiTimeline extends Component {
 
     const isAnyKeyframeHighlighted = !!Object.keys(keyframeProperty).length;
 
+    const timelineWrapperWidth = props.rekapi ?
+      RekapiTimeline.computeTimelineWidth(props.rekapi, state.timelineScale) :
+      1;
+
     return (
       <div className="rekapi-timeline-container">
         <Details
@@ -374,7 +378,9 @@ export class RekapiTimeline extends Component {
           handleMillisecondInputChange={this.handleMillisecondInputChange}
           handleValueInputChange={this.handleValueInputChange}
         />
-        <Timeline />
+        <Timeline
+          timelineWrapperWidth={timelineWrapperWidth}
+        />
         <BottomFrame
           isPlaying={state.isPlaying}
           animationLength={state.animationLength}
