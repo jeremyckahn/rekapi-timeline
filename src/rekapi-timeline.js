@@ -353,18 +353,19 @@ export class RekapiTimeline extends Component {
 
   render () {
     const { props, state } = this;
+    const { rekapi } = props;
 
-    const keyframeProperty = props.rekapi ?
+    const keyframeProperty = rekapi ?
       RekapiTimeline.computeHighlightedKeyframe(
-        props.rekapi,
+        rekapi,
         state.propertyCursor
       ) :
       {};
 
     const isAnyKeyframeHighlighted = !!Object.keys(keyframeProperty).length;
 
-    const timelineWrapperWidth = props.rekapi ?
-      RekapiTimeline.computeTimelineWidth(props.rekapi, state.timelineScale) :
+    const timelineWrapperWidth = rekapi ?
+      RekapiTimeline.computeTimelineWidth(rekapi, state.timelineScale) :
       1;
 
     return (
