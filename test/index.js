@@ -260,6 +260,40 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
+  describe('RekapiTimeline.computeTimelineWidth', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor().keyframe(0, { x: 1 }).keyframe(1000, { x: 1 });
+    });
+
+    it('is a function', () => {
+      assert(RekapiTimeline.computeTimelineWidth instanceof Function);
+    });
+
+    describe('return values', () => {
+      it('applies timelineScale=.5 to animation length', () => {
+        assert(
+          RekapiTimeline.computeTimelineWidth(rekapi, .5),
+          500
+        );
+      });
+
+      it('applies timelineScale=1 to animation length', () => {
+        assert(
+          RekapiTimeline.computeTimelineWidth(rekapi, 1),
+          1000
+        );
+      });
+
+      it('applies timelineScale=2 to animation length', () => {
+        assert(
+          RekapiTimeline.computeTimelineWidth(rekapi, 2),
+          2000
+        );
+      });
+    });
+  });
+
   describe('RekapiTimeline#updateEasingList', () => {
     beforeEach(() => {
       setBezierFunction('testCurve', 0, 0, 0, 0);

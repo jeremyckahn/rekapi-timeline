@@ -416,5 +416,14 @@ Object.assign(RekapiTimeline, {
 
     const keyframeProperty = actor.getKeyframeProperty(property, millisecond);
     return keyframeProperty ? keyframeProperty.exportPropertyData() : {};
-  }
+  },
+
+  /**
+   * @method RekapiTimeline.computeTimelineWidth
+   * @param {external:rekapi.Rekapi} rekapi
+   * @param {number} timelineScale A normalized scalar value
+   * @returns {number}
+   */
+  computeTimelineWidth: (rekapi, timelineScale) =>
+    rekapi.getAnimationLength() * timelineScale
 });
