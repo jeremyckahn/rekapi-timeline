@@ -272,21 +272,21 @@ describe('<RekapiTimeline />', () => {
 
     describe('return values', () => {
       it('applies timelineScale=.5 to animation length', () => {
-        assert(
+        assert.equal(
           RekapiTimeline.computeTimelineWidth(rekapi, .5),
           500
         );
       });
 
       it('applies timelineScale=1 to animation length', () => {
-        assert(
+        assert.equal(
           RekapiTimeline.computeTimelineWidth(rekapi, 1),
           1000
         );
       });
 
       it('applies timelineScale=2 to animation length', () => {
-        assert(
+        assert.equal(
           RekapiTimeline.computeTimelineWidth(rekapi, 2),
           2000
         );
