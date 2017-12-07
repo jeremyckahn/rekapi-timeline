@@ -432,5 +432,16 @@ Object.assign(RekapiTimeline, {
    * @returns {number}
    */
   computeTimelineWidth: (rekapi, timelineScale) =>
-    rekapi.getAnimationLength() * timelineScale
+    rekapi.getAnimationLength() * timelineScale,
+
+  /**
+   * @method RekapiTimeline.computeScrubberPixelPosition
+   * @param {external:rekapi.Rekapi} rekapi
+   * @param {number} timelineScale A normalized scalar value
+   * @returns {number}
+   */
+  computeScrubberPixelPosition: (rekapi, timelineScale) =>
+    (
+      rekapi.getLastPositionUpdated() * rekapi.getAnimationLength()
+    ) * timelineScale
 });

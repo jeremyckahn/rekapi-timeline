@@ -294,6 +294,96 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
+  describe('RekapiTimeline.computeScrubberPixelPosition', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor().keyframe(0, { x: 1 }).keyframe(1000, { x: 1 });
+    });
+
+    it('is a function', () => {
+      assert(RekapiTimeline.computeScrubberPixelPosition instanceof Function);
+    });
+
+    describe('return values', () => {
+      describe('animation position === 0 (default)', () => {
+        it('applies timelineScale=.5 to animation position', () => {
+          assert.equal(
+            RekapiTimeline.computeScrubberPixelPosition(rekapi, .5),
+            0
+          );
+        });
+
+        it('applies timelineScale=1 to animation position', () => {
+          assert.equal(
+            RekapiTimeline.computeScrubberPixelPosition(rekapi, 1),
+            0
+          );
+        });
+
+        it('applies timelineScale=2 to animation position', () => {
+          assert.equal(
+            RekapiTimeline.computeScrubberPixelPosition(rekapi, 2),
+            0
+          );
+        });
+      });
+
+      describe('animation position === 500', () => {
+        beforeEach(() => {
+          rekapi.update(500);
+        });
+
+        it('applies timelineScale=.5 to animation position', () => {
+          assert.equal(
+            RekapiTimeline.computeScrubberPixelPosition(rekapi, .5),
+            250
+          );
+        });
+
+        it('applies timelineScale=1 to animation position', () => {
+          assert.equal(
+            RekapiTimeline.computeScrubberPixelPosition(rekapi, 1),
+            500
+          );
+        });
+
+        it('applies timelineScale=2 to animation position', () => {
+          assert.equal(
+            RekapiTimeline.computeScrubberPixelPosition(rekapi, 2),
+            1000
+          );
+        });
+      });
+
+      describe('animation position === 1000', () => {
+        beforeEach(() => {
+          rekapi.update(1000);
+        });
+
+        it('applies timelineScale=.5 to animation position', () => {
+          assert.equal(
+            RekapiTimeline.computeScrubberPixelPosition(rekapi, .5),
+            500
+          );
+        });
+
+        it('applies timelineScale=1 to animation position', () => {
+          assert.equal(
+            RekapiTimeline.computeScrubberPixelPosition(rekapi, 1),
+            1000
+          );
+        });
+
+        it('applies timelineScale=2 to animation position', () => {
+          assert.equal(
+            RekapiTimeline.computeScrubberPixelPosition(rekapi, 2),
+            2000
+          );
+        });
+      });
+    });
+  });
+
   describe('RekapiTimeline#updateEasingList', () => {
     beforeEach(() => {
       setBezierFunction('testCurve', 0, 0, 0, 0);
