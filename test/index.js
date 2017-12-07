@@ -1137,6 +1137,21 @@ describe('<Timeline />', () => {
       });
     });
   });
+
+  describe('scrubber position', () => {
+    beforeEach(() => {
+      component = shallow(<Timeline scrubberPosition={500} />);
+    });
+
+    describe('left', () => {
+      it('is determined by scrubberPosition prop', () => {
+        assert.equal(
+          component.find('.scrubber-handle').props().style.left,
+          500
+        );
+      });
+    });
+  });
 });
 
 describe('<BottomFrame />', () => {

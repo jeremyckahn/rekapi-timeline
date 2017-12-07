@@ -4,7 +4,8 @@ import React from 'react';
 // to be ported/adapted from the original version.
 
 const Timeline = ({
-  timelineWrapperWidth
+  timelineWrapperWidth,
+  scrubberPosition
 }) => (
   <div className="fill timeline">
     <div className="timeline-wrapper" style={{ width: timelineWrapperWidth }}>
@@ -13,7 +14,7 @@ const Timeline = ({
         <div className="scrubber-wrapper">
           <div
             className="scrubber-handle"
-            draggable="false"
+            style={{ left: scrubberPosition }}
           >
             <i className="glyphicon glyphicon-chevron-down scrubber-icon">&nbsp;</i>
             <figure className="scrubber-guide"></figure>

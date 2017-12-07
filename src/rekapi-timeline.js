@@ -368,6 +368,10 @@ export class RekapiTimeline extends Component {
       RekapiTimeline.computeTimelineWidth(rekapi, state.timelineScale) :
       1;
 
+    const scrubberPosition = rekapi ?
+      RekapiTimeline.computeScrubberPixelPosition(rekapi, state.timelineScale) :
+      0;
+
     return (
       <div className="rekapi-timeline-container">
         <Details
@@ -381,6 +385,7 @@ export class RekapiTimeline extends Component {
         />
         <Timeline
           timelineWrapperWidth={timelineWrapperWidth}
+          scrubberPosition={scrubberPosition}
         />
         <BottomFrame
           isPlaying={state.isPlaying}
