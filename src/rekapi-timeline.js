@@ -102,7 +102,8 @@ export class RekapiTimeline extends Component {
       'handlePlayButtonClick',
       'handlePauseButtonClick',
       'handleStopButtonClick',
-      'handleTimelineScaleChange'
+      'handleTimelineScaleChange',
+      'handleScrubberDrag'
     ].forEach(method => this[method] = this[method].bind(this));
   }
 
@@ -316,6 +317,18 @@ export class RekapiTimeline extends Component {
   }
 
   /**
+   * @method RekapiTimeline#handleScrubberDrag
+   * @param {number} x
+   * @returns {undefined}
+   */
+  handleScrubberDrag (x) {
+    const { rekapi } = this.props;
+    rekapi.update(
+      (x / rekapi.getAnimationLength()) * (1000 * this.state.timelineScale)
+    );
+  }
+
+  /**
    * @method RekapiTimeline#isNewPropertyValueValid
    * @param {external:rekapi.KeyframeProperty} keyframeProperty
    * @param {number|string} newValue
@@ -386,6 +399,7 @@ export class RekapiTimeline extends Component {
         <Timeline
           timelineWrapperWidth={timelineWrapperWidth}
           scrubberPosition={scrubberPosition}
+          handleScrubberDrag={this.handleScrubberDrag}
         />
         <BottomFrame
           isPlaying={state.isPlaying}

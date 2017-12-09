@@ -6,7 +6,8 @@ import Draggable from 'react-draggable';
 
 const Timeline = ({
   timelineWrapperWidth,
-  scrubberPosition
+  scrubberPosition,
+  handleScrubberDrag
 }) => (
   <div className="fill timeline">
     <div className="timeline-wrapper" style={{ width: timelineWrapperWidth }}>
@@ -17,7 +18,7 @@ const Timeline = ({
             axis="x"
             position={{ x: scrubberPosition, y: 0 }}
             bounds=".scrubber-wrapper"
-            onDrag={(e, { x }) => { console.log(x); }}
+            onDrag={(e, { x }) => handleScrubberDrag(x) }
           >
             <div
               className="scrubber-handle"
