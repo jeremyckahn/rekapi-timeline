@@ -1143,10 +1143,10 @@ describe('<Timeline />', () => {
       component = shallow(<Timeline scrubberPosition={500} />);
     });
 
-    describe('left', () => {
+    describe('draggable position', () => {
       it('is determined by scrubberPosition prop', () => {
         assert.equal(
-          component.find('.scrubber-handle').props().style.left,
+          component.find('Draggable').props().position.x,
           500
         );
       });

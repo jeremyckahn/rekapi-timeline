@@ -1,4 +1,5 @@
 import React from 'react';
+import Draggable from 'react-draggable';
 
 // FIXME: There is quite a bit of weird JavaScript-powered styling that needs
 // to be ported/adapted from the original version.
@@ -12,13 +13,19 @@ const Timeline = ({
 
       <div className="scrubber">
         <div className="scrubber-wrapper">
-          <div
-            className="scrubber-handle"
-            style={{ left: scrubberPosition }}
+          <Draggable
+            axis="x"
+            position={{ x: scrubberPosition, y: 0 }}
+            bounds=".scrubber-wrapper"
+            onDrag={(e, { x }) => { console.log(x); }}
           >
-            <i className="glyphicon glyphicon-chevron-down scrubber-icon">&nbsp;</i>
-            <figure className="scrubber-guide"></figure>
-          </div>
+            <div
+              className="scrubber-handle"
+            >
+              <i className="glyphicon glyphicon-chevron-down scrubber-icon">&nbsp;</i>
+              <figure className="scrubber-guide"></figure>
+            </div>
+          </Draggable>
         </div>
       </div>
 
