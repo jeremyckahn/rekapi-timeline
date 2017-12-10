@@ -323,10 +323,7 @@ export class RekapiTimeline extends Component {
    * @returns {undefined}
    */
   handleScrubberDrag (x) {
-    const { rekapi } = this.props;
-    rekapi.update(
-      (x / rekapi.getAnimationLength()) * (1000 * this.state.timelineScale)
-    );
+    this.updateToRawX(x);
   }
 
   /**
@@ -335,15 +332,27 @@ export class RekapiTimeline extends Component {
    * @returns {undefined}
    */
   handleScrubberBarClick (x) {
-    // TODO: Consolidate the redundant logic between this and
-    // handleScrubberDrag
-    const { rekapi } = this.props;
-    rekapi.pause();
-    rekapi.update(
-      (x / rekapi.getAnimationLength()) * (1000 * this.state.timelineScale)
-    );
+    this.props.rekapi.pause();
+    this.updateToRawX(x);
   }
 
+  /**
+   * @method RekapiTimeline#updateToRawX
+   * @param {number} rawX Raw pixel value to be scaled against
+   * `this.state.timelineScale` before being passed to
+   * {@link external:Rekapi.rekapi#update}.
+   * @returns {undefined}
+   */
+  updateToRawX (rawX) {
+    const {
+      props: { rekapi },
+      state: { timelineScale}
+    } = this;
+
+    rekapi.update(
+      (rawX / rekapi.getAnimationLength()) * (1000 * timelineScale)
+    );
+  }
 
   /**
    * @method RekapiTimeline#isNewPropertyValueValid
