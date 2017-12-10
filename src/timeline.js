@@ -7,13 +7,17 @@ import Draggable from 'react-draggable';
 const Timeline = ({
   timelineWrapperWidth,
   scrubberPosition,
-  handleScrubberDrag
+  handleScrubberDrag,
+  handleScrubberBarClick
 }) => (
   <div className="fill timeline">
     <div className="timeline-wrapper" style={{ width: timelineWrapperWidth }}>
 
       <div className="scrubber">
-        <div className="scrubber-wrapper">
+        <div
+          className="scrubber-wrapper"
+          onClick={e => handleScrubberBarClick(e.nativeEvent.offsetX)}
+        >
           <Draggable
             axis="x"
             position={{ x: scrubberPosition, y: 0 }}

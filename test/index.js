@@ -935,6 +935,46 @@ describe('<RekapiTimeline />', () => {
       });
     });
   });
+
+  describe('RekapiTimeline#handleScrubberBarClick', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+      rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
+    });
+
+    describe('timelineScale === .5', () => {
+      beforeEach(() => {
+        component.setState({ timelineScale: .5 });
+        component.instance().handleScrubberBarClick(100);
+      });
+
+      it('sets the scaled timeline position', () => {
+        assert.equal(rekapi.getLastPositionUpdated(), .05);
+      });
+    });
+
+    describe('timelineScale === 1 (default)', () => {
+      beforeEach(() => {
+        component.instance().handleScrubberBarClick(100);
+      });
+
+      it('sets the scaled timeline position', () => {
+        assert.equal(rekapi.getLastPositionUpdated(), .1);
+      });
+    });
+
+    describe('timelineScale === 2', () => {
+      beforeEach(() => {
+        component.setState({ timelineScale: 2 });
+        component.instance().handleScrubberBarClick(100);
+      });
+
+      it('sets the scaled timeline position', () => {
+        assert.equal(rekapi.getLastPositionUpdated(), .2);
+      });
+    });
+  });
 });
 
 describe('<Details />', () => {
