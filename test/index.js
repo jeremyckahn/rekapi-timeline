@@ -910,7 +910,7 @@ describe('<RekapiTimeline />', () => {
       });
 
       it('sets the scaled timeline position', () => {
-        assert.equal(rekapi.getLastPositionUpdated(), .05);
+        assert.equal(rekapi.getLastPositionUpdated(), .2);
       });
     });
 
@@ -931,7 +931,7 @@ describe('<RekapiTimeline />', () => {
       });
 
       it('sets the scaled timeline position', () => {
-        assert.equal(rekapi.getLastPositionUpdated(), .2);
+        assert.equal(rekapi.getLastPositionUpdated(), .05);
       });
     });
   });
@@ -950,7 +950,7 @@ describe('<RekapiTimeline />', () => {
       });
 
       it('sets the scaled timeline position', () => {
-        assert.equal(rekapi.getLastPositionUpdated(), .05);
+        assert.equal(rekapi.getLastPositionUpdated(), .2);
       });
     });
 
@@ -971,7 +971,7 @@ describe('<RekapiTimeline />', () => {
       });
 
       it('sets the scaled timeline position', () => {
-        assert.equal(rekapi.getLastPositionUpdated(), .2);
+        assert.equal(rekapi.getLastPositionUpdated(), .05);
       });
     });
   });
