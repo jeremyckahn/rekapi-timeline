@@ -282,7 +282,7 @@ export class RekapiTimeline extends Component {
    * @returns {undefined}
    */
   handlePlayButtonClick () {
-    this.props.rekapi.play();
+    this.props.rekapi.playFromCurrent();
   }
 
   /**
