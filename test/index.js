@@ -1220,7 +1220,7 @@ describe('<Timeline />', () => {
 
   describe('scrubber position', () => {
     beforeEach(() => {
-      component = shallow(<Timeline scrubberPosition={500} />);
+      component = mount(<Timeline scrubberPosition={500} />);
     });
 
     describe('draggable position', () => {
