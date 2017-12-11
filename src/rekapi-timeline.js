@@ -407,6 +407,12 @@ export class RekapiTimeline extends Component {
       RekapiTimeline.computeTimelineWidth(rekapi, state.timelineScale) :
       1;
 
+    // FIXME: This null check is way too heavy-handed; it is needed to prevent
+    // some tests from needlessly failing.  Find a better way to do this.
+    const propertyTracks = state.rekapi && state.rekapi.actors[0] ?
+      state.rekapi.actors[0].propertyTracks :
+      {};
+
     const scrubberPosition = rekapi ?
       RekapiTimeline.computeScrubberPixelPosition(rekapi, state.timelineScale) :
       0;
@@ -427,6 +433,7 @@ export class RekapiTimeline extends Component {
           scrubberPosition={scrubberPosition}
           handleScrubberDrag={this.handleScrubberDrag}
           handleScrubberBarClick={this.handleScrubberBarClick}
+          propertyTracks={propertyTracks}
         />
         <BottomFrame
           isPlaying={state.isPlaying}

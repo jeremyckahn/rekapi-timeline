@@ -32,11 +32,11 @@ const Timeline = ({
   timelineWrapperWidth,
   scrubberPosition,
   handleScrubberDrag,
-  handleScrubberBarClick
+  handleScrubberBarClick,
+  propertyTracks = {}
 }) => (
   <div className="fill timeline">
     <div className="timeline-wrapper" style={{ width: timelineWrapperWidth }}>
-
       <Scrubber
         timelineWrapperWidth={timelineWrapperWidth}
         scrubberPosition={scrubberPosition}
@@ -44,6 +44,15 @@ const Timeline = ({
         handleScrubberBarClick={handleScrubberBarClick}
       />
 
+      <div className="actor-tracks">
+        {Object.keys(propertyTracks).map(trackName => (
+          <div
+            className="keyframe-property-track"
+            key={trackName}
+            data-track-name={trackName}
+          ></div>
+        ))}
+      </div>
     </div>
   </div>);
 

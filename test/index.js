@@ -43,11 +43,10 @@ const [
   translateXNumberProperty1
 ] = decoupledRekapiNumberExport.actors[0].propertyTracks.translateX;
 
+let rekapi;
 let component;
 
 describe('<RekapiTimeline />', () => {
-  let rekapi;
-
   const getActor = () => rekapi.getAllActors()[0];
 
   beforeEach(() => {
@@ -1230,6 +1229,22 @@ describe('<Timeline />', () => {
           500
         );
       });
+    });
+  });
+
+  describe('property tracks', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor().keyframe(0, { x: 0, y: 0 });
+      component = shallow(
+        <Timeline
+          propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
+        />
+      );
+    });
+
+    it('renders all keyframe tracks', () => {
+      assert.equal(component.find('.keyframe-property-track').length, 2);
     });
   });
 });
