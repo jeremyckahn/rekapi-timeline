@@ -403,7 +403,7 @@ export class RekapiTimeline extends Component {
 
     const isAnyKeyframeHighlighted = !!Object.keys(keyframeProperty).length;
 
-    const timelineWrapperWidth = rekapi ?
+    const timelineWrapperWidth = (rekapi && this.getActor()) ?
       RekapiTimeline.computeTimelineWidth(rekapi, state.timelineScale) :
       1;
 
