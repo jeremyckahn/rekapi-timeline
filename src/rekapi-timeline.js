@@ -56,8 +56,11 @@ export class RekapiTimeline extends Component {
 
     this.bindMethods();
 
+    const timeline = rekapi.exportTimeline();
+
     this.state = {
-      rekapi: rekapi.exportTimeline(),
+      rekapi: timeline,
+      actor: timeline.actors[0],
       propertyCursor: {},
       easingCurves: Object.keys(Tweenable.formulas),
       isPlaying: rekapi.isPlaying(),
@@ -68,9 +71,12 @@ export class RekapiTimeline extends Component {
 
     rekapi
       .on('timelineModified', () => {
+        const timeline = rekapi.exportTimeline();
+
         this.setState({
-          rekapi: rekapi.exportTimeline(),
-          animationLength: rekapi.getAnimationLength()
+          rekapi: timeline,
+          animationLength: timeline.duration,
+          actor: timeline.actors[0]
         });
 
         rekapi.update();
@@ -407,10 +413,8 @@ export class RekapiTimeline extends Component {
       RekapiTimeline.computeTimelineWidth(rekapi, state.timelineScale) :
       1;
 
-    // FIXME: This null check is way too heavy-handed; it is needed to prevent
-    // some tests from needlessly failing.  Find a better way to do this.
-    const propertyTracks = state.rekapi && state.rekapi.actors[0] ?
-      state.rekapi.actors[0].propertyTracks :
+    const propertyTracks = state.actor ?
+      state.actor.propertyTracks :
       {};
 
     const scrubberPosition = rekapi ?

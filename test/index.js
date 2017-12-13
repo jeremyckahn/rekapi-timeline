@@ -47,8 +47,9 @@ const [
 let rekapi;
 let component;
 
+const getActor = () => rekapi.getAllActors()[0];
+
 describe('<RekapiTimeline />', () => {
-  const getActor = () => rekapi.getAllActors()[0];
 
   beforeEach(() => {
     component = shallow(<RekapiTimeline />);
@@ -82,6 +83,29 @@ describe('<RekapiTimeline />', () => {
   });
 
   describe('state', () => {
+    describe('rekapi', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('is a basic rekapi export by default', () => {
+        assert.deepEqual(component.state().rekapi, rekapi.exportTimeline());
+      });
+    });
+
+    describe('actor', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        rekapi.addActor();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('is a basic actor export by default', () => {
+        assert.deepEqual(component.state().actor, getActor().exportTimeline());
+      });
+    });
+
     describe('propertyCursor', () => {
       beforeEach(() => {
         rekapi = new Rekapi();
