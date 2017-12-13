@@ -1,11 +1,14 @@
 import React from 'react';
 import Draggable from 'react-draggable';
 
+import { propertyTrackHeight } from './constants';
+
 const Scrubber = ({
   timelineWrapperWidth,
   scrubberPosition,
   handleScrubberDrag,
-  handleScrubberBarClick
+  handleScrubberBarClick,
+  propertyTracks
 }) =>
   <div className="scrubber">
     <div
@@ -21,8 +24,15 @@ const Scrubber = ({
         <div
           className="scrubber-handle"
         >
-          <i className="glyphicon glyphicon-chevron-down scrubber-icon">&nbsp;</i>
-          <figure className="scrubber-guide"></figure>
+          <i className="glyphicon glyphicon-chevron-down scrubber-icon">
+            &nbsp;
+          </i>
+          <figure
+            className="scrubber-guide"
+            style={{
+              height: propertyTrackHeight * Object.keys(propertyTracks).length
+            }}
+          ></figure>
         </div>
       </Draggable>
     </div>
@@ -42,6 +52,7 @@ const Timeline = ({
         scrubberPosition={scrubberPosition}
         handleScrubberDrag={handleScrubberDrag}
         handleScrubberBarClick={handleScrubberBarClick}
+        propertyTracks={propertyTracks}
       />
 
       <div className="animation-tracks">

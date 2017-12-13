@@ -17,7 +17,8 @@ import BottomFrame from '../src/bottom-frame';
 
 import {
   newPropertyMillisecondBuffer,
-  defaultTimelineScale
+  defaultTimelineScale,
+  propertyTrackHeight
 } from '../src/constants';
 
 import { basicRekapiExport } from './fixtures/basic-rekapi-export'
@@ -1227,6 +1228,25 @@ describe('<Timeline />', () => {
         assert.equal(
           component.find('Draggable').props().position.x,
           500
+        );
+      });
+    });
+  });
+
+  describe('scrubber guide', () => {
+    describe('dynamic styling', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        rekapi.addActor().keyframe(0, { x: 0, y: 0, z: 0});
+        component = mount(<Timeline
+          propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
+        />);
+      });
+
+      it('has the correct height', () => {
+        assert.equal(
+          component.find('.scrubber-guide').props().style.height,
+          propertyTrackHeight * 3
         );
       });
     });
