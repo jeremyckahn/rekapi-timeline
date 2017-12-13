@@ -397,34 +397,41 @@ export class RekapiTimeline extends Component {
   }
 
   render () {
-    const { props, state } = this;
-    const { rekapi } = props;
+    const {
+      props: { rekapi },
+      state: {
+        actor,
+        animationLength,
+        currentPosition,
+        easingCurves,
+        isPlaying,
+        propertyCursor,
+        timelineScale
+      }
+    } = this;
 
     const keyframeProperty = rekapi ?
-      RekapiTimeline.computeHighlightedKeyframe(
-        rekapi,
-        state.propertyCursor
-      ) :
+      RekapiTimeline.computeHighlightedKeyframe(rekapi, propertyCursor) :
       {};
 
     const isAnyKeyframeHighlighted = !!Object.keys(keyframeProperty).length;
 
     const timelineWrapperWidth = (rekapi && this.getActor()) ?
-      RekapiTimeline.computeTimelineWidth(rekapi, state.timelineScale) :
+      RekapiTimeline.computeTimelineWidth(rekapi, timelineScale) :
       1;
 
-    const propertyTracks = state.actor ?
-      state.actor.propertyTracks :
+    const propertyTracks = actor ?
+      actor.propertyTracks :
       {};
 
     const scrubberPosition = rekapi ?
-      RekapiTimeline.computeScrubberPixelPosition(rekapi, state.timelineScale) :
+      RekapiTimeline.computeScrubberPixelPosition(rekapi, timelineScale) :
       0;
 
     return (
       <div className="rekapi-timeline-container">
         <Details
-          easingCurves={state.easingCurves}
+          easingCurves={easingCurves}
           keyframeProperty={keyframeProperty}
           handleAddKeyframeButtonClick={this.handleAddKeyframeButtonClick}
           handleDeleteKeyframeButtonClick={this.handleDeleteKeyframeButtonClick}
@@ -440,10 +447,10 @@ export class RekapiTimeline extends Component {
           propertyTracks={propertyTracks}
         />
         <BottomFrame
-          isPlaying={state.isPlaying}
-          animationLength={state.animationLength}
-          currentPosition={state.currentPosition}
-          timelineScale={state.timelineScale}
+          isPlaying={isPlaying}
+          animationLength={animationLength}
+          currentPosition={currentPosition}
+          timelineScale={timelineScale}
           handlePlayButtonClick={this.handlePlayButtonClick}
           handlePauseButtonClick={this.handlePauseButtonClick}
           handleStopButtonClick={this.handleStopButtonClick}
