@@ -14,6 +14,7 @@ const Scrubber = ({
     <div
       className="scrubber-wrapper"
       onClick={e => handleScrubberBarClick(e.nativeEvent.offsetX)}
+      style={{ width: timelineWrapperWidth }}
     >
       <Draggable
         axis="x"
@@ -44,9 +45,12 @@ const Timeline = ({
   handleScrubberDrag,
   handleScrubberBarClick,
   propertyTracks = {}
-}) => (
+}) =>
   <div className="fill timeline">
-    <div className="timeline-wrapper" style={{ width: timelineWrapperWidth }}>
+    <div
+      className="timeline-wrapper"
+      style={{ width: `calc(100% + ${timelineWrapperWidth}px)`}}
+    >
       <Scrubber
         timelineWrapperWidth={timelineWrapperWidth}
         scrubberPosition={scrubberPosition}
@@ -67,6 +71,6 @@ const Timeline = ({
         </div>
       </div>
     </div>
-  </div>);
+  </div>
 
 export default Timeline;

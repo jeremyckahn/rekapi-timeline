@@ -1236,6 +1236,21 @@ describe('<Timeline />', () => {
       it('is determined by timelineWrapperWidth prop', () => {
         assert.equal(
           component.find('.timeline-wrapper').props().style.width,
+          'calc(100% + 1000px)'
+        );
+      });
+    });
+  });
+
+  describe('scrubber wrapper', () => {
+    beforeEach(() => {
+      component = mount(<Timeline timelineWrapperWidth={1000} />);
+    });
+
+    describe('width', () => {
+      it('is determined by timelineWrapperWidth prop', () => {
+        assert.equal(
+          component.find('.scrubber-wrapper').props().style.width,
           1000
         );
       });
