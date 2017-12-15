@@ -408,6 +408,12 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
+  describe('RekapiTimeline.computeScaledPixelPosition', () => {
+    it('scales a pixel value against a normalized value', () => {
+      assert.equal(RekapiTimeline.computeScaledPixelPosition(1.5, 10), 15);
+    });
+  });
+
   describe('RekapiTimeline#updateEasingList', () => {
     beforeEach(() => {
       setBezierFunction('testCurve', 0, 0, 0, 0);

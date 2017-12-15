@@ -445,6 +445,7 @@ export class RekapiTimeline extends Component {
           handleScrubberDrag={this.handleScrubberDrag}
           handleScrubberBarClick={this.handleScrubberBarClick}
           propertyTracks={propertyTracks}
+          timelineScaleConverter={RekapiTimeline.computeScaledPixelPosition.bind(null, timelineScale)}
         />
         <BottomFrame
           isPlaying={isPlaying}
@@ -505,7 +506,17 @@ Object.assign(RekapiTimeline, {
    * @returns {number}
    */
   computeScrubberPixelPosition: (rekapi, timelineScale) =>
-    (
+    RekapiTimeline.computeScaledPixelPosition(
+      timelineScale,
       rekapi.getLastPositionUpdated() * rekapi.getAnimationLength()
-    ) * timelineScale
+    ),
+
+  /**
+   * @method RekapiTimeline.computeScaledPixelPosition
+   * @param {number} timelineScale A normalized scalar value
+   * @param {number} rawPixel The pixel value to scale
+   * @returns {number}
+   */
+  computeScaledPixelPosition:
+    (timelineScale, rawPixel) => rawPixel * timelineScale
 });
