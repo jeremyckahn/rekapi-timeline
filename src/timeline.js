@@ -45,7 +45,7 @@ const Timeline = ({
   handleScrubberDrag,
   handleScrubberBarClick,
   propertyTracks = {},
-  timelineScaleConverter = _ => _, // FIXME: Stubbed; implement and test this
+  timelineScaleConverter = () => {},
   handlePropertyDrag = () => {} // FIXME: Stubbed; implement and test this
 }) =>
   <div className="fill timeline">

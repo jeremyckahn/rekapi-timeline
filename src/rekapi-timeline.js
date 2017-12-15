@@ -428,6 +428,9 @@ export class RekapiTimeline extends Component {
       RekapiTimeline.computeScrubberPixelPosition(rekapi, timelineScale) :
       0;
 
+    const timelineScaleConverter =
+      RekapiTimeline.computeScaledPixelPosition.bind(null, timelineScale);
+
     return (
       <div className="rekapi-timeline-container">
         <Details
@@ -445,7 +448,7 @@ export class RekapiTimeline extends Component {
           handleScrubberDrag={this.handleScrubberDrag}
           handleScrubberBarClick={this.handleScrubberBarClick}
           propertyTracks={propertyTracks}
-          timelineScaleConverter={RekapiTimeline.computeScaledPixelPosition.bind(null, timelineScale)}
+          timelineScaleConverter={timelineScaleConverter}
         />
         <BottomFrame
           isPlaying={isPlaying}
