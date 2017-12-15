@@ -44,7 +44,9 @@ const Timeline = ({
   scrubberPosition,
   handleScrubberDrag,
   handleScrubberBarClick,
-  propertyTracks = {}
+  propertyTracks = {},
+  timelineScaleConverter = _ => _, // FIXME: Stubbed; implement and test this
+  handlePropertyDrag = () => {} // FIXME: Stubbed; implement and test this
 }) =>
   <div className="fill timeline">
     <div
@@ -68,12 +70,19 @@ const Timeline = ({
               data-track-name={trackName}
             >
               {propertyTracks[trackName].map(property =>
-                <div
-                  className="keyframe-property-wrapper"
+                <Draggable
                   key={String(property.millisecond)}
+                  axis="x"
+                  position={{ x: timelineScaleConverter(property.millisecond), y: 0 }}
+                  bounds=".keyframe-property-track"
+                  onDrag={(e, { x }) => handlePropertyDrag(x) }
                 >
-                  <div className="keyframe-property">&nbsp;</div>
-                </div>
+                  <div
+                    className="keyframe-property-wrapper"
+                  >
+                    <div className="keyframe-property">&nbsp;</div>
+                  </div>
+                </Draggable>
               )}
             </div>
           ))}
