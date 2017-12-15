@@ -75,7 +75,7 @@ const Timeline = ({
                   axis="x"
                   position={{ x: timelineScaleConverter(property.millisecond), y: 0 }}
                   bounds=".keyframe-property-track"
-                  onDrag={(e, { x }) => handlePropertyDrag(x) }
+                  onDrag={(e, { x }) => handlePropertyDrag(x, property.name, property.millisecond) }
                 >
                   <div
                     className="keyframe-property-wrapper"

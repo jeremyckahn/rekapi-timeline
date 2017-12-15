@@ -1011,6 +1011,40 @@ describe('<RekapiTimeline />', () => {
       });
     });
   });
+
+  describe('RekapiTimeline#handlePropertyDrag', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
+    });
+
+    describe('timelineScale === 1 (default)', () => {
+      beforeEach(() => {
+        component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+        component.instance().handlePropertyDrag(500, 'x', 1000);
+      });
+
+      it('updates the specified property to have the new millisecond value', () => {
+        assert(getActor().hasKeyframeAt(500, 'x'));
+      });
+    });
+
+    describe('timelineScale === 0.5', () => {
+      beforeEach(() => {
+        component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+        component.setState({ timelineScale: 0.5 });
+        component.instance().handlePropertyDrag(250, 'x', 1000);
+      });
+
+      it('updates the specified property to have the new scaled millisecond value', () => {
+        assert(getActor().hasKeyframeAt(500, 'x'));
+      });
+    });
+
+    describe('property millisecond collisons', () => {
+      it('does not update the dragged property', () => {});
+    });
+  });
 });
 
 describe('<Details />', () => {
