@@ -467,12 +467,12 @@ Object.assign(RekapiTimeline, {
    * Compute a {@link external:rekapi.propertyData} from a
    * {@link RekapiTimeline.propertyCursor} and a
    * {@link external:rekapi.Rekapi}.
-   * @returns {external:rekapi.propertyData|{}} Is `{}` if the
-   * {@link external:rekapi.KeyframeProperty} referenced by `propertyCursor`
-   * cannot be found.
    * @method RekapiTimeline.computeHighlightedKeyframe
    * @param {external:rekapi.Rekapi} rekapi
    * @param {RekapiTimeline.propertyCursor} propertyCursor
+   * @returns {external:rekapi.propertyData|{}} Is `{}` if the
+   * {@link external:rekapi.KeyframeProperty} referenced by `propertyCursor`
+   * cannot be found.
    * @static
    */
   computeHighlightedKeyframe (rekapi, { property, millisecond }) {
@@ -495,6 +495,7 @@ Object.assign(RekapiTimeline, {
    * @param {external:rekapi.Rekapi} rekapi
    * @param {number} timelineScale A normalized scalar value
    * @returns {number}
+   * @static
    */
   computeTimelineWidth: (rekapi, timelineScale) =>
     rekapi.getAnimationLength() * timelineScale,
@@ -504,6 +505,7 @@ Object.assign(RekapiTimeline, {
    * @param {external:rekapi.Rekapi} rekapi
    * @param {number} timelineScale A normalized scalar value
    * @returns {number}
+   * @static
    */
   computeScrubberPixelPosition: (rekapi, timelineScale) =>
     RekapiTimeline.computeScaledPixelPosition(
@@ -516,6 +518,7 @@ Object.assign(RekapiTimeline, {
    * @param {number} timelineScale A normalized scalar value
    * @param {number} rawPixel The pixel value to scale
    * @returns {number}
+   * @static
    */
   computeScaledPixelPosition:
     (timelineScale, rawPixel) => rawPixel * timelineScale
