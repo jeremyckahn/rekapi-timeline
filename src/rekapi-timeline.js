@@ -524,5 +524,15 @@ Object.assign(RekapiTimeline, {
    * @static
    */
   computeScaledPixelPosition:
-    (timelineScale, rawPixel) => rawPixel * timelineScale
+    (timelineScale, rawPixel) => timelineScale * rawPixel,
+
+  /**
+   * @method RekapiTimeline.computeDescaledPixelPosition
+   * @param {number} timelineScale A normalized scalar value
+   * @param {number} scaledPixel A pixel value that has already been scaled
+   * @returns {number}
+   * @static
+   */
+  computeDescaledPixelPosition:
+    (timelineScale, scaledPixel) => scaledPixel / timelineScale
 });
