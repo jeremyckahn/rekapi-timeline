@@ -1306,6 +1306,43 @@ describe('<Timeline />', () => {
       assert.equal(component.find('.keyframe-property-track').length, 2);
     });
   });
+
+  describe('keyframe properties', () => {
+    describe('property wrapper', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
+        component = shallow(
+          <Timeline
+            propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
+          />
+        );
+      });
+
+      it('renders all .keyframe-property-wrapper elements', () => {
+        assert.equal(component.find('.keyframe-property-wrapper').length, 2);
+      });
+    });
+
+    describe('property element', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
+        component = shallow(
+          <Timeline
+            propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
+          />
+        );
+      });
+
+      it('renders all .keyframe-property elements', () => {
+        assert.equal(
+          component.find('.keyframe-property-wrapper .keyframe-property').length,
+          2
+        );
+      });
+    });
+  });
 });
 
 describe('<BottomFrame />', () => {

@@ -66,10 +66,20 @@ const Timeline = ({
               className="keyframe-property-track"
               key={trackName}
               data-track-name={trackName}
-            ></div>
+            >
+              {propertyTracks[trackName].map(property =>
+                <div
+                  className="keyframe-property-wrapper"
+                  key={String(property.millisecond)}
+                >
+                  <div className="keyframe-property">&nbsp;</div>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
+
     </div>
   </div>
 
