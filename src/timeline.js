@@ -87,9 +87,9 @@ const Timeline = ({
               key={trackName}
               data-track-name={trackName}
             >
-              {propertyTracks[trackName].map(property =>
+              {propertyTracks[trackName].map((property, i) =>
                 <Property
-                  key={String(property.millisecond)}
+                  key={String(i)}
                   timelineScaleConverter={timelineScaleConverter}
                   property={property}
                   handlePropertyDrag={handlePropertyDrag}

@@ -344,13 +344,32 @@ export class RekapiTimeline extends Component {
   }
 
   handlePropertyDrag (x, propertyName, propertyMillisecond) {
+    // FIXME: A lot of the logic in this function is lacking proper unit
+    // testing
     const millisecond = RekapiTimeline.computeDescaledPixelPosition(
         this.state.timelineScale,
         x
       );
 
-    this.getActor().modifyKeyframeProperty(propertyName, propertyMillisecond, {
+    const actor = this.getActor();
+
+    if (actor.hasKeyframeAt(millisecond, propertyName)) {
+      // This early return is necessary because react-draggable will fire the
+      // onDrag handler for mouse movement along the Y axis (even when
+      // configured to be restricted to the X axis).  This would effectively
+      // cause the property to moved onto itself, which causes a Rekapi error.
+      return;
+    }
+
+    actor.modifyKeyframeProperty(propertyName, propertyMillisecond, {
       millisecond
+    });
+
+    this.setState({
+      propertyCursor: {
+        property: propertyName,
+        millisecond
+      }
     });
   }
 
