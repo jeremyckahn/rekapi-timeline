@@ -52,7 +52,7 @@ export class RekapiTimeline extends Component {
    * @constructs RekapiTimeline
    */
   constructor ({ rekapi = new Rekapi() }) {
-    super(arguments[0]);
+    super(...arguments);
 
     this.bindMethods();
 
