@@ -344,12 +344,13 @@ export class RekapiTimeline extends Component {
   }
 
   handlePropertyDrag (x, propertyName, propertyMillisecond) {
+    const millisecond = RekapiTimeline.computeDescaledPixelPosition(
+        this.state.timelineScale,
+        x
+      );
+
     this.getActor().modifyKeyframeProperty(propertyName, propertyMillisecond, {
-      millisecond:
-        RekapiTimeline.computeDescaledPixelPosition(
-          this.state.timelineScale,
-          x
-        )
+      millisecond
     });
   }
 

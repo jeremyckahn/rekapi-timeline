@@ -39,6 +39,24 @@ const Scrubber = ({
     </div>
   </div>
 
+const Property = ({
+  timelineScaleConverter,
+  property,
+  handlePropertyDrag
+}) =>
+  <Draggable
+    axis="x"
+    position={{ x: timelineScaleConverter(property.millisecond), y: 0 }}
+    bounds=".keyframe-property-track"
+    onDrag={(e, { x }) => handlePropertyDrag(x, property.name, property.millisecond) }
+  >
+    <div
+      className="keyframe-property-wrapper"
+    >
+      <div className="keyframe-property">&nbsp;</div>
+    </div>
+  </Draggable>
+
 const Timeline = ({
   timelineWrapperWidth,
   scrubberPosition,
@@ -70,19 +88,12 @@ const Timeline = ({
               data-track-name={trackName}
             >
               {propertyTracks[trackName].map(property =>
-                <Draggable
+                <Property
                   key={String(property.millisecond)}
-                  axis="x"
-                  position={{ x: timelineScaleConverter(property.millisecond), y: 0 }}
-                  bounds=".keyframe-property-track"
-                  onDrag={(e, { x }) => handlePropertyDrag(x, property.name, property.millisecond) }
-                >
-                  <div
-                    className="keyframe-property-wrapper"
-                  >
-                    <div className="keyframe-property">&nbsp;</div>
-                  </div>
-                </Draggable>
+                  timelineScaleConverter={timelineScaleConverter}
+                  property={property}
+                  handlePropertyDrag={handlePropertyDrag}
+                />
               )}
             </div>
           ))}

@@ -1358,7 +1358,7 @@ describe('<Timeline />', () => {
       beforeEach(() => {
         rekapi = new Rekapi();
         rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
-        component = shallow(
+        component = mount(
           <Timeline
             propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
           />
@@ -1374,7 +1374,7 @@ describe('<Timeline />', () => {
       beforeEach(() => {
         rekapi = new Rekapi();
         rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
-        component = shallow(
+        component = mount(
           <Timeline
             propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
           />
