@@ -1099,6 +1099,19 @@ describe('<RekapiTimeline />', () => {
         });
       });
     });
+
+    describe('propertyCursor updating', () => {
+      beforeEach(() => {
+        component.instance().handlePropertyDrag(500, 'x', 1000);
+      });
+
+      it('updates propertyCursor', () => {
+        assert.deepEqual(
+          component.state().propertyCursor,
+          { property: 'x', millisecond: 500 }
+        );
+      });
+    });
   });
 });
 

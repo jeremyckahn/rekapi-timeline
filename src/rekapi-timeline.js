@@ -344,13 +344,13 @@ export class RekapiTimeline extends Component {
   }
 
   /**
+   * @method RekapiTimeline#handlePropertyDrag
    * @param {number} x Target raw, unscaled target x value
    * @param {string} propertyName
    * @param {number} propertyMillisecond Current property millisecond
+   * @returns {undefined}
    */
   handlePropertyDrag (x, propertyName, propertyMillisecond) {
-    // FIXME: A lot of the logic in this function is lacking proper unit
-    // testing
     const millisecond = RekapiTimeline.computeDescaledPixelPosition(
         this.state.timelineScale,
         x
