@@ -49,6 +49,9 @@ let component;
 
 const getActor = () => rekapi.getAllActors()[0];
 
+const getPropertyTracks = () =>
+  rekapi.exportTimeline().actors[0].propertyTracks;
+
 describe('<RekapiTimeline />', () => {
 
   beforeEach(() => {
@@ -1343,7 +1346,7 @@ describe('<Timeline />', () => {
       rekapi.addActor().keyframe(0, { x: 0, y: 0 });
       component = shallow(
         <Timeline
-          propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
+          propertyTracks={getPropertyTracks()}
         />
       );
     });
@@ -1360,7 +1363,7 @@ describe('<Timeline />', () => {
         rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
         component = mount(
           <Timeline
-            propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
+            propertyTracks={getPropertyTracks()}
           />
         );
       });
@@ -1376,7 +1379,7 @@ describe('<Timeline />', () => {
         rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
         component = mount(
           <Timeline
-            propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
+            propertyTracks={getPropertyTracks()}
           />
         );
       });
