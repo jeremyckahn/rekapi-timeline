@@ -1018,34 +1018,86 @@ describe('<RekapiTimeline />', () => {
   describe('RekapiTimeline#handlePropertyDrag', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
-      rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
+      rekapi.addActor()
+        .keyframe(0, { x: 0 })
+        .keyframe(1000, { x: 1 })
+        .keyframe(1500, { x: 1500 });
+
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
     });
 
     describe('timelineScale === 1 (default)', () => {
-      beforeEach(() => {
-        component = shallow(<RekapiTimeline rekapi={rekapi}/>);
-        component.instance().handlePropertyDrag(500, 'x', 1000);
+      describe('basic usage', () => {
+        beforeEach(() => {
+          component.instance().handlePropertyDrag(500, 'x', 1000);
+        });
+
+        it('updates the specified property to have the new millisecond value', () => {
+          assert(getActor().hasKeyframeAt(500, 'x'));
+        });
       });
 
-      it('updates the specified property to have the new millisecond value', () => {
-        assert(getActor().hasKeyframeAt(500, 'x'));
+      describe('property millisecond collisons', () => {
+        beforeEach(() => {
+          component.instance().handlePropertyDrag(1000, 'x', 1500);
+        });
+
+        it('does not update the dragged property', () => {
+          assert(getActor().hasKeyframeAt(1500, 'x'));
+        });
       });
     });
 
     describe('timelineScale === 0.5', () => {
       beforeEach(() => {
-        component = shallow(<RekapiTimeline rekapi={rekapi}/>);
         component.setState({ timelineScale: 0.5 });
-        component.instance().handlePropertyDrag(250, 'x', 1000);
       });
 
-      it('updates the specified property to have the new scaled millisecond value', () => {
-        assert(getActor().hasKeyframeAt(500, 'x'));
+      describe('basic usage', () => {
+        beforeEach(() => {
+          component.instance().handlePropertyDrag(250, 'x', 1000);
+        });
+
+        it('updates the specified property to have the new scaled millisecond value', () => {
+          assert(getActor().hasKeyframeAt(500, 'x'));
+        });
+      });
+
+      describe('property millisecond collisons', () => {
+        beforeEach(() => {
+          component.instance().handlePropertyDrag(500, 'x', 750);
+        });
+
+        it('does not update the dragged property', () => {
+          assert(getActor().hasKeyframeAt(1500, 'x'));
+        });
       });
     });
 
-    describe('property millisecond collisons', () => {
-      it('does not update the dragged property', () => {});
+    describe('timelineScale === 2', () => {
+      beforeEach(() => {
+        component.setState({ timelineScale: 2 });
+      });
+
+      describe('basic usage', () => {
+        beforeEach(() => {
+          component.instance().handlePropertyDrag(1000, 'x', 1000);
+        });
+
+        it('updates the specified property to have the new scaled millisecond value', () => {
+          assert(getActor().hasKeyframeAt(500, 'x'));
+        });
+      });
+
+      describe('property millisecond collisons', () => {
+        beforeEach(() => {
+          component.instance().handlePropertyDrag(2000, 'x', 3000);
+        });
+
+        it('does not update the dragged property', () => {
+          assert(getActor().hasKeyframeAt(1500, 'x'));
+        });
+      });
     });
   });
 });

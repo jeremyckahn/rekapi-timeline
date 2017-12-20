@@ -343,6 +343,11 @@ export class RekapiTimeline extends Component {
     this.updateToRawX(x);
   }
 
+  /**
+   * @param {number} x Target raw, unscaled target x value
+   * @param {string} propertyName
+   * @param {number} propertyMillisecond Current property millisecond
+   */
   handlePropertyDrag (x, propertyName, propertyMillisecond) {
     // FIXME: A lot of the logic in this function is lacking proper unit
     // testing
