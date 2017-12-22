@@ -45,7 +45,9 @@ module.exports = {
   resolve: {
     modules: [
       'node_modules'
-    ]
+    ],
+    // Uncomment this when testing symlinked dependencies
+    //symlinks: false
   },
   devServer: {
     port: 9123

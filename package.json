@@ -54,6 +54,6 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-draggable": "^3.0.4",
-    "rekapi": "^2.0.6"
+    "rekapi": "^2.1.0"
   }
 }

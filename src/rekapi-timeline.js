@@ -37,6 +37,8 @@ import {
 const rTokenStringChunks = /([^(-?\d)]+)/g;
 const rTokenNumberChunks = /\d+(\.\d+)?/g;
 
+const exportTimelineOptions = { withId: true };
+
 /**
  * @param {string} numberString
  * @returns {string}
@@ -56,7 +58,7 @@ export class RekapiTimeline extends Component {
 
     this.bindMethods();
 
-    const timeline = rekapi.exportTimeline();
+    const timeline = rekapi.exportTimeline(exportTimelineOptions);
 
     this.state = {
       rekapi: timeline,
@@ -71,7 +73,7 @@ export class RekapiTimeline extends Component {
 
     rekapi
       .on('timelineModified', () => {
-        const timeline = rekapi.exportTimeline();
+        const timeline = rekapi.exportTimeline(exportTimelineOptions);
 
         this.setState({
           rekapi: timeline,

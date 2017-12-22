@@ -31,6 +31,8 @@ import {
 
 Enzyme.configure({ adapter: new Adapter() });
 
+const exportTimelineOptions = { withId: true };
+
 const [
   basicProperty1,
   basicProperty2
@@ -50,7 +52,7 @@ let component;
 const getActor = () => rekapi.getAllActors()[0];
 
 const getPropertyTracks = () =>
-  rekapi.exportTimeline().actors[0].propertyTracks;
+  rekapi.exportTimeline(exportTimelineOptions).actors[0].propertyTracks;
 
 describe('<RekapiTimeline />', () => {
 
@@ -79,7 +81,7 @@ describe('<RekapiTimeline />', () => {
         });
 
         it('updates rekapi state when rekapi prop is modified', () => {
-          assert.deepEqual(component.state().rekapi, rekapi.exportTimeline());
+          assert.deepEqual(component.state().rekapi, rekapi.exportTimeline(exportTimelineOptions));
         });
       });
     });
@@ -93,7 +95,7 @@ describe('<RekapiTimeline />', () => {
       });
 
       it('is a basic rekapi export by default', () => {
-        assert.deepEqual(component.state().rekapi, rekapi.exportTimeline());
+        assert.deepEqual(component.state().rekapi, rekapi.exportTimeline(exportTimelineOptions));
       });
     });
 
@@ -105,7 +107,7 @@ describe('<RekapiTimeline />', () => {
       });
 
       it('is a basic actor export by default', () => {
-        assert.deepEqual(component.state().actor, getActor().exportTimeline());
+        assert.deepEqual(component.state().actor, getActor().exportTimeline(exportTimelineOptions));
       });
     });
 
@@ -1392,7 +1394,7 @@ describe('<Timeline />', () => {
         rekapi = new Rekapi();
         rekapi.addActor().keyframe(0, { x: 0, y: 0, z: 0});
         component = mount(<Timeline
-          propertyTracks={rekapi.exportTimeline().actors[0].propertyTracks}
+          propertyTracks={rekapi.exportTimeline(exportTimelineOptions).actors[0].propertyTracks}
         />);
       });
 
