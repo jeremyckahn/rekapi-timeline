@@ -499,6 +499,7 @@ export class RekapiTimeline extends Component {
           handlePropertyClick={this.handlePropertyClick}
           propertyTracks={propertyTracks}
           timelineScaleConverter={timelineScaleConverter}
+          propertyCursor={propertyCursor}
         />
         <BottomFrame
           isPlaying={isPlaying}

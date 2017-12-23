@@ -1474,6 +1474,58 @@ describe('<Timeline />', () => {
       });
     });
   });
+
+  describe('active classes', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor()
+        .keyframe(0, { x: 0, y: 1 })
+        .keyframe(1000, { x: 2, y: 3 });
+
+      component = mount(
+        <Timeline
+          propertyTracks={getPropertyTracks()}
+          propertyCursor={{ property: 'y', millisecond: 1000 }}
+        />
+      );
+    });
+
+    describe('active property track', () => {
+      it('gives active class to active property track', () => {
+        assert(
+          component.find(
+            '.keyframe-property-track'
+          ).get(1).props.className.includes('active')
+        );
+      });
+
+      it('does not give active class to inactive property track', () => {
+        assert(
+          !component.find(
+            '.keyframe-property-track'
+          ).get(0).props.className.includes('active')
+        );
+      });
+    });
+
+    describe('active property', () => {
+      it('gives active class to active property', () => {
+        assert(
+          component.find(
+            '[data-track-name="y"] .keyframe-property-wrapper'
+          ).get(1).props.className.includes('active')
+        );
+      });
+
+      it('does not give active class to inactive property track', () => {
+        assert(
+          !component.find(
+            '[data-track-name="y"] .keyframe-property-wrapper'
+          ).get(0).props.className.includes('active')
+        );
+      });
+    });
+  });
 });
 
 describe('<BottomFrame />', () => {

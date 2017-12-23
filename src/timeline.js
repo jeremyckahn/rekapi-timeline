@@ -42,6 +42,7 @@ const Scrubber = ({
 const Property = ({
   timelineScaleConverter,
   property,
+  propertyCursor,
   handlePropertyDrag,
   handlePropertyClick
 }) =>
@@ -53,9 +54,15 @@ const Property = ({
     onStart={() => handlePropertyClick(property)}
   >
     <div
-      className="keyframe-property-wrapper"
+      className={'keyframe-property-wrapper' + (
+        property.name === propertyCursor.property &&
+          property.millisecond === propertyCursor.millisecond ?
+        ' active' : ''
+      )}
     >
-      <div className="keyframe-property">&nbsp;</div>
+      <div
+        className="keyframe-property"
+      >&nbsp;</div>
     </div>
   </Draggable>
 
@@ -67,7 +74,8 @@ const Timeline = ({
   propertyTracks = {},
   timelineScaleConverter = () => {},
   handlePropertyDrag,
-  handlePropertyClick
+  handlePropertyClick,
+  propertyCursor = {}
 }) =>
   <div className="fill timeline">
     <div
@@ -86,7 +94,9 @@ const Timeline = ({
         <div className="actor-tracks">
           {Object.keys(propertyTracks).map(trackName => (
             <div
-              className="keyframe-property-track"
+              className={'keyframe-property-track' + (
+                trackName === propertyCursor.property ? ' active' : ''
+              )}
               key={trackName}
               data-track-name={trackName}
             >
@@ -95,6 +105,7 @@ const Timeline = ({
                   key={property.id}
                   timelineScaleConverter={timelineScaleConverter}
                   property={property}
+                  propertyCursor={propertyCursor}
                   handlePropertyDrag={handlePropertyDrag}
                   handlePropertyClick={handlePropertyClick}
                 />
