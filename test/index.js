@@ -55,7 +55,6 @@ const getPropertyTracks = () =>
   rekapi.exportTimeline(exportTimelineOptions).actors[0].propertyTracks;
 
 describe('<RekapiTimeline />', () => {
-
   beforeEach(() => {
     component = shallow(<RekapiTimeline />);
   });
@@ -1113,6 +1112,22 @@ describe('<RekapiTimeline />', () => {
           { property: 'x', millisecond: 500 }
         );
       });
+    });
+  });
+
+  describe('RekapiTimeline#handlePropertyClick', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
+      component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+      component.instance().handlePropertyClick(getPropertyTracks().x[1]);
+    });
+
+    it('updates propertyCursor', () => {
+      assert.deepEqual(
+        component.state().propertyCursor,
+        { property: 'x', millisecond: 1000 }
+      );
     });
   });
 });

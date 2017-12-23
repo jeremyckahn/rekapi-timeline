@@ -42,13 +42,15 @@ const Scrubber = ({
 const Property = ({
   timelineScaleConverter,
   property,
-  handlePropertyDrag
+  handlePropertyDrag,
+  handlePropertyClick
 }) =>
   <Draggable
     axis="x"
     position={{ x: timelineScaleConverter(property.millisecond), y: 0 }}
     bounds=".keyframe-property-track"
-    onDrag={(e, { x }) => handlePropertyDrag(x, property.name, property.millisecond) }
+    onDrag={(e, { x }) => handlePropertyDrag(x, property.name, property.millisecond)}
+    onStart={() => handlePropertyClick(property)}
   >
     <div
       className="keyframe-property-wrapper"
@@ -64,7 +66,8 @@ const Timeline = ({
   handleScrubberBarClick,
   propertyTracks = {},
   timelineScaleConverter = () => {},
-  handlePropertyDrag = () => {} // FIXME: Stubbed; implement and test this
+  handlePropertyDrag,
+  handlePropertyClick
 }) =>
   <div className="fill timeline">
     <div
@@ -93,6 +96,7 @@ const Timeline = ({
                   timelineScaleConverter={timelineScaleConverter}
                   property={property}
                   handlePropertyDrag={handlePropertyDrag}
+                  handlePropertyClick={handlePropertyClick}
                 />
               )}
             </div>

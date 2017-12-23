@@ -113,7 +113,8 @@ export class RekapiTimeline extends Component {
       'handleTimelineScaleChange',
       'handleScrubberDrag',
       'handleScrubberBarClick',
-      'handlePropertyDrag'
+      'handlePropertyDrag',
+      'handlePropertyClick'
     ].forEach(method => this[method] = this[method].bind(this));
   }
 
@@ -381,6 +382,15 @@ export class RekapiTimeline extends Component {
   }
 
   /**
+   * @param {external:Rekapi.KeyframeProperty} property
+   */
+  handlePropertyClick (property) {
+    const { millisecond, name } = property;
+
+    this.setState({ propertyCursor: { millisecond, property: name } });
+  }
+
+  /**
    * @method RekapiTimeline#updateToRawX
    * @param {number} rawX Raw pixel value to be scaled against
    * `this.state.timelineScale` before being passed to
@@ -486,6 +496,7 @@ export class RekapiTimeline extends Component {
           handleScrubberDrag={this.handleScrubberDrag}
           handleScrubberBarClick={this.handleScrubberBarClick}
           handlePropertyDrag={this.handlePropertyDrag}
+          handlePropertyClick={this.handlePropertyClick}
           propertyTracks={propertyTracks}
           timelineScaleConverter={timelineScaleConverter}
         />
