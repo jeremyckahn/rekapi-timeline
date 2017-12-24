@@ -585,5 +585,5 @@ Object.assign(RekapiTimeline, {
    * @static
    */
   computeDescaledPixelPosition:
-    (timelineScale, scaledPixel) => scaledPixel / timelineScale
+    (timelineScale, scaledPixel) => Math.floor(scaledPixel / timelineScale)
 });
