@@ -215,11 +215,16 @@ export default {
   },
 
   /**
-   * @method module:eventHandlers.handleScrubberDrag
+   * @method module:eventHandlers.handleScrubberBarClick
+   * @param {external:React.SyntheticEvent} e
    * @param {number} x
    * @returns {undefined}
    */
-  handleScrubberBarClick (x) {
+  handleScrubberBarClick (e, x) {
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+
     this.props.rekapi.pause();
     this.updateToRawX(x);
   },

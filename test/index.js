@@ -825,6 +825,10 @@ describe('eventHandlers', () => {
   });
 
   describe('handleScrubberBarClick', () => {
+    // FIXME: This is a bizarre way to make the tests pass; find a better way
+    // to fake an event object
+    const e = { target: 1, currentTarget: 1 };
+
     beforeEach(() => {
       rekapi = new Rekapi();
       component = shallow(<RekapiTimeline rekapi={rekapi}/>);
@@ -834,7 +838,7 @@ describe('eventHandlers', () => {
     describe('timelineScale === .5', () => {
       beforeEach(() => {
         component.setState({ timelineScale: .5 });
-        component.instance().handleScrubberBarClick(100);
+        component.instance().handleScrubberBarClick(e, 100);
       });
 
       it('sets the scaled timeline position', () => {
@@ -844,7 +848,7 @@ describe('eventHandlers', () => {
 
     describe('timelineScale === 1 (default)', () => {
       beforeEach(() => {
-        component.instance().handleScrubberBarClick(100);
+        component.instance().handleScrubberBarClick(e, 100);
       });
 
       it('sets the scaled timeline position', () => {
@@ -855,7 +859,7 @@ describe('eventHandlers', () => {
     describe('timelineScale === 2', () => {
       beforeEach(() => {
         component.setState({ timelineScale: 2 });
-        component.instance().handleScrubberBarClick(100);
+        component.instance().handleScrubberBarClick(e, 100);
       });
 
       it('sets the scaled timeline position', () => {

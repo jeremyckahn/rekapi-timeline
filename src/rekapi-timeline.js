@@ -143,7 +143,7 @@ export class RekapiTimeline extends Component {
     } = this;
 
     rekapi.update(
-      (rawX / rekapi.getAnimationLength()) * (1000 / timelineScale)
+      computeDescaledPixelPosition(timelineScale, rawX)
     );
   }
 

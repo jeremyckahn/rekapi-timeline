@@ -13,7 +13,7 @@ const Scrubber = ({
   <div className="scrubber">
     <div
       className="scrubber-wrapper"
-      onClick={e => handleScrubberBarClick(e.nativeEvent.offsetX)}
+      onClick={e => handleScrubberBarClick(e, e.nativeEvent.offsetX)}
       style={{ width: timelineWrapperWidth }}
     >
       <Draggable
