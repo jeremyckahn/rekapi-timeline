@@ -151,7 +151,7 @@ export class RekapiTimeline extends Component {
    * @method RekapiTimeline#isNewPropertyValueValid
    * @param {external:rekapi.KeyframeProperty} keyframeProperty
    * @param {number|string} newValue
-   * @returns {undefined}
+   * @returns {boolean}
    */
   isNewPropertyValueValid (keyframeProperty, newValue) {
     const { value: currentValue } = keyframeProperty;

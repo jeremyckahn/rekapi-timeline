@@ -286,177 +286,12 @@ describe('utils', () => {
   });
 });
 
-describe('<RekapiTimeline />', () => {
+describe('eventHandlers', () => {
   beforeEach(() => {
     component = shallow(<RekapiTimeline />);
   });
 
-  it('is a react component', () => {
-    assert.equal(component.length, 1);
-  });
-
-  describe('props', () => {
-    describe('rekapi', () => {
-      beforeEach(() => {
-        rekapi = new Rekapi();
-        component = mount(<RekapiTimeline rekapi={rekapi}/>);
-      });
-
-      it('accepts and stores a rekapi', () => {
-        assert(component.props().rekapi instanceof Rekapi);
-      });
-
-      describe('timeline modification', () => {
-        beforeEach(() => {
-          rekapi.addActor().keyframe(0, { x: 0 });
-        });
-
-        it('updates rekapi state when rekapi prop is modified', () => {
-          assert.deepEqual(component.state().rekapi, rekapi.exportTimeline(exportTimelineOptions));
-        });
-      });
-    });
-  });
-
-  describe('state', () => {
-    describe('rekapi', () => {
-      beforeEach(() => {
-        rekapi = new Rekapi();
-        component = mount(<RekapiTimeline rekapi={rekapi}/>);
-      });
-
-      it('is a basic rekapi export by default', () => {
-        assert.deepEqual(component.state().rekapi, rekapi.exportTimeline(exportTimelineOptions));
-      });
-    });
-
-    describe('actor', () => {
-      beforeEach(() => {
-        rekapi = new Rekapi();
-        rekapi.addActor();
-        component = mount(<RekapiTimeline rekapi={rekapi}/>);
-      });
-
-      it('is a basic actor export by default', () => {
-        assert.deepEqual(component.state().actor, getActor().exportTimeline(exportTimelineOptions));
-      });
-    });
-
-    describe('propertyCursor', () => {
-      beforeEach(() => {
-        rekapi = new Rekapi();
-        component = mount(<RekapiTimeline rekapi={rekapi}/>);
-      });
-
-      it('is empty by default', () => {
-        assert.deepEqual(component.state().propertyCursor, {});
-      });
-    });
-
-    describe('isPlaying', () => {
-      describe('when animation is not playing', () => {
-        it('reflects Rekapi#isPlaying', () => {
-          assert.equal(component.state().isPlaying, false);
-        });
-      });
-
-      describe('when animation is playing', () => {
-        beforeEach(() => {
-          rekapi = new Rekapi();
-          component = mount(<RekapiTimeline rekapi={rekapi}/>);
-
-          rekapi.play();
-        });
-
-        afterEach(() => {
-          rekapi.stop();
-        });
-
-        it('reflects Rekapi#isPlaying', () => {
-          assert.equal(component.state().isPlaying, true);
-        });
-      });
-    });
-
-    describe('timelineScale', () => {
-      beforeEach(() => {
-        rekapi = new Rekapi();
-        component = mount(<RekapiTimeline rekapi={rekapi}/>);
-      });
-
-      it('gets a default value', () => {
-        assert.equal(component.state().timelineScale, defaultTimelineScale);
-      });
-    });
-
-    describe('currentPosition', () => {
-      beforeEach(() => {
-        rekapi = new Rekapi();
-        component = mount(<RekapiTimeline rekapi={rekapi}/>);
-
-        rekapi.addActor().keyframe(1000, { x: 1 });
-      });
-
-      it('reflects the current animation position', () => {
-        assert.equal(component.state().currentPosition, 0);
-      });
-
-      describe('position changes', () => {
-        beforeEach(() => {
-          rekapi.update(500);
-        });
-
-        it('reflects the animation position changed', () => {
-          assert.equal(component.state().currentPosition, .5);
-        });
-      });
-    });
-
-    describe('animationLength', () => {
-      let actor;
-      beforeEach(() => {
-        rekapi = new Rekapi();
-        component = mount(<RekapiTimeline rekapi={rekapi}/>);
-
-        actor = rekapi.addActor().keyframe(1000, { x: 1 });
-      });
-
-      it('reflects the animation length', () => {
-        assert.equal(component.state().animationLength, 1000);
-      });
-
-      describe('timeline changes', () => {
-        beforeEach(() => {
-          actor.keyframe(2000, { x: 2 });
-        });
-
-        it('reflects animation length changes', () => {
-          assert.equal(component.state().animationLength, 2000);
-        });
-      });
-    });
-  });
-
-  describe('RekapiTimeline#updateEasingList', () => {
-    beforeEach(() => {
-      setBezierFunction('testCurve', 0, 0, 0, 0);
-      component.instance().updateEasingList();
-    });
-
-    afterEach(() => {
-      unsetBezierFunction('testCurve');
-    });
-
-    it('is a function', () => {
-      assert(component.instance().updateEasingList instanceof Function);
-    });
-
-    it('reflects changes to Tweenable.formulas', () => {
-      assert(component.state().easingCurves.indexOf('testCurve') > -1);
-    });
-  });
-
-  describe('RekapiTimeline#handleAddKeyframeButtonClick', () => {
+  describe('handleAddKeyframeButtonClick', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       component = shallow(<RekapiTimeline rekapi={rekapi}/>);
@@ -532,7 +367,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handleDeleteKeyframeButtonClick', () => {
+  describe('handleDeleteKeyframeButtonClick', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       component = shallow(<RekapiTimeline rekapi={rekapi}/>);
@@ -605,7 +440,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handleEasingSelectChange', () => {
+  describe('handleEasingSelectChange', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       rekapi.importTimeline(basicRekapiExport);
@@ -628,7 +463,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handleMillisecondInputChange', () => {
+  describe('handleMillisecondInputChange', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       component = shallow(<RekapiTimeline rekapi={rekapi}/>);
@@ -659,7 +494,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handleValueInputChange', () => {
+  describe('handleValueInputChange', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       component = shallow(<RekapiTimeline rekapi={rekapi}/>);
@@ -868,7 +703,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handlePlayButtonClick', () => {
+  describe('handlePlayButtonClick', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       sinon.spy(rekapi, 'play');
@@ -882,7 +717,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handlePauseButtonClick', () => {
+  describe('handlePauseButtonClick', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       sinon.spy(rekapi, 'pause');
@@ -896,7 +731,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handleStopButtonClick', () => {
+  describe('handleStopButtonClick', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       sinon.spy(rekapi, 'stop');
@@ -917,7 +752,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handleTimelineScaleChange', () => {
+  describe('handleTimelineScaleChange', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       component = shallow(<RekapiTimeline rekapi={rekapi}/>);
@@ -949,7 +784,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handleScrubberDrag', () => {
+  describe('handleScrubberDrag', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       component = shallow(<RekapiTimeline rekapi={rekapi}/>);
@@ -989,7 +824,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handleScrubberBarClick', () => {
+  describe('handleScrubberBarClick', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       component = shallow(<RekapiTimeline rekapi={rekapi}/>);
@@ -1029,7 +864,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handlePropertyDrag', () => {
+  describe('handlePropertyDrag', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       rekapi.addActor()
@@ -1128,7 +963,7 @@ describe('<RekapiTimeline />', () => {
     });
   });
 
-  describe('RekapiTimeline#handlePropertyClick', () => {
+  describe('handlePropertyClick', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
@@ -1141,6 +976,177 @@ describe('<RekapiTimeline />', () => {
         component.state().propertyCursor,
         { property: 'x', millisecond: 1000 }
       );
+    });
+  });
+});
+
+describe('<RekapiTimeline />', () => {
+  beforeEach(() => {
+    component = shallow(<RekapiTimeline />);
+  });
+
+  it('is a react component', () => {
+    assert.equal(component.length, 1);
+  });
+
+  describe('props', () => {
+    describe('rekapi', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('accepts and stores a rekapi', () => {
+        assert(component.props().rekapi instanceof Rekapi);
+      });
+
+      describe('timeline modification', () => {
+        beforeEach(() => {
+          rekapi.addActor().keyframe(0, { x: 0 });
+        });
+
+        it('updates rekapi state when rekapi prop is modified', () => {
+          assert.deepEqual(component.state().rekapi, rekapi.exportTimeline(exportTimelineOptions));
+        });
+      });
+    });
+  });
+
+  describe('state', () => {
+    describe('rekapi', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('is a basic rekapi export by default', () => {
+        assert.deepEqual(component.state().rekapi, rekapi.exportTimeline(exportTimelineOptions));
+      });
+    });
+
+    describe('actor', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        rekapi.addActor();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('is a basic actor export by default', () => {
+        assert.deepEqual(component.state().actor, getActor().exportTimeline(exportTimelineOptions));
+      });
+    });
+
+    describe('propertyCursor', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('is empty by default', () => {
+        assert.deepEqual(component.state().propertyCursor, {});
+      });
+    });
+
+    describe('isPlaying', () => {
+      describe('when animation is not playing', () => {
+        it('reflects Rekapi#isPlaying', () => {
+          assert.equal(component.state().isPlaying, false);
+        });
+      });
+
+      describe('when animation is playing', () => {
+        beforeEach(() => {
+          rekapi = new Rekapi();
+          component = mount(<RekapiTimeline rekapi={rekapi}/>);
+
+          rekapi.play();
+        });
+
+        afterEach(() => {
+          rekapi.stop();
+        });
+
+        it('reflects Rekapi#isPlaying', () => {
+          assert.equal(component.state().isPlaying, true);
+        });
+      });
+    });
+
+    describe('timelineScale', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('gets a default value', () => {
+        assert.equal(component.state().timelineScale, defaultTimelineScale);
+      });
+    });
+
+    describe('currentPosition', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+
+        rekapi.addActor().keyframe(1000, { x: 1 });
+      });
+
+      it('reflects the current animation position', () => {
+        assert.equal(component.state().currentPosition, 0);
+      });
+
+      describe('position changes', () => {
+        beforeEach(() => {
+          rekapi.update(500);
+        });
+
+        it('reflects the animation position changed', () => {
+          assert.equal(component.state().currentPosition, .5);
+        });
+      });
+    });
+
+    describe('animationLength', () => {
+      let actor;
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+
+        actor = rekapi.addActor().keyframe(1000, { x: 1 });
+      });
+
+      it('reflects the animation length', () => {
+        assert.equal(component.state().animationLength, 1000);
+      });
+
+      describe('timeline changes', () => {
+        beforeEach(() => {
+          actor.keyframe(2000, { x: 2 });
+        });
+
+        it('reflects animation length changes', () => {
+          assert.equal(component.state().animationLength, 2000);
+        });
+      });
+    });
+  });
+
+  describe('RekapiTimeline#updateEasingList', () => {
+    beforeEach(() => {
+      setBezierFunction('testCurve', 0, 0, 0, 0);
+      component.instance().updateEasingList();
+    });
+
+    afterEach(() => {
+      unsetBezierFunction('testCurve');
+    });
+
+    it('is a function', () => {
+      assert(component.instance().updateEasingList instanceof Function);
+    });
+
+    it('reflects changes to Tweenable.formulas', () => {
+      assert(component.state().easingCurves.indexOf('testCurve') > -1);
     });
   });
 });

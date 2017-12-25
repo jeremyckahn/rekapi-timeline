@@ -8,6 +8,10 @@ import {
 } from './utils';
 
 /**
+ * @module eventHandlers
+ */
+
+/**
  * @param {string} numberString
  * @returns {string}
  */
@@ -18,7 +22,7 @@ const sanitizeDanglingDecimals =
 
 export default {
   /**
-   * @method RekapiTimeline#handleAddKeyframeButtonClick
+   * @method module:eventHandlers.handleAddKeyframeButtonClick
    * @returns {undefined}
    */
   handleAddKeyframeButtonClick () {
@@ -53,7 +57,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handleDeleteKeyframeButtonClick
+   * @method module:eventHandlers.handleDeleteKeyframeButtonClick
    * @returns {undefined}
    */
   handleDeleteKeyframeButtonClick () {
@@ -81,7 +85,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handleEasingSelectChange
+   * @method module:eventHandlers.handleEasingSelectChange
    * @param {external:React.SyntheticEvent} e
    * @returns {undefined}
    */
@@ -97,7 +101,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handleMillisecondInputChange
+   * @method module:eventHandlers.handleMillisecondInputChange
    * @param {external:React.SyntheticEvent} e
    * @returns {undefined}
    */
@@ -126,7 +130,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handleValueInputChange
+   * @method module:eventHandlers.handleValueInputChange
    * @param {external:React.SyntheticEvent} e
    * @returns {undefined}
    */
@@ -163,7 +167,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handlePlayButtonClick
+   * @method module:eventHandlers.handlePlayButtonClick
    * @returns {undefined}
    */
   handlePlayButtonClick () {
@@ -171,7 +175,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handlePauseButtonClick
+   * @method module:eventHandlers.handlePauseButtonClick
    * @returns {undefined}
    */
   handlePauseButtonClick () {
@@ -179,7 +183,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handleStopButtonClick
+   * @method module:eventHandlers.handleStopButtonClick
    * @returns {undefined}
    */
   handleStopButtonClick () {
@@ -189,7 +193,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handleTimelineScaleChange
+   * @method module:eventHandlers.handleTimelineScaleChange
    * @param {external:React.SyntheticEvent} e
    * @returns {undefined}
    */
@@ -202,7 +206,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handleScrubberDrag
+   * @method module:eventHandlers.handleScrubberDrag
    * @param {number} x
    * @returns {undefined}
    */
@@ -211,7 +215,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handleScrubberDrag
+   * @method module:eventHandlers.handleScrubberDrag
    * @param {number} x
    * @returns {undefined}
    */
@@ -221,7 +225,7 @@ export default {
   },
 
   /**
-   * @method RekapiTimeline#handlePropertyDrag
+   * @method module:eventHandlers.handlePropertyDrag
    * @param {number} x Target raw, unscaled target x value
    * @param {string} propertyName
    * @param {number} propertyMillisecond Current property millisecond
