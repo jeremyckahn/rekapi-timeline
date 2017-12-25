@@ -61,6 +61,231 @@ const getActor = () => rekapi.getAllActors()[0];
 const getPropertyTracks = () =>
   rekapi.exportTimeline(exportTimelineOptions).actors[0].propertyTracks;
 
+describe('utils', () => {
+  describe('computeHighlightedKeyframe', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+    });
+
+    it('is a function', () => {
+      assert(computeHighlightedKeyframe instanceof Function);
+    });
+
+    describe('return values', () => {
+      describe('when propertyCursor is empty', () => {
+        it('returns empty object', () => {
+          assert.deepEqual(
+            computeHighlightedKeyframe(rekapi, {}),
+            {}
+          );
+        });
+      });
+
+      describe('when rekapi has an actor and propertyCursor is empty', () => {
+        beforeEach(() => {
+          rekapi.addActor();
+        });
+
+        it('returns empty object', () => {
+          assert.deepEqual(
+            computeHighlightedKeyframe(rekapi, {}),
+            {}
+          );
+        });
+      });
+
+      describe('when propertyCursor references a property track that does not exist', () => {
+        beforeEach(() => {
+          rekapi.addActor().keyframe(0, { x: 5 });
+        });
+
+        it('returns empty object', () => {
+          assert.deepEqual(
+            computeHighlightedKeyframe(
+              rekapi,
+              { property: 'y', millisecond: 0 }
+            ),
+            {}
+          );
+        });
+      });
+
+      describe('when propertyCursor references a property that does not exist', () => {
+        it('returns empty object', () => {
+          assert.deepEqual(
+            computeHighlightedKeyframe(
+              rekapi,
+              { property: 'x', millisecond: 0 }
+            ),
+            {}
+          );
+        });
+      });
+
+      describe('when propertyCursor references a property that does exist', () => {
+        beforeEach(() => {
+          rekapi.addActor().keyframe(0, { x: 5 });
+        });
+
+        it('returns KeyframeProperty data', () => {
+          assert.deepEqual(
+            computeHighlightedKeyframe(
+              rekapi,
+              { property: 'x', millisecond: 0 }
+            ),
+            {
+              value: 5,
+              name: 'x',
+              easing: 'linear',
+              millisecond: 0
+            }
+          );
+        });
+      });
+    });
+  });
+
+  describe('computeTimelineWidth', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor().keyframe(0, { x: 1 }).keyframe(1000, { x: 1 });
+    });
+
+    it('is a function', () => {
+      assert(computeTimelineWidth instanceof Function);
+    });
+
+    describe('return values', () => {
+      it('applies timelineScale=.5 to animation length', () => {
+        assert.equal(
+          computeTimelineWidth(rekapi, .5),
+          500
+        );
+      });
+
+      it('applies timelineScale=1 to animation length', () => {
+        assert.equal(
+          computeTimelineWidth(rekapi, 1),
+          1000
+        );
+      });
+
+      it('applies timelineScale=2 to animation length', () => {
+        assert.equal(
+          computeTimelineWidth(rekapi, 2),
+          2000
+        );
+      });
+    });
+  });
+
+  describe('computeScrubberPixelPosition', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor().keyframe(0, { x: 1 }).keyframe(1000, { x: 1 });
+    });
+
+    it('is a function', () => {
+      assert(computeScrubberPixelPosition instanceof Function);
+    });
+
+    describe('return values', () => {
+      describe('animation position === 0 (default)', () => {
+        it('applies timelineScale=.5 to animation position', () => {
+          assert.equal(
+            computeScrubberPixelPosition(rekapi, .5),
+            0
+          );
+        });
+
+        it('applies timelineScale=1 to animation position', () => {
+          assert.equal(
+            computeScrubberPixelPosition(rekapi, 1),
+            0
+          );
+        });
+
+        it('applies timelineScale=2 to animation position', () => {
+          assert.equal(
+            computeScrubberPixelPosition(rekapi, 2),
+            0
+          );
+        });
+      });
+
+      describe('animation position === 500', () => {
+        beforeEach(() => {
+          rekapi.update(500);
+        });
+
+        it('applies timelineScale=.5 to animation position', () => {
+          assert.equal(
+            computeScrubberPixelPosition(rekapi, .5),
+            250
+          );
+        });
+
+        it('applies timelineScale=1 to animation position', () => {
+          assert.equal(
+            computeScrubberPixelPosition(rekapi, 1),
+            500
+          );
+        });
+
+        it('applies timelineScale=2 to animation position', () => {
+          assert.equal(
+            computeScrubberPixelPosition(rekapi, 2),
+            1000
+          );
+        });
+      });
+
+      describe('animation position === 1000', () => {
+        beforeEach(() => {
+          rekapi.update(1000);
+        });
+
+        it('applies timelineScale=.5 to animation position', () => {
+          assert.equal(
+            computeScrubberPixelPosition(rekapi, .5),
+            500
+          );
+        });
+
+        it('applies timelineScale=1 to animation position', () => {
+          assert.equal(
+            computeScrubberPixelPosition(rekapi, 1),
+            1000
+          );
+        });
+
+        it('applies timelineScale=2 to animation position', () => {
+          assert.equal(
+            computeScrubberPixelPosition(rekapi, 2),
+            2000
+          );
+        });
+      });
+    });
+  });
+
+  describe('computeScaledPixelPosition', () => {
+    it('scales a pixel value against a normalized value', () => {
+      assert.equal(computeScaledPixelPosition(1.5, 10), 15);
+    });
+  });
+
+  describe('computeDescaledPixelPosition', () => {
+    it('de-scales a scaled pixel value against a normalized value', () => {
+      assert.equal(computeDescaledPixelPosition(2, 10), 5);
+    });
+
+    it('rounds returned values down', () => {
+      assert.equal(computeDescaledPixelPosition(1.9, 10), 5);
+    });
+  });
+});
+
 describe('<RekapiTimeline />', () => {
   beforeEach(() => {
     component = shallow(<RekapiTimeline />);
@@ -209,229 +434,6 @@ describe('<RekapiTimeline />', () => {
           assert.equal(component.state().animationLength, 2000);
         });
       });
-    });
-  });
-
-  describe('RekapiTimeline.computeHighlightedKeyframe', () => {
-    beforeEach(() => {
-      rekapi = new Rekapi();
-    });
-
-    it('is a function', () => {
-      assert(computeHighlightedKeyframe instanceof Function);
-    });
-
-    describe('return values', () => {
-      describe('when propertyCursor is empty', () => {
-        it('returns empty object', () => {
-          assert.deepEqual(
-            computeHighlightedKeyframe(rekapi, {}),
-            {}
-          );
-        });
-      });
-
-      describe('when rekapi has an actor and propertyCursor is empty', () => {
-        beforeEach(() => {
-          rekapi.addActor();
-        });
-
-        it('returns empty object', () => {
-          assert.deepEqual(
-            computeHighlightedKeyframe(rekapi, {}),
-            {}
-          );
-        });
-      });
-
-      describe('when propertyCursor references a property track that does not exist', () => {
-        beforeEach(() => {
-          rekapi.addActor().keyframe(0, { x: 5 });
-        });
-
-        it('returns empty object', () => {
-          assert.deepEqual(
-            computeHighlightedKeyframe(
-              rekapi,
-              { property: 'y', millisecond: 0 }
-            ),
-            {}
-          );
-        });
-      });
-
-      describe('when propertyCursor references a property that does not exist', () => {
-        it('returns empty object', () => {
-          assert.deepEqual(
-            computeHighlightedKeyframe(
-              rekapi,
-              { property: 'x', millisecond: 0 }
-            ),
-            {}
-          );
-        });
-      });
-
-      describe('when propertyCursor references a property that does exist', () => {
-        beforeEach(() => {
-          rekapi.addActor().keyframe(0, { x: 5 });
-        });
-
-        it('returns KeyframeProperty data', () => {
-          assert.deepEqual(
-            computeHighlightedKeyframe(
-              rekapi,
-              { property: 'x', millisecond: 0 }
-            ),
-            {
-              value: 5,
-              name: 'x',
-              easing: 'linear',
-              millisecond: 0
-            }
-          );
-        });
-      });
-    });
-  });
-
-  describe('RekapiTimeline.computeTimelineWidth', () => {
-    beforeEach(() => {
-      rekapi = new Rekapi();
-      rekapi.addActor().keyframe(0, { x: 1 }).keyframe(1000, { x: 1 });
-    });
-
-    it('is a function', () => {
-      assert(computeTimelineWidth instanceof Function);
-    });
-
-    describe('return values', () => {
-      it('applies timelineScale=.5 to animation length', () => {
-        assert.equal(
-          computeTimelineWidth(rekapi, .5),
-          500
-        );
-      });
-
-      it('applies timelineScale=1 to animation length', () => {
-        assert.equal(
-          computeTimelineWidth(rekapi, 1),
-          1000
-        );
-      });
-
-      it('applies timelineScale=2 to animation length', () => {
-        assert.equal(
-          computeTimelineWidth(rekapi, 2),
-          2000
-        );
-      });
-    });
-  });
-
-  describe('RekapiTimeline.computeScrubberPixelPosition', () => {
-    beforeEach(() => {
-      rekapi = new Rekapi();
-      rekapi.addActor().keyframe(0, { x: 1 }).keyframe(1000, { x: 1 });
-    });
-
-    it('is a function', () => {
-      assert(computeScrubberPixelPosition instanceof Function);
-    });
-
-    describe('return values', () => {
-      describe('animation position === 0 (default)', () => {
-        it('applies timelineScale=.5 to animation position', () => {
-          assert.equal(
-            computeScrubberPixelPosition(rekapi, .5),
-            0
-          );
-        });
-
-        it('applies timelineScale=1 to animation position', () => {
-          assert.equal(
-            computeScrubberPixelPosition(rekapi, 1),
-            0
-          );
-        });
-
-        it('applies timelineScale=2 to animation position', () => {
-          assert.equal(
-            computeScrubberPixelPosition(rekapi, 2),
-            0
-          );
-        });
-      });
-
-      describe('animation position === 500', () => {
-        beforeEach(() => {
-          rekapi.update(500);
-        });
-
-        it('applies timelineScale=.5 to animation position', () => {
-          assert.equal(
-            computeScrubberPixelPosition(rekapi, .5),
-            250
-          );
-        });
-
-        it('applies timelineScale=1 to animation position', () => {
-          assert.equal(
-            computeScrubberPixelPosition(rekapi, 1),
-            500
-          );
-        });
-
-        it('applies timelineScale=2 to animation position', () => {
-          assert.equal(
-            computeScrubberPixelPosition(rekapi, 2),
-            1000
-          );
-        });
-      });
-
-      describe('animation position === 1000', () => {
-        beforeEach(() => {
-          rekapi.update(1000);
-        });
-
-        it('applies timelineScale=.5 to animation position', () => {
-          assert.equal(
-            computeScrubberPixelPosition(rekapi, .5),
-            500
-          );
-        });
-
-        it('applies timelineScale=1 to animation position', () => {
-          assert.equal(
-            computeScrubberPixelPosition(rekapi, 1),
-            1000
-          );
-        });
-
-        it('applies timelineScale=2 to animation position', () => {
-          assert.equal(
-            computeScrubberPixelPosition(rekapi, 2),
-            2000
-          );
-        });
-      });
-    });
-  });
-
-  describe('RekapiTimeline.computeScaledPixelPosition', () => {
-    it('scales a pixel value against a normalized value', () => {
-      assert.equal(computeScaledPixelPosition(1.5, 10), 15);
-    });
-  });
-
-  describe('RekapiTimeline.computeDescaledPixelPosition', () => {
-    it('de-scales a scaled pixel value against a normalized value', () => {
-      assert.equal(computeDescaledPixelPosition(2, 10), 5);
-    });
-
-    it('rounds returned values down', () => {
-      assert.equal(computeDescaledPixelPosition(1.9, 10), 5);
     });
   });
 

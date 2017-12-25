@@ -2,10 +2,14 @@
 // here should be namepath-ed under a "utils" module.
 
 /**
+ * @module utils
+ */
+
+/**
  * Compute a {@link external:rekapi.propertyData} from a
  * {@link RekapiTimeline.propertyCursor} and a
  * {@link external:rekapi.Rekapi}.
- * @method RekapiTimeline.computeHighlightedKeyframe
+ * @method module:utils.computeHighlightedKeyframe
  * @param {external:rekapi.Rekapi} rekapi
  * @param {RekapiTimeline.propertyCursor} propertyCursor
  * @returns {external:rekapi.propertyData|{}} Is `{}` if the
@@ -29,7 +33,7 @@ export const computeHighlightedKeyframe = (rekapi, { property, millisecond }) =>
 };
 
 /**
- * @method RekapiTimeline.computeTimelineWidth
+ * @method module:utils.computeTimelineWidth
  * @param {external:rekapi.Rekapi} rekapi
  * @param {number} timelineScale A normalized scalar value
  * @returns {number}
@@ -39,7 +43,7 @@ export const computeTimelineWidth = (rekapi, timelineScale) =>
   rekapi.getAnimationLength() * timelineScale;
 
 /**
- * @method RekapiTimeline.computeScrubberPixelPosition
+ * @method module:utils.computeScrubberPixelPosition
  * @param {external:rekapi.Rekapi} rekapi
  * @param {number} timelineScale A normalized scalar value
  * @returns {number}
@@ -52,7 +56,7 @@ export const computeScrubberPixelPosition = (rekapi, timelineScale) =>
   );
 
 /**
- * @method RekapiTimeline.computeScaledPixelPosition
+ * @method module:utils.computeScaledPixelPosition
  * @param {number} timelineScale A normalized scalar value
  * @param {number} rawPixel The pixel value to scale
  * @returns {number}
@@ -62,7 +66,7 @@ export const computeScaledPixelPosition =
   (timelineScale, rawPixel) => timelineScale * rawPixel;
 
 /**
- * @method RekapiTimeline.computeDescaledPixelPosition
+ * @method module:utils.computeDescaledPixelPosition
  * @param {number} timelineScale A normalized scalar value
  * @param {number} scaledPixel A pixel value that has already been scaled
  * @returns {number}
