@@ -147,9 +147,14 @@ export default {
     const currentProperty =
       this.getActor().getKeyframeProperty(property, millisecond);
 
-    const sanitizedInput = typeof value === 'string' ?
-      sanitizeDanglingDecimals(value) :
+    // Deliberate "=="
+    const coercedValue = String(value) == Number(value) ?
+      Number(value) :
       value;
+
+    const sanitizedInput = typeof coercedValue === 'string' ?
+      sanitizeDanglingDecimals(coercedValue) :
+      coercedValue;
 
     if (!currentProperty
       || !this.isNewPropertyValueValid(currentProperty, sanitizedInput)

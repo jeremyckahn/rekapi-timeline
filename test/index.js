@@ -49,10 +49,6 @@ const [
   translateXStringProperty1
 ] = decoupledRekapiStringExport.actors[0].propertyTracks.translateX;
 
-const [
-  translateXNumberProperty1
-] = decoupledRekapiNumberExport.actors[0].propertyTracks.translateX;
-
 let rekapi;
 let component;
 
@@ -523,8 +519,8 @@ describe('eventHandlers', () => {
           });
         });
 
-        describe('invalid values', () => {
-          describe('type mismatch', () => {
+        describe('type coercion', () => {
+          describe('strings to number', () => {
             beforeEach(() => {
               rekapi.importTimeline(decoupledRekapiNumberExport);
               component.setState({
@@ -538,9 +534,32 @@ describe('eventHandlers', () => {
               });
             });
 
+            it('converts a string value to its number equivalent', () => {
+              assert.equal(keyframeProperty.value, 5);
+            });
+          });
+        });
+
+        describe('invalid values', () => {
+          describe('type mismatch', () => {
+            beforeEach(() => {
+              rekapi.importTimeline(decoupledRekapiNumberExport);
+              component.setState({
+                propertyCursor: { property: 'rotateZ', millisecond: 0 }
+              });
+
+              keyframeProperty = getActor().getKeyframeProperty('rotateZ', 0);
+
+              component.instance().handleValueInputChange({
+                target: { value: '5' }
+              });
+            });
 
             it('does not set the current property value to the indicated string', () => {
-              assert.equal(keyframeProperty.value, translateXNumberProperty1.value);
+              assert.equal(
+                keyframeProperty.value,
+                decoupledRekapiNumberExport.actors[0].propertyTracks.rotateZ[0].value
+              );
             });
           });
         });
