@@ -75,6 +75,7 @@ const Timeline = ({
   timelineScaleConverter = () => {},
   handlePropertyDrag,
   handlePropertyClick,
+  handlePropertyTrackDoubleClick,
   propertyCursor = {}
 }) =>
   <div className="fill timeline">
@@ -99,6 +100,7 @@ const Timeline = ({
               )}
               key={trackName}
               data-track-name={trackName}
+              onDoubleClick={e => handlePropertyTrackDoubleClick(e, trackName)}
             >
               {propertyTracks[trackName].map((property, i) =>
                 <Property

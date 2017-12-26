@@ -995,6 +995,53 @@ describe('eventHandlers', () => {
       );
     });
   });
+
+  describe('handlePropertyTrackDoubleClick', () => {
+    describe('with no prior properties', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        rekapi.addActor().keyframe(0, { x: 1 }).keyframe(1000, { x: 2 });
+        component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+
+        const e = { nativeEvent: { offsetX: 500 } };
+
+        component.setState({ timelineScale: 1 });
+        component.instance().handlePropertyTrackDoubleClick(e, 'x');
+      });
+
+      it('creates a new property at the specified location', () => {
+        assert(getActor().hasKeyframeAt(500, 'x'));
+      });
+
+      it('creates a new property with the previous property\'s value', () => {
+        assert.equal(getActor().getKeyframeProperty('x', 500).value, 1);
+      });
+
+      it('updates the propertyCursor', () => {
+        assert.deepEqual(
+          component.state().propertyCursor,
+          { property: 'x', millisecond: 500 }
+        );
+      });
+    });
+
+    describe('with no prior properties', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        rekapi.addActor().keyframe(750, { x: 2 }).keyframe(1000, { x: 3 });
+        component = shallow(<RekapiTimeline rekapi={rekapi}/>);
+
+        const e = { nativeEvent: { offsetX: 500 } };
+
+        component.setState({ timelineScale: 1 });
+        component.instance().handlePropertyTrackDoubleClick(e, 'x');
+      });
+
+      it('uses the value from the first property in the track', () => {
+        assert.equal(getActor().getKeyframeProperty('x', 500).value, 2);
+      });
+    });
+  });
 });
 
 describe('<RekapiTimeline />', () => {

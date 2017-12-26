@@ -275,6 +275,36 @@ export default {
     const { millisecond, name } = property;
 
     this.setState({ propertyCursor: { millisecond, property: name } });
+  },
+
+  /**
+   * @method module:eventHandlers.handlePropertyTrackDoubleClick
+   * @param {external:React.SyntheticEvent} e
+   * @param {string} trackName
+   * @returns {undefined}
+   */
+  handlePropertyTrackDoubleClick (e, trackName) {
+    const targetMillisecond = computeDescaledPixelPosition(
+        this.state.timelineScale,
+        e.nativeEvent.offsetX
+      );
+
+    const properties = this.getActor().getPropertiesInTrack(trackName);
+    const priorProperty = properties.slice().reverse().find(
+      property => property.millisecond < targetMillisecond
+    ) || properties[0];
+
+    this.getActor().keyframe(
+      targetMillisecond,
+      { [trackName]: priorProperty.value }
+    );
+
+    this.setState({
+      propertyCursor: {
+        millisecond: targetMillisecond,
+        property: trackName
+      }
+    });
   }
 };
 

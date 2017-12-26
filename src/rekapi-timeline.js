@@ -254,6 +254,7 @@ export class RekapiTimeline extends Component {
           handlePropertyClick={this.handlePropertyClick}
           propertyTracks={propertyTracks}
           timelineScaleConverter={timelineScaleConverter}
+          handlePropertyTrackDoubleClick={this.handlePropertyTrackDoubleClick}
           propertyCursor={propertyCursor}
         />
         <BottomFrame
