@@ -1166,6 +1166,40 @@ describe('<RekapiTimeline />', () => {
       assert(component.state().easingCurves.indexOf('testCurve') > -1);
     });
   });
+
+  describe('RekapiTimeline#onRekapiTimelineModified', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor().keyframe(0, { x: 0 }).keyframe(1000, { x: 1 });
+      component = shallow(<RekapiTimeline rekapi={rekapi} />);
+    });
+
+    describe('timeline syncing', () => {
+      beforeEach(() => {
+        getActor().modifyKeyframeProperty('x', 1000, { value: 5 });
+      });
+
+      it('updates the timeline', () => {
+        assert.deepEqual(
+          component.state().rekapi,
+          rekapi.exportTimeline(exportTimelineOptions)
+        );
+      });
+    });
+
+    describe('scrubber syncing', () => {
+      describe('when timeline has been shortened to less than previous update', () => {
+        beforeEach(() => {
+          rekapi.update(950);
+          getActor().modifyKeyframeProperty('x', 1000, { millisecond: 500 });
+        });
+
+        it('updates to the end of the animation', () => {
+          assert.equal(rekapi.getLastPositionUpdated(), 1);
+        });
+      });
+    });
+  });
 });
 
 describe('<Details />', () => {
