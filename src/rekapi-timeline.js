@@ -70,17 +70,7 @@ export class RekapiTimeline extends Component {
     };
 
     rekapi
-      .on('timelineModified', () => {
-        const timeline = rekapi.exportTimeline(exportTimelineOptions);
-
-        this.setState({
-          rekapi: timeline,
-          animationLength: timeline.duration,
-          actor: timeline.actors[0]
-        });
-
-        rekapi.update();
-      })
+      .on('timelineModified', this.onRekapiTimelineModified.bind(this))
       .on('playStateChange', () => {
         this.setState({
           isPlaying: rekapi.isPlaying()
@@ -102,6 +92,32 @@ export class RekapiTimeline extends Component {
     Object.keys(eventHandlers).forEach(
       method => this[method] = eventHandlers[method].bind(this)
     );
+  }
+
+  /**
+   * @method RekapiTimeline#onRekapiTimelineModified
+   * @returns {undefined}
+   */
+  onRekapiTimelineModified () {
+    const { rekapi } = this.props;
+    const timeline = rekapi.exportTimeline(exportTimelineOptions);
+
+    const oldLength = this.state.animationLength;
+    const animationLength = timeline.duration;
+
+    this.setState({
+      animationLength,
+      rekapi: timeline,
+      actor: timeline.actors[0]
+    });
+
+    if (!rekapi.isPlaying()) {
+      if ((rekapi.getLastPositionUpdated() * oldLength) > animationLength) {
+        rekapi.update(animationLength);
+      } else {
+        rekapi.update();
+      }
+    }
   }
 
   /**
