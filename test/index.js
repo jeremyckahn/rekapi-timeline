@@ -826,9 +826,15 @@ describe('eventHandlers', () => {
   });
 
   describe('handleScrubberBarClick', () => {
-    // FIXME: This is a bizarre way to make the tests pass; find a better way
-    // to fake an event object
-    const e = { target: 1, currentTarget: 1 };
+    // target and currentTarget need to be equal to get past a target check in
+    // handleScrubberBarClick's implementation
+    const e = {
+      target: 1,
+      currentTarget: 1,
+      nativeEvent: {
+        offsetX: 100
+      }
+    };
 
     beforeEach(() => {
       rekapi = new Rekapi();
@@ -839,7 +845,7 @@ describe('eventHandlers', () => {
     describe('timelineScale === .5', () => {
       beforeEach(() => {
         component.setState({ timelineScale: .5 });
-        component.instance().handleScrubberBarClick(e, 100);
+        component.instance().handleScrubberBarClick(e);
       });
 
       it('sets the scaled timeline position', () => {
@@ -850,7 +856,7 @@ describe('eventHandlers', () => {
     describe('timelineScale === 1', () => {
       beforeEach(() => {
         component.setState({ timelineScale: 1 });
-        component.instance().handleScrubberBarClick(e, 100);
+        component.instance().handleScrubberBarClick(e);
       });
 
       it('sets the scaled timeline position', () => {
@@ -861,7 +867,7 @@ describe('eventHandlers', () => {
     describe('timelineScale === 2', () => {
       beforeEach(() => {
         component.setState({ timelineScale: 2 });
-        component.instance().handleScrubberBarClick(e, 100);
+        component.instance().handleScrubberBarClick(e);
       });
 
       it('sets the scaled timeline position', () => {

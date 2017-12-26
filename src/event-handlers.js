@@ -217,13 +217,17 @@ export default {
   /**
    * @method module:eventHandlers.handleScrubberBarClick
    * @param {external:React.SyntheticEvent} e
-   * @param {number} x
    * @returns {undefined}
    */
-  handleScrubberBarClick (e, x) {
+  handleScrubberBarClick (e) {
+    // Some child elements' drag events propagate through as click events to
+    // this handler, so check for that and bail out early if the user actually
+    // clicked on the scrubber and not the scrubber bar.
     if (e.target !== e.currentTarget) {
       return;
     }
+
+    const x = e.nativeEvent.offsetX;
 
     this.props.rekapi.pause();
     this.updateToRawX(x);
