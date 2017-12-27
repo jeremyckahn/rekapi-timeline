@@ -156,9 +156,7 @@ export default {
       sanitizeDanglingDecimals(coercedValue) :
       coercedValue;
 
-    if (!currentProperty
-      || !this.isNewPropertyValueValid(currentProperty, sanitizedInput)
-    ) {
+    if (!this.isNewPropertyValueValid(currentProperty, sanitizedInput)) {
       return;
     }
 
