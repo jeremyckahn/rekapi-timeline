@@ -1581,7 +1581,7 @@ describe('<Timeline />', () => {
     beforeEach(() => {
       rekapi = new Rekapi();
       rekapi.addActor().keyframe(0, { x: 0, y: 0 });
-      component = shallow(
+      component = mount(
         <Timeline
           propertyTracks={getPropertyTracks()}
         />

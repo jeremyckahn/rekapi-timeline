@@ -66,6 +66,40 @@ const Property = ({
     </div>
   </Draggable>
 
+const AnimationTracks = ({
+  handlePropertyClick,
+  handlePropertyDrag,
+  handlePropertyTrackDoubleClick,
+  propertyCursor,
+  propertyTracks,
+  timelineScaleConverter
+}) =>
+  <div className="animation-tracks">
+    <div className="actor-tracks">
+      {Object.keys(propertyTracks).map(trackName => (
+        <div
+          className={'keyframe-property-track' + (
+            trackName === propertyCursor.property ? ' active' : ''
+          )}
+          key={trackName}
+          data-track-name={trackName}
+          onDoubleClick={e => handlePropertyTrackDoubleClick(e, trackName)}
+        >
+          {propertyTracks[trackName].map((property, i) =>
+            <Property
+              key={property.id}
+              timelineScaleConverter={timelineScaleConverter}
+              property={property}
+              propertyCursor={propertyCursor}
+              handlePropertyDrag={handlePropertyDrag}
+              handlePropertyClick={handlePropertyClick}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+
 const Timeline = ({
   timelineWrapperWidth,
   scrubberPosition,
@@ -90,33 +124,14 @@ const Timeline = ({
         handleScrubberBarClick={handleScrubberBarClick}
         propertyTracks={propertyTracks}
       />
-
-      <div className="animation-tracks">
-        <div className="actor-tracks">
-          {Object.keys(propertyTracks).map(trackName => (
-            <div
-              className={'keyframe-property-track' + (
-                trackName === propertyCursor.property ? ' active' : ''
-              )}
-              key={trackName}
-              data-track-name={trackName}
-              onDoubleClick={e => handlePropertyTrackDoubleClick(e, trackName)}
-            >
-              {propertyTracks[trackName].map((property, i) =>
-                <Property
-                  key={property.id}
-                  timelineScaleConverter={timelineScaleConverter}
-                  property={property}
-                  propertyCursor={propertyCursor}
-                  handlePropertyDrag={handlePropertyDrag}
-                  handlePropertyClick={handlePropertyClick}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
+      <AnimationTracks
+        handlePropertyClick={handlePropertyClick}
+        handlePropertyDrag={handlePropertyDrag}
+        handlePropertyTrackDoubleClick={handlePropertyTrackDoubleClick}
+        propertyCursor={propertyCursor}
+        propertyTracks={propertyTracks}
+        timelineScaleConverter={timelineScaleConverter}
+      />
     </div>
   </div>
 
