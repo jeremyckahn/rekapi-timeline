@@ -110,7 +110,12 @@ const Timeline = ({
   handlePropertyDrag,
   handlePropertyClick,
   handlePropertyTrackDoubleClick,
-  propertyCursor = {}
+  propertyCursor = {},
+
+  // FIXME: These are unimplemented and untested
+  newTrackName,
+  handleChangeNewTrackName = () => {},
+  handleClickNewTrackButton = () => {}
 }) =>
   <div className="fill timeline">
     <div
@@ -132,6 +137,23 @@ const Timeline = ({
         propertyTracks={propertyTracks}
         timelineScaleConverter={timelineScaleConverter}
       />
+
+
+      <div className="new-track-name-input-wrapper">
+        <button
+          className="icon-button add"
+          title="Add a new property to animate"
+          onClick={handleClickNewTrackButton}
+        >
+          <i className="glyphicon glyphicon-plus"></i>
+        </button>
+        <input
+          className="new-track-name"
+          value={newTrackName}
+          onChange={handleChangeNewTrackName}
+        />
+      </div>
+
     </div>
   </div>
 

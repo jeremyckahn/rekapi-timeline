@@ -66,7 +66,8 @@ export class RekapiTimeline extends Component {
       isPlaying: rekapi.isPlaying(),
       timelineScale: defaultTimelineScale,
       animationLength: rekapi.getAnimationLength(),
-      currentPosition: rekapi.getLastPositionUpdated()
+      currentPosition: rekapi.getLastPositionUpdated(),
+      newTrackName: 'newTrack'
     };
 
     rekapi
@@ -215,7 +216,8 @@ export class RekapiTimeline extends Component {
         easingCurves,
         isPlaying,
         propertyCursor,
-        timelineScale
+        timelineScale,
+        newTrackName
       }
     } = this;
 
@@ -262,6 +264,7 @@ export class RekapiTimeline extends Component {
           timelineScaleConverter={timelineScaleConverter}
           handlePropertyTrackDoubleClick={this.handlePropertyTrackDoubleClick}
           propertyCursor={propertyCursor}
+          newTrackName={newTrackName}
         />
         <BottomFrame
           isPlaying={isPlaying}
