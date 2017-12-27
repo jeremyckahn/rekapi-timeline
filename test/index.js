@@ -499,6 +499,25 @@ describe('eventHandlers', () => {
     describe('with propertyCursor that does reference a keyframeProperty', () => {
       let keyframeProperty;
 
+      describe('weakly-typed values', () => {
+        beforeEach(() => {
+          rekapi.addActor().keyframe(0, { x: 1 });
+          component.setState({
+            propertyCursor: { property: 'x', millisecond: 0 }
+          });
+
+          keyframeProperty = getActor().getKeyframeProperty('x', 0);
+
+          component.instance().handleValueInputChange({
+            target: { value: '5abc' }
+          });
+        });
+
+        it('allows value types to change if there is only on property in a track', () => {
+          assert.equal(keyframeProperty.value, '5abc');
+        });
+      });
+
       describe('number values', () => {
         describe('valid values', () => {
           beforeEach(() => {

@@ -173,6 +173,12 @@ export class RekapiTimeline extends Component {
     const { value: currentValue } = keyframeProperty;
     const typeOfNewValue = typeof newValue;
 
+    if (
+      this.getActor().getPropertiesInTrack(keyframeProperty.name).length === 1
+    ) {
+      return true;
+    }
+
     if (typeof currentValue !== typeOfNewValue) {
       return false;
     }
