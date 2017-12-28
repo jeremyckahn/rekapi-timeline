@@ -308,6 +308,38 @@ export default {
         property: trackName
       }
     });
+  },
+
+  /**
+   * @method module:eventHandlers.handleChangeNewTrackName
+   * @param {external:React.SyntheticEvent} e
+   * @returns {undefined}
+   */
+  handleChangeNewTrackName (e) {
+    const { value: newTrackName } = e.target;
+
+    this.setState({ newTrackName });
+  },
+
+  /**
+   * @method module:eventHandlers.handleKeyDownNewTrackName
+   * @param {external:React.SyntheticEvent} e
+   * @returns {undefined}
+   */
+  handleKeyDownNewTrackName (e) {
+    if (e.nativeEvent.keyCode !== 13) { // 13 == enter key
+      return;
+    }
+
+    this.addNewTrack();
+  },
+
+  /**
+   * @method module:eventHandlers.handleClickNewTrackButton
+   * @returns {undefined}
+   */
+  handleClickNewTrackButton () {
+    this.addNewTrack();
   }
 };
 

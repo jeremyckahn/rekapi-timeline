@@ -115,6 +115,7 @@ const Timeline = ({
   // FIXME: These are unimplemented and untested
   newTrackName,
   handleChangeNewTrackName = () => {},
+  handleKeyDownNewTrackName = () => {},
   handleClickNewTrackButton = () => {}
 }) =>
   <div className="fill timeline">
@@ -138,7 +139,6 @@ const Timeline = ({
         timelineScaleConverter={timelineScaleConverter}
       />
 
-
       <div className="new-track-name-input-wrapper">
         <button
           className="icon-button add"
@@ -151,6 +151,7 @@ const Timeline = ({
           className="new-track-name"
           value={newTrackName}
           onChange={handleChangeNewTrackName}
+          onKeyDown={handleKeyDownNewTrackName}
         />
       </div>
 

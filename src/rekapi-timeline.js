@@ -206,6 +206,21 @@ export class RekapiTimeline extends Component {
     return true;
   }
 
+  /**
+   * @method RekapiTimeline#addNewTrack
+   * @returns {boolean}
+   */
+  addNewTrack () {
+    const { newTrackName } = this.state;
+    const actor = this.getActor();
+
+    if (actor.getTrackNames().indexOf(newTrackName) > -1) {
+      return;
+    }
+
+    actor.keyframe(0, { [newTrackName]: 0 });
+  }
+
   render () {
     const {
       props: { rekapi },
@@ -265,6 +280,9 @@ export class RekapiTimeline extends Component {
           handlePropertyTrackDoubleClick={this.handlePropertyTrackDoubleClick}
           propertyCursor={propertyCursor}
           newTrackName={newTrackName}
+          handleChangeNewTrackName={this.handleChangeNewTrackName}
+          handleKeyDownNewTrackName={this.handleKeyDownNewTrackName}
+          handleClickNewTrackButton={this.handleClickNewTrackButton}
         />
         <BottomFrame
           isPlaying={isPlaying}

@@ -1080,6 +1080,84 @@ describe('eventHandlers', () => {
       });
     });
   });
+
+  describe('handleChangeNewTrackName', () => {
+    beforeEach(() => {
+      component = shallow(<RekapiTimeline />);
+      component.instance().handleChangeNewTrackName({ target: { value: 'foo' } });
+    });
+
+    it('sets the newTrackName state', () => {
+      assert.equal(component.state().newTrackName, 'foo');
+    });
+  });
+
+  describe('handleKeyDownNewTrackName', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor();
+      component = shallow(<RekapiTimeline rekapi={rekapi} />);
+      component.setState({ newTrackName: 'x' });
+    });
+
+    describe('user pressed enter key', () => {
+      beforeEach(() => {
+        component.instance().handleKeyDownNewTrackName({
+          nativeEvent: { keyCode: 13 }
+        });
+      });
+
+      it('adds the track name specified by newTrackName', () => {
+        assert(getActor().hasKeyframeAt(0, 'x'));
+      });
+    });
+
+    describe('user pressed any other key', () => {
+      beforeEach(() => {
+        component.instance().handleKeyDownNewTrackName({
+          nativeEvent: { keyCode: 42 }
+        });
+      });
+
+      it('does nothing', () => {
+        assert(!getActor().hasKeyframeAt(0, 'x'));
+      });
+    });
+  });
+
+  describe('handleClickNewTrackButton', () => {
+    beforeEach(() => {
+      rekapi = new Rekapi();
+      rekapi.addActor();
+      component = shallow(<RekapiTimeline rekapi={rekapi} />);
+      component.setState({ newTrackName: 'x' });
+    });
+
+    describe('specified track does not exist', () => {
+      beforeEach(() => {
+        component.instance().handleClickNewTrackButton();
+      });
+
+      it('adds the track name specified by newTrackName', () => {
+        assert(getActor().hasKeyframeAt(0, 'x'));
+      });
+
+      it('gives the new property a default value', () => {
+        assert.equal(getActor().getKeyframeProperty('x', 0).value, 0);
+      });
+    });
+
+    describe('specified track does exist', () => {
+      beforeEach(() => {
+        getActor().keyframe(1000, { x: 5 });
+        component.instance().handleClickNewTrackButton();
+      });
+
+      it('does not add new property', () => {
+        assert(!getActor().hasKeyframeAt(0, 'x'));
+      });
+    });
+  });
 });
 
 describe('<RekapiTimeline />', () => {
@@ -1182,6 +1260,17 @@ describe('<RekapiTimeline />', () => {
 
       it('gets a default value', () => {
         assert.equal(component.state().timelineScale, defaultTimelineScale);
+      });
+    });
+
+    describe('timelineScale', () => {
+      beforeEach(() => {
+        rekapi = new Rekapi();
+        component = mount(<RekapiTimeline rekapi={rekapi}/>);
+      });
+
+      it('gets a default value', () => {
+        assert.equal(component.state().newTrackName, 'newTrack');
       });
     });
 
