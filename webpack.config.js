@@ -23,6 +23,11 @@ module.exports = Object.assign(commonConfig, {
   },
   plugins: [
     new CleanWebpackPlugin([ dist ]),
+    new Webpack.DefinePlugin({
+      'process.env': {
+         NODE_ENV: JSON.stringify('production')
+       }
+    }),
     new Webpack.optimize.UglifyJsPlugin({
       compress: {
         dead_code: true,
