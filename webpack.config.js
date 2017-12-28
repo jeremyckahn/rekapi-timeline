@@ -1,12 +1,14 @@
+const commonConfig = require('./webpack.common.config');
 const path = require('path');
 const Webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const { name, version } = require('./package.json');
 
 const dist = 'dist';
 
-module.exports = {
+module.exports = Object.assign(commonConfig, {
   entry: {
     'rekapi-timeline': './src/rekapi-timeline.js',
     tests: './test/index.js',
@@ -18,21 +20,6 @@ module.exports = {
     library: 'rekapi-timeline',
     libraryTarget: 'umd',
     umdNamedDefine: true
-  },
-  devtool: 'source-map',
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: 'babel-loader',
-        exclude: path.join(__dirname, 'node_modules')
-      }
-    ]
-  },
-  resolve: {
-    modules: [
-      'node_modules'
-    ]
   },
   plugins: [
     new CleanWebpackPlugin([ dist ]),
@@ -46,5 +33,8 @@ module.exports = {
       }
     }),
     new Webpack.BannerPlugin(version),
+    new CopyWebpackPlugin([
+      { from: 'index.html' }
+    ])
   ]
-};
+});
