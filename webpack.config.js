@@ -2,7 +2,6 @@ const commonConfig = require('./webpack.common.config');
 const path = require('path');
 const Webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const { name, version } = require('./package.json');
 
@@ -10,9 +9,7 @@ const dist = 'dist';
 
 module.exports = Object.assign(commonConfig, {
   entry: {
-    'rekapi-timeline': './src/rekapi-timeline.js',
-    tests: './test/index.js',
-    demo: './demo/index.js'
+    'rekapi-timeline': './src/index.js'
   },
   output: {
     path: path.join(__dirname, `${dist}`),
@@ -20,6 +17,28 @@ module.exports = Object.assign(commonConfig, {
     library: 'rekapi-timeline',
     libraryTarget: 'umd',
     umdNamedDefine: true
+  },
+  externals : {
+    react: {
+      root: 'React',
+      commonjs: 'react',
+      commonjs2: 'react',
+      amd: 'react'
+    },
+    'react-dom': {
+      root: 'ReactDOM',
+      commonjs: 'react-dom',
+      commonjs2: 'react-dom',
+      amd: 'react-dom'
+    },
+    'react-draggable': {
+      root: 'ReactDraggable',
+      commonjs: 'react-draggable',
+      commonjs2: 'react-draggable',
+      amd: 'react-draggable'
+    },
+    rekapi: 'rekapi',
+    shifty: 'shifty'
   },
   plugins: [
     new CleanWebpackPlugin([ dist ]),
@@ -37,9 +56,6 @@ module.exports = Object.assign(commonConfig, {
         comments: false
       }
     }),
-    new Webpack.BannerPlugin(version),
-    new CopyWebpackPlugin([
-      { from: 'index.html' }
-    ])
+    new Webpack.BannerPlugin(version)
   ]
 });
