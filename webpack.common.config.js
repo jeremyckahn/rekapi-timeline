@@ -35,6 +35,9 @@ module.exports = {
     modules: [
       'node_modules'
     ],
+    alias: {
+      shifty: path.resolve(__dirname, './node_modules/rekapi/node_modules/shifty/dist/shifty.js')
+    },
     // Uncomment this when testing symlinked dependencies
     //symlinks: false
   }
