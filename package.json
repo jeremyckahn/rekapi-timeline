@@ -1,6 +1,6 @@
 {
   "name": "rekapi-timeline",
-  "version": "0.0.0",
+  "version": "0.7.0",
   "description": "A demonstration of modern JavaScript project structure",
   "main": "dist/rekapi-timeline.js",
   "scripts": {
