@@ -14,6 +14,7 @@ import {
 /**
  * @param {string} numberString
  * @returns {string}
+ * @private
  */
 const sanitizeDanglingDecimals =
   numberString => numberString.replace(/\d+\.(?=\D)/g,
