@@ -8,7 +8,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "aenima": "0.8.0",
+    "aenima": "^0.8.4",
     "backbone": "1.2.1",
     "bootstrap-sass": "3.2.0",
     "jquery": "2.1.4",
