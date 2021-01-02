@@ -29,6 +29,7 @@
     "copy-webpack-plugin": "^4.1.1",
     "css-loader": "^0.28.7",
     "gh-pages": "^1.0.0",
+    "jshint": "^2.12.0",
     "node-sass": "^4.5.3",
     "raw-loader": "^0.5.1",
     "sass-loader": "^6.0.6",
