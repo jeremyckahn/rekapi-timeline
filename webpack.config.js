@@ -37,7 +37,6 @@ module.exports = {
       lateralus: rootDir('node_modules/lateralus/dist/lateralus'),
       lodash: rootDir('node_modules/lodash/index.js'),
       rekapi: rootDir('node_modules/rekapi/src/main'),
-      shifty: rootDir('node_modules/shifty/src/main'),
       underscore: 'lodash'
     }
   },
@@ -78,17 +77,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin([ 'dist' ]),
-    new Webpack.optimize.UglifyJsPlugin({
-      compress: {
-        dead_code: true,
-        unused: true,
-        warnings: false
-      },
-      output: {
-        comments: false
-      },
-      sourceMap: true
-    }),
     new CopyWebpackPlugin([
       { from: 'index.html' }
     ]),
