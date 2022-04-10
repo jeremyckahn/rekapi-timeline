@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "prettier",
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "sourceType": "script"
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "amd": true
+  },
+  "globals": {
+  }
+}
