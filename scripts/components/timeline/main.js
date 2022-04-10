@@ -1,30 +1,45 @@
-import Lateralus from 'lateralus'
-import Model from './model'
-import View from './view'
-import template from 'text!./template.mustache'
-import ScrubberComponent from '../scrubber/main'
-import AnimationTracksComponent from '../animation-tracks/main'
+define([
+  'lateralus',
 
-const Base = Lateralus.Component
+  './model',
+  './view',
+  'text!./template.mustache',
 
-const TimelineComponent = Base.extend({
-  name: 'timeline',
+  '../scrubber/main',
+  '../animation-tracks/main',
+], function (
+  Lateralus,
+
   Model,
   View,
   template,
 
-  initialize() {
-    this.scrubberComponent = this.addComponent(ScrubberComponent, {
-      el: this.view.$scrubber[0],
-    })
+  ScrubberComponent,
+  AnimationTracksComponent
+) {
+  'use strict'
 
-    this.animationTracksComponent = this.addComponent(
-      AnimationTracksComponent,
-      {
-        el: this.view.$animationTracks[0],
-      }
-    )
-  },
+  const Base = Lateralus.Component;
+
+  const TimelineComponent = Base.extend({
+    name: 'timeline',
+    Model,
+    View,
+    template,
+
+    initialize() {
+      this.scrubberComponent = this.addComponent(ScrubberComponent, {
+        el: this.view.$scrubber[0],
+      })
+
+      this.animationTracksComponent = this.addComponent(
+        AnimationTracksComponent,
+        {
+          el: this.view.$animationTracks[0],
+        }
+      )
+    },
+  });
+
+  return TimelineComponent
 })
-
-export default TimelineComponent

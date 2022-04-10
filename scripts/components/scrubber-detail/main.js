@@ -1,15 +1,26 @@
-import Lateralus from 'lateralus'
-import Model from './model'
-import View from './view'
-import template from 'text!./template.mustache'
+define([
+  'lateralus',
 
-const Base = Lateralus.Component
+  './model',
+  './view',
+  'text!./template.mustache',
+], function (
+  Lateralus,
 
-const ScrubberDetailComponent = Base.extend({
-  name: 'scrubber-detail',
   Model,
   View,
-  template,
-})
+  template
+) {
+  'use strict'
 
-export default ScrubberDetailComponent
+  const Base = Lateralus.Component;
+
+  const ScrubberDetailComponent = Base.extend({
+    name: 'scrubber-detail',
+    Model,
+    View,
+    template,
+  });
+
+  return ScrubberDetailComponent
+})

@@ -1,15 +1,26 @@
-import Lateralus from 'lateralus'
-import Model from './model'
-import View from './view'
-import template from 'text!./template.mustache'
+define([
+  'lateralus',
 
-const Base = Lateralus.Component
+  './model',
+  './view',
+  'text!./template.mustache',
+], function (
+  Lateralus,
 
-const KeyframePropertyDetailComponent = Base.extend({
-  name: 'keyframe-property-detail',
   Model,
   View,
-  template,
-})
+  template
+) {
+  'use strict'
 
-export default KeyframePropertyDetailComponent
+  const Base = Lateralus.Component;
+
+  const KeyframePropertyDetailComponent = Base.extend({
+    name: 'keyframe-property-detail',
+    Model,
+    View,
+    template,
+  });
+
+  return KeyframePropertyDetailComponent
+})

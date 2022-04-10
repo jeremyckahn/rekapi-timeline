@@ -1,15 +1,26 @@
-import Lateralus from 'lateralus'
-import Model from './model'
-import View from './view'
-import template from 'text!./template.mustache'
+define([
+  'lateralus',
 
-const Base = Lateralus.Component
+  './model',
+  './view',
+  'text!./template.mustache',
+], function (
+  Lateralus,
 
-const ActorTracksComponent = Base.extend({
-  name: 'actor-tracks',
   Model,
   View,
-  template,
-})
+  template
+) {
+  'use strict'
 
-export default ActorTracksComponent
+  const Base = Lateralus.Component;
+
+  const ActorTracksComponent = Base.extend({
+    name: 'actor-tracks',
+    Model,
+    View,
+    template,
+  });
+
+  return ActorTracksComponent
+})

@@ -1,4 +1,6 @@
-/* global require */
+/*global require*/
+'use strict'
+
 require.config({
   baseUrl: '/',
   shim: {

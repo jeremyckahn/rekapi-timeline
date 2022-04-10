@@ -1,132 +1,145 @@
-import _ from 'underscore'
-import Lateralus from 'lateralus'
-import template from 'text!./template.mustache'
-import constant from '../../constant'
+define([
+  'underscore',
+  'lateralus',
 
-const Base = Lateralus.Component.View
-const baseProto = Base.prototype
+  'text!./template.mustache',
 
-const ScrubberComponentView = Base.extend({
+  '../../constant',
+], function (
+  _,
+  Lateralus,
+
   template,
 
-  lateralusEvents: {
-    'change:timelineScale': function () {
-      this.render()
-      this.syncContainerToTimelineLength()
+  constant
+) {
+  'use strict'
+
+  const Base = Lateralus.Component.View;
+  const baseProto = Base.prototype;
+
+  const ScrubberComponentView = Base.extend({
+    template,
+
+    lateralusEvents: {
+      'change:timelineScale': function () {
+        this.render()
+        this.syncContainerToTimelineLength()
+      },
+
+      'change:timelineDuration': function () {
+        this.render()
+      },
+
+      requestResizeScrubberGuide() {
+        this.resizeScrubberGuide()
+      },
+
+      'rekapi:afterUpdate': function () {
+        this.render()
+      },
+
+      // resizeScrubberGuide calls that are called in response to a Rekapi
+      // event must be deferred here so the DOM has a chance to finish building
+      // itself
+      'rekapi:addKeyframePropertyTrack': function () {
+        _.defer(this.resizeScrubberGuide.bind(this))
+      },
+
+      'rekapi:removeKeyframePropertyTrack': function () {
+        _.defer(this.resizeScrubberGuide.bind(this))
+      },
+
+      'rekapi:timelineModified': function () {
+        this.syncContainerToTimelineLength()
+      },
     },
 
-    'change:timelineDuration': function () {
-      this.render()
-    },
+    events: {
+      'drag .scrubber-handle': function () {
+        const millisecond = this.collectOne(
+          'timelineMillisecondForHandle',
+          this.$scrubberHandle
+        );
+        this.lateralus.update(millisecond)
+      },
 
-    requestResizeScrubberGuide() {
-      this.resizeScrubberGuide()
-    },
+      /**
+       * @param {jQuery.Event} evt
+       */
+      'click .scrubber-wrapper': function (evt) {
+        if (evt.target !== this.$scrubberWrapper[0]) {
+          return
+        }
 
-    'rekapi:afterUpdate': function () {
-      this.render()
-    },
+        const scaledMillisecond = this.collectOne(
+          'timelineMillisecondForXOffset',
+          evt.offsetX
+        );
 
-    // resizeScrubberGuide calls that are called in response to a Rekapi
-    // event must be deferred here so the DOM has a chance to finish building
-    // itself
-    'rekapi:addKeyframePropertyTrack': function () {
-      _.defer(this.resizeScrubberGuide.bind(this))
-    },
-
-    'rekapi:removeKeyframePropertyTrack': function () {
-      _.defer(this.resizeScrubberGuide.bind(this))
-    },
-
-    'rekapi:timelineModified': function () {
-      this.syncContainerToTimelineLength()
-    },
-  },
-
-  events: {
-    'drag .scrubber-handle': function () {
-      const millisecond = this.collectOne(
-        'timelineMillisecondForHandle',
-        this.$scrubberHandle
-      )
-      this.lateralus.update(millisecond)
+        const lateralus = this.lateralus;
+        lateralus.rekapi.pause()
+        lateralus.update(scaledMillisecond, true)
+      },
     },
 
     /**
-     * @param {jQuery.Event} evt
+     * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    'click .scrubber-wrapper': function (evt) {
-      if (evt.target !== this.$scrubberWrapper[0]) {
-        return
-      }
+    initialize() {
+      baseProto.initialize.apply(this, arguments)
 
-      const scaledMillisecond = this.collectOne(
-        'timelineMillisecondForXOffset',
-        evt.offsetX
-      )
+      this.syncContainerToTimelineLength()
 
-      const lateralus = this.lateralus
-      lateralus.rekapi.pause()
-      lateralus.update(scaledMillisecond, true)
+      this.$scrubberHandle.dragon({
+        within: this.$scrubberWrapper,
+      })
     },
-  },
 
-  /**
-   * @param {Object} [options] See http://backbonejs.org/#View-constructor
-   */
-  initialize() {
-    baseProto.initialize.apply(this, arguments)
+    deferredInitialize() {
+      this.resizeScrubberGuide()
+    },
 
-    this.syncContainerToTimelineLength()
+    render() {
+      this.syncHandleToTimelineLength()
+    },
 
-    this.$scrubberHandle.dragon({
-      within: this.$scrubberWrapper,
-    })
-  },
+    syncContainerToTimelineLength() {
+      const scaledContainerWidth =
+        this.lateralus.model.get('timelineDuration') *
+        (constant.PIXELS_PER_SECOND / 1000) *
+        this.lateralus.model.get('timelineScale');
 
-  deferredInitialize() {
-    this.resizeScrubberGuide()
-  },
+      this.$scrubberWrapper.width(
+        scaledContainerWidth + this.$scrubberHandle.width()
+      )
+    },
 
-  render() {
-    this.syncHandleToTimelineLength()
-  },
+    syncHandleToTimelineLength() {
+      const lastMillisecondUpdated =
+        this.lateralus.rekapi.getLastPositionUpdated() *
+        this.lateralus.model.get('timelineDuration');
 
-  syncContainerToTimelineLength() {
-    const scaledContainerWidth =
-      this.lateralus.model.get('timelineDuration') *
-      (constant.PIXELS_PER_SECOND / 1000) *
-      this.lateralus.model.get('timelineScale')
+      const scaledLeftValue =
+        lastMillisecondUpdated *
+        (constant.PIXELS_PER_SECOND / 1000) *
+        this.lateralus.model.get('timelineScale');
 
-    this.$scrubberWrapper.width(
-      scaledContainerWidth + this.$scrubberHandle.width()
-    )
-  },
+      this.$scrubberHandle.css('left', scaledLeftValue)
+    },
 
-  syncHandleToTimelineLength() {
-    const lastMillisecondUpdated =
-      this.lateralus.rekapi.getLastPositionUpdated() *
-      this.lateralus.model.get('timelineDuration')
+    resizeScrubberGuide() {
+      const wrapperHeight = this.collectOne('timelineWrapperHeight');
+      const scrubberBottomBorder = parseInt(
+        this.$scrubberWrapper.css('borderBottomWidth'),
+        10
+      );
+      this.$scrubberGuide.css(
+        'height',
+        wrapperHeight - this.$el.height() + scrubberBottomBorder
+      )
+    },
+  });
 
-    const scaledLeftValue =
-      lastMillisecondUpdated *
-      (constant.PIXELS_PER_SECOND / 1000) *
-      this.lateralus.model.get('timelineScale')
-
-    this.$scrubberHandle.css('left', scaledLeftValue)
-  },
-
-  resizeScrubberGuide() {
-    const wrapperHeight = this.collectOne('timelineWrapperHeight')
-    const scrubberBottomBorder = parseInt(
-      this.$scrubberWrapper.css('borderBottomWidth'),
-      10
-    )
-    this.$scrubberGuide.css(
-      'height',
-      wrapperHeight - this.$el.height() + scrubberBottomBorder
-    )
-  },
+  return ScrubberComponentView
 })
-
-export default ScrubberComponentView

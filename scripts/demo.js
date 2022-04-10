@@ -1,13 +1,14 @@
-/* global require */
-require(['./rekapi-timeline'], rekapiTimeline => {
+require(['./rekapi-timeline'], function (rekapiTimeline) {
+  'use strict'
+
   const { Rekapi } = rekapiTimeline
 
-  const timelineEl = document.querySelector('#rekapi-timeline')
-  const rekapi = new Rekapi(document.body)
+  const timelineEl = document.querySelector('#rekapi-timeline');
+  const rekapi = new Rekapi(document.body);
 
   const actor = rekapi.addActor({
     context: document.querySelector('#actor-1'),
-  })
+  });
 
   actor
     .keyframe(0, {
@@ -22,7 +23,7 @@ require(['./rekapi-timeline'], rekapiTimeline => {
       translateY: '100px',
     })
 
-  const timeline = rekapi.createTimeline(timelineEl)
+  const timeline = rekapi.createTimeline(timelineEl);
   rekapi.play(1)
 
   console.log((window.rekapi = rekapi))
