@@ -14,7 +14,7 @@ define(() => {
 
     DEFAULT_KEYFRAME_PROPERTY_VALUE: 0,
     DEFAULT_KEYFRAME_PROPERTY_MILLISECOND: 0,
-  };
+  }
 
   return rekapiTimelineConstants
 })

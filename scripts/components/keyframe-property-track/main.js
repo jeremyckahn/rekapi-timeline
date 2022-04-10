@@ -13,7 +13,7 @@ define([
 ) {
   'use strict'
 
-  const Base = Lateralus.Component;
+  const Base = Lateralus.Component
 
   const KeyframePropertyTrackComponent = Base.extend({
     name: 'keyframe-property-track',
@@ -32,7 +32,7 @@ define([
         }
       },
     },
-  });
+  })
 
   return KeyframePropertyTrackComponent
 })

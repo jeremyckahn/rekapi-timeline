@@ -13,8 +13,8 @@ define([
 ) {
   'use strict'
 
-  const Base = Lateralus.Component.View;
-  const baseProto = Base.prototype;
+  const Base = Lateralus.Component.View
+  const baseProto = Base.prototype
 
   const ActorTracksComponentView = Base.extend({
     template,
@@ -62,12 +62,12 @@ define([
             trackName,
           },
         }
-      );
+      )
 
       this.keyframePropertyTrackComponents.push(keyframePropertyTrackComponent)
       this.$el.append(keyframePropertyTrackComponent.view.$el)
     },
-  });
+  })
 
   return ActorTracksComponentView
 })

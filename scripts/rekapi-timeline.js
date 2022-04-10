@@ -48,19 +48,14 @@ define([
       this.globalRenderData = this.model.pick('supportedProperties')
 
       // Amplify all Rekapi events to "rekapi:" lateralusEvents.
-      this.rekapi.getEventNames().forEach(
-        eventName => {
-          this.rekapi.on(
-            eventName,
-            () => {
-              this.emit.apply(
-                this,
-                [`rekapi:${eventName}`].concat(_.toArray(arguments))
-              )
-            }
+      this.rekapi.getEventNames().forEach(eventName => {
+        this.rekapi.on(eventName, () => {
+          this.emit.apply(
+            this,
+            [`rekapi:${eventName}`].concat(_.toArray(arguments))
           )
-        }
-      )
+        })
+      })
 
       this.actorCollection = this.initCollection(ActorCollection)
 
@@ -71,7 +66,7 @@ define([
     {
       Model: RekapiTimelineModel,
     }
-  );
+  )
 
   _.extend(RekapiTimeline.prototype, {
     lateralusEvents: {
@@ -87,8 +82,8 @@ define([
           // removal process where calling update() would not reflect the new
           // state of the timeline.  However, this only needs to be done if the
           // animation is not already playing.
-          const timelineDuration = this.model.get('timelineDuration');
-          const lastMillisecondUpdated = this.rekapi.getLastMillisecondUpdated();
+          const timelineDuration = this.model.get('timelineDuration')
+          const lastMillisecondUpdated = this.rekapi.getLastMillisecondUpdated()
 
           // Passing undefined to Rekapi#update causes a re-render of the
           // previously rendered frame.  If the previously rendered frame is
@@ -98,7 +93,7 @@ define([
           const updateMillisecond =
             lastMillisecondUpdated > timelineDuration
               ? timelineDuration
-              : undefined;
+              : undefined
 
           this.update(updateMillisecond)
         }
@@ -106,7 +101,7 @@ define([
 
       'rekapi:timelineModified': function () {
         if (!this.rekapi.isPlaying()) {
-          const timelineDuration = this.model.get('timelineDuration');
+          const timelineDuration = this.model.get('timelineDuration')
 
           if (this.rekapi.getLastMillisecondUpdated() > timelineDuration) {
             this.update(timelineDuration)
@@ -123,7 +118,7 @@ define([
      * @return {Rekapi}
      */
     update() {
-      const rekapi = this.rekapi;
+      const rekapi = this.rekapi
 
       try {
         rekapi.update.apply(rekapi, arguments)

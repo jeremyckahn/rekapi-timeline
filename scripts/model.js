@@ -11,7 +11,7 @@ define(['underscore', 'lateralus', './constant'], (_, Lateralus, constant) => {
 
       preventValueInputAutoSelect: false,
     },
-  });
+  })
 
   return RekapiTimelineModel
 })

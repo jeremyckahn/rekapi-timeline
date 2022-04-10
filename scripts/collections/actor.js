@@ -7,7 +7,7 @@ define(['underscore', 'backbone', 'lateralus', '../models/actor'], function (
 ) {
   'use strict'
 
-  const Base = Lateralus.Component.Collection;
+  const Base = Lateralus.Component.Collection
 
   const ActorCollection = Base.extend({
     model: ActorModel,
@@ -40,10 +40,10 @@ define(['underscore', 'backbone', 'lateralus', '../models/actor'], function (
      * @param {Rekapi.Actor} actor
      */
     addActor(actor) {
-      const actorModel = this.initModel(ActorModel, { actor });
+      const actorModel = this.initModel(ActorModel, { actor })
       this.emit('actorAdded', this.add(actorModel))
     },
-  });
+  })
 
   return ActorCollection
 })

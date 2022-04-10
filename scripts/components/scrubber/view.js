@@ -15,8 +15,8 @@ define([
 ) {
   'use strict'
 
-  const Base = Lateralus.Component.View;
-  const baseProto = Base.prototype;
+  const Base = Lateralus.Component.View
+  const baseProto = Base.prototype
 
   const ScrubberComponentView = Base.extend({
     template,
@@ -60,7 +60,7 @@ define([
         const millisecond = this.collectOne(
           'timelineMillisecondForHandle',
           this.$scrubberHandle
-        );
+        )
         this.lateralus.update(millisecond)
       },
 
@@ -75,9 +75,9 @@ define([
         const scaledMillisecond = this.collectOne(
           'timelineMillisecondForXOffset',
           evt.offsetX
-        );
+        )
 
-        const lateralus = this.lateralus;
+        const lateralus = this.lateralus
         lateralus.rekapi.pause()
         lateralus.update(scaledMillisecond, true)
       },
@@ -108,7 +108,7 @@ define([
       const scaledContainerWidth =
         this.lateralus.model.get('timelineDuration') *
         (constant.PIXELS_PER_SECOND / 1000) *
-        this.lateralus.model.get('timelineScale');
+        this.lateralus.model.get('timelineScale')
 
       this.$scrubberWrapper.width(
         scaledContainerWidth + this.$scrubberHandle.width()
@@ -118,28 +118,28 @@ define([
     syncHandleToTimelineLength() {
       const lastMillisecondUpdated =
         this.lateralus.rekapi.getLastPositionUpdated() *
-        this.lateralus.model.get('timelineDuration');
+        this.lateralus.model.get('timelineDuration')
 
       const scaledLeftValue =
         lastMillisecondUpdated *
         (constant.PIXELS_PER_SECOND / 1000) *
-        this.lateralus.model.get('timelineScale');
+        this.lateralus.model.get('timelineScale')
 
       this.$scrubberHandle.css('left', scaledLeftValue)
     },
 
     resizeScrubberGuide() {
-      const wrapperHeight = this.collectOne('timelineWrapperHeight');
+      const wrapperHeight = this.collectOne('timelineWrapperHeight')
       const scrubberBottomBorder = parseInt(
         this.$scrubberWrapper.css('borderBottomWidth'),
         10
-      );
+      )
       this.$scrubberGuide.css(
         'height',
         wrapperHeight - this.$el.height() + scrubberBottomBorder
       )
     },
-  });
+  })
 
   return ScrubberComponentView
 })

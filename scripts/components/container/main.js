@@ -23,7 +23,7 @@ define([
 ) {
   'use strict'
 
-  const Base = Lateralus.Component;
+  const Base = Lateralus.Component
 
   const ContainerComponent = Base.extend({
     name: 'rekapi-timeline-container',
@@ -51,7 +51,7 @@ define([
         }
       )
     },
-  });
+  })
 
   return ContainerComponent
 })

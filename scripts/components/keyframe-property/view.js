@@ -7,8 +7,8 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
 ) {
   'use strict'
 
-  const Base = Lateralus.Component.View;
-  const baseProto = Base.prototype;
+  const Base = Lateralus.Component.View
+  const baseProto = Base.prototype
 
   const KeyframePropertyComponentView = Base.extend({
     template,
@@ -63,7 +63,7 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
-        const nextProperty = this.model.get('nextProperty');
+        const nextProperty = this.model.get('nextProperty')
         if (nextProperty && nextProperty.id === keyframeProperty.id) {
           this.activate()
         }
@@ -85,7 +85,7 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
        * @param {{ name: string, millisecond: number}} nameAndMillisecondOb
        */
       activateKeyframePropertyByNameAndMillisecond(nameAndMillisecondOb) {
-        const modelAttrs = this.model.toJSON();
+        const modelAttrs = this.model.toJSON()
 
         if (
           nameAndMillisecondOb.name === modelAttrs.name &&
@@ -130,14 +130,14 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
     },
 
     render() {
-      const elData = this.$el.data('dragon');
+      const elData = this.$el.data('dragon')
       if (elData && elData.isDragging) {
         return
       }
 
       const scaledXCoordinate =
         ((constant.PIXELS_PER_SECOND * this.model.get('millisecond')) / 1000) *
-        this.lateralus.model.get('timelineScale');
+        this.lateralus.model.get('timelineScale')
 
       this.$el.css({
         left: scaledXCoordinate,
@@ -159,10 +159,10 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
     updateKeyframeProperty() {
-      const model = this.model;
+      const model = this.model
       const millisecond = Math.round(
         this.collectOne('timelineMillisecondForHandle', this.$el)
-      );
+      )
 
       if (
         // This will be true if the user drags the property vertically, which
@@ -179,16 +179,16 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
     },
 
     overwriteRedundantProperty() {
-      const model = this.model;
+      const model = this.model
       const millisecond = Math.round(
         this.collectOne('timelineMillisecondForHandle', this.$el)
-      );
+      )
 
       this.emit('beginTemporaryTimelineModifications')
       model.set('millisecond', 1e99)
 
       if (this.doesPropertyAlreadyExistAt(millisecond)) {
-        const actor = model.get('actor');
+        const actor = model.get('actor')
         actor.removeKeyframeProperty(model.get('name'), millisecond)
       }
 
@@ -206,7 +206,7 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
         .get('actor')
         .hasKeyframeAt(millisecond, this.model.get('name'))
     },
-  });
+  })
 
   return KeyframePropertyComponentView
 })

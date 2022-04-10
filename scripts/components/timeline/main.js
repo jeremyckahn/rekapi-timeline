@@ -19,7 +19,7 @@ define([
 ) {
   'use strict'
 
-  const Base = Lateralus.Component;
+  const Base = Lateralus.Component
 
   const TimelineComponent = Base.extend({
     name: 'timeline',
@@ -39,7 +39,7 @@ define([
         }
       )
     },
-  });
+  })
 
   return TimelineComponent
 })

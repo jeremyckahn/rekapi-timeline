@@ -15,8 +15,8 @@ define([
 ) {
   'use strict'
 
-  const Base = Lateralus.Component.View;
-  const baseProto = Base.prototype;
+  const Base = Lateralus.Component.View
+  const baseProto = Base.prototype
 
   const AnimationTracksComponentView = Base.extend({
     template,
@@ -47,12 +47,12 @@ define([
     addActorComponent(actorModel) {
       const actorTracksComponent = this.addComponent(ActorTracksComponent, {
         model: actorModel,
-      });
+      })
 
       this.actorTracksComponents.push(actorTracksComponent)
       this.$el.append(actorTracksComponent.view.$el)
     },
-  });
+  })
 
   return AnimationTracksComponentView
 })

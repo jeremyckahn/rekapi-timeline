@@ -6,7 +6,7 @@ define(['backbone', 'lateralus', '../models/keyframe-property'], function (
 ) {
   'use strict'
 
-  const Base = Lateralus.Component.Collection;
+  const Base = Lateralus.Component.Collection
 
   const KeyframePropertyCollection = Base.extend({
     model: KeyframePropertyModel,
@@ -49,7 +49,7 @@ define(['backbone', 'lateralus', '../models/keyframe-property'], function (
     addKeyframeProperty(keyframeProperty) {
       const keyframePropertyModel = this.initModel(KeyframePropertyModel, {
         keyframeProperty,
-      });
+      })
 
       this.emit('keyframePropertyAdded', this.add(keyframePropertyModel))
     },
@@ -60,7 +60,7 @@ define(['backbone', 'lateralus', '../models/keyframe-property'], function (
     removeKeyframeProperty(keyframeProperty) {
       this.remove(keyframeProperty.id)
     },
-  });
+  })
 
   return KeyframePropertyCollection
 })

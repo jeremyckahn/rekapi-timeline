@@ -15,8 +15,8 @@ define([
 ) {
   'use strict'
 
-  const Base = Lateralus.Component.View;
-  const baseProto = Base.prototype;
+  const Base = Lateralus.Component.View
+  const baseProto = Base.prototype
 
   const ContainerComponentView = Base.extend({
     template,
@@ -34,9 +34,9 @@ define([
       timelineMillisecondForHandle($handle) {
         const distanceFromLeft =
           parseInt($handle.css('left'), 10) -
-          parseInt($handle.parent().css('border-left-width'), 10);
+          parseInt($handle.parent().css('border-left-width'), 10)
         const baseMillisecond =
-          (distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
+          (distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000
 
         return baseMillisecond / this.lateralus.model.get('timelineScale')
       },
@@ -46,7 +46,7 @@ define([
        * @return {number}
        */
       timelineMillisecondForXOffset(xOffset) {
-        const baseMillisecond = (xOffset / constant.PIXELS_PER_SECOND) * 1000;
+        const baseMillisecond = (xOffset / constant.PIXELS_PER_SECOND) * 1000
 
         return Math.floor(
           baseMillisecond / this.lateralus.model.get('timelineScale')
@@ -60,7 +60,7 @@ define([
        * @param {string} trackName
        */
       'rekapi:removeKeyframePropertyTrack': function (rekapi, trackName) {
-        const currentActorModel = this.collectOne('currentActorModel');
+        const currentActorModel = this.collectOne('currentActorModel')
 
         // Remove corresponding inline styles for the removed track
         $(currentActorModel.get('context')).css(trackName, '')
@@ -73,7 +73,7 @@ define([
     initialize() {
       baseProto.initialize.apply(this, arguments)
     },
-  });
+  })
 
   return ContainerComponentView
 })
