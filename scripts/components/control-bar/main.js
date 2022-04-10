@@ -1,19 +1,15 @@
-define(['lateralus', './model', './view', 'text!./template.mustache'], (
-  Lateralus,
+import Lateralus from 'lateralus'
+import Model from './model'
+import View from './view'
+import template from 'text!./template.mustache'
+
+const Base = Lateralus.Component
+
+const ControlBarComponent = Base.extend({
+  name: 'control-bar',
   Model,
   View,
-  template
-) => {
-  'use strict'
-
-  const Base = Lateralus.Component
-
-  const ControlBarComponent = Base.extend({
-    name: 'control-bar',
-    Model,
-    View,
-    template,
-  })
-
-  return ControlBarComponent
+  template,
 })
+
+export default ControlBarComponent

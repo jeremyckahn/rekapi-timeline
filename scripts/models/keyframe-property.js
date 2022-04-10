@@ -1,92 +1,88 @@
-define(['underscore', 'backbone', 'lateralus', 'rekapi'], function (
-  _,
-  Backbone,
-  Lateralus,
-  Rekapi
-) {
-  'use strict'
+import _ from 'underscore'
+import Backbone from 'backbone'
+import Lateralus from 'lateralus'
+import { Rekapi } from 'rekapi'
 
-  const Base = Lateralus.Component.Model
+const Base = Lateralus.Component.Model
 
-  const KeyframePropertyModel = Base.extend({
-    defaults: {
-      keyframeProperty: Rekapi.KeyframeProperty,
-      isActive: false,
-    },
+const KeyframePropertyModel = Base.extend({
+  defaults: {
+    keyframeProperty: Rekapi.KeyframeProperty,
+    isActive: false,
+  },
 
-    lateralusEvents: {
-      /**
-       * @param {Rekapi} rekapi
-       * @param {Rekapi.KeyframeProperty} keyframeProperty
-       */
-      'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
-        if (keyframeProperty.id === this.id) {
-          this.destroy()
-        }
-      },
-    },
-
+  lateralusEvents: {
     /**
-     * @param {Object} attributes
-     *   @param {Rekapi.KeyframeProperty} keyframeProperty
+     * @param {Rekapi} rekapi
+     * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
-    initialize() {
-      // Have all Backbone.Model.prototype methods act upon the
-      // Rekapi.KeyframeProperty instance.
-      this.attributes = this.attributes.keyframeProperty
-      _.defaults(
-        this.attributes,
-        _.omit(KeyframePropertyModel.prototype.defaults, 'keyframeProperty')
-      )
-
-      this.id = this.attributes.id
+    'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
+      if (keyframeProperty.id === this.id) {
+        this.destroy()
+      }
     },
+  },
 
-    /**
-     * @override
-     */
-    set(key, value) {
-      if (typeof key === 'string') {
-        const oldValue = this.get(key)
+  /**
+   * @param {Object} attributes
+   *   @param {Rekapi.KeyframeProperty} keyframeProperty
+   */
+  initialize() {
+    // Have all Backbone.Model.prototype methods act upon the
+    // Rekapi.KeyframeProperty instance.
+    this.attributes = this.attributes.keyframeProperty
+    _.defaults(
+      this.attributes,
+      _.omit(KeyframePropertyModel.prototype.defaults, 'keyframeProperty')
+    )
 
-        if (key in this.attributes) {
-          if (this.get(key) === value) {
-            return
-          }
+    this.id = this.attributes.id
+  },
 
-          // Modify the keyframeProperty via its actor so that the state of the
-          // animation is updated.
-          const obj = {}
-          obj[key] = value
-          this.attributes.actor.modifyKeyframeProperty(
-            this.attributes.name,
-            this.attributes.millisecond,
-            obj
-          )
+  /**
+   * @override
+   */
+  set(key, value) {
+    if (typeof key === 'string') {
+      const oldValue = this.get(key)
+
+      if (key in this.attributes) {
+        if (this.get(key) === value) {
+          return
         }
 
-        this.attributes[key] = oldValue
+        // Modify the keyframeProperty via its actor so that the state of the
+        // animation is updated.
+        const obj = {}
+        obj[key] = value
+        this.attributes.actor.modifyKeyframeProperty(
+          this.attributes.name,
+          this.attributes.millisecond,
+          obj
+        )
       }
 
-      Backbone.Model.prototype.set.apply(this, arguments)
-    },
+      this.attributes[key] = oldValue
+    }
 
-    /**
-     * @return {RekapiTimelineActorModel}
-     */
-    getOwnerActor() {
-      return this.collection.actorModel
-    },
+    Backbone.Model.prototype.set.apply(this, arguments)
+  },
 
-    /**
-     * Override the standard Backbone.Model#destroy behavior, as there is no
-     * server data that this model is tied to.
-     * @override
-     */
-    destroy() {
-      this.trigger('destroy')
-    },
-  })
+  /**
+   * @return {RekapiTimelineActorModel}
+   */
+  getOwnerActor() {
+    return this.collection.actorModel
+  },
 
-  return KeyframePropertyModel
+  /**
+   * Override the standard Backbone.Model#destroy behavior, as there is no
+   * server data that this model is tied to.
+   * @override
+   */
+  destroy() {
+    this.trigger('destroy')
+  },
 })
+
+export default KeyframePropertyModel

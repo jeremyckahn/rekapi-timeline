@@ -1,6 +1,5 @@
+/* global require */
 require(['./rekapi-timeline'], rekapiTimeline => {
-  'use strict'
-
   const { Rekapi } = rekapiTimeline
 
   const timelineEl = document.querySelector('#rekapi-timeline')

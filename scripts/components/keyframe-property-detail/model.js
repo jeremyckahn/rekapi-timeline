@@ -1,19 +1,17 @@
-define(['lateralus'], function (Lateralus) {
-  'use strict'
+import Lateralus from 'lateralus'
 
-  const Base = Lateralus.Component.Model
-  const baseProto = Base.prototype
+const Base = Lateralus.Component.Model
+const baseProto = Base.prototype
 
-  const KeyframePropertyDetailComponentModel = Base.extend({
-    /**
-     * Parameters are the same as http://backbonejs.org/#Model-constructor
-     * @param {Object} [attributes]
-     * @param {Object} [options]
-     */
-    initialize() {
-      baseProto.initialize.apply(this, arguments)
-    },
-  })
-
-  return KeyframePropertyDetailComponentModel
+const KeyframePropertyDetailComponentModel = Base.extend({
+  /**
+   * Parameters are the same as http://backbonejs.org/#Model-constructor
+   * @param {Object} [attributes]
+   * @param {Object} [options]
+   */
+  initialize() {
+    baseProto.initialize.apply(this, arguments)
+  },
 })
+
+export default KeyframePropertyDetailComponentModel

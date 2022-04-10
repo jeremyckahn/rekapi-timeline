@@ -1,17 +1,16 @@
-define(['underscore', 'lateralus', './constant'], (_, Lateralus, constant) => {
-  'use strict'
+import Lateralus from 'lateralus'
+import constant from './constant'
 
-  const RekapiTimelineModel = Lateralus.Model.extend({
-    defaults: {
-      timelineScale: constant.DEFAULT_TIMELINE_SCALE,
-      timelineDuration: 0,
+const RekapiTimelineModel = Lateralus.Model.extend({
+  defaults: {
+    timelineScale: constant.DEFAULT_TIMELINE_SCALE,
+    timelineDuration: 0,
 
-      // @type {Array.<{name: string, defaultValue: string}>}
-      supportedProperties: [],
+    // @type {Array.<{name: string, defaultValue: string}>}
+    supportedProperties: [],
 
-      preventValueInputAutoSelect: false,
-    },
-  })
-
-  return RekapiTimelineModel
+    preventValueInputAutoSelect: false,
+  },
 })
+
+export default RekapiTimelineModel
