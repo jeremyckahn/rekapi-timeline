@@ -6,10 +6,10 @@ define(['underscore', 'lateralus', 'text!./template.mustache'], function (
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.View
-  var baseProto = Base.prototype
+  const Base = Lateralus.Component.View;
+  const baseProto = Base.prototype;
 
-  var ScrubberDetailComponentView = Base.extend({
+  const ScrubberDetailComponentView = Base.extend({
     template: template,
 
     lateralusEvents: {
@@ -45,7 +45,7 @@ define(['underscore', 'lateralus', 'text!./template.mustache'], function (
      * @override
      */
     getTemplateRenderData: function () {
-      var renderData = baseProto.getTemplateRenderData.apply(this, arguments)
+      const renderData = baseProto.getTemplateRenderData.apply(this, arguments);
 
       _.extend(renderData, {
         initialZoom: this.lateralus.model.get('timelineScale') * 100,
@@ -59,15 +59,15 @@ define(['underscore', 'lateralus', 'text!./template.mustache'], function (
     },
 
     renderCurrentPosition: function () {
-      var lateralus = this.lateralus
-      var currentPosition =
+      const lateralus = this.lateralus;
+      const currentPosition =
         lateralus.rekapi.getLastPositionUpdated() *
-        lateralus.model.get('timelineDuration')
+        lateralus.model.get('timelineDuration');
 
       // Default the rendered value to 0, as currentPosition may be NaN.
       this.$currentPosition.text(Math.floor(currentPosition) || 0)
     },
-  })
+  });
 
   return ScrubberDetailComponentView
 })

@@ -1,10 +1,10 @@
 define(['lateralus'], function (Lateralus) {
   'use strict'
 
-  var Base = Lateralus.Component.Model
-  var baseProto = Base.prototype
+  const Base = Lateralus.Component.Model;
+  const baseProto = Base.prototype;
 
-  var TimelineComponentModel = Base.extend({
+  const TimelineComponentModel = Base.extend({
     /**
      * Parameters are the same as http://backbonejs.org/#Model-constructor
      * @param {Object} [attributes]
@@ -13,7 +13,7 @@ define(['lateralus'], function (Lateralus) {
     initialize: function () {
       baseProto.initialize.apply(this, arguments)
     },
-  })
+  });
 
   return TimelineComponentModel
 })

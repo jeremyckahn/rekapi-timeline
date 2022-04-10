@@ -13,14 +13,14 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component
+  const Base = Lateralus.Component;
 
-  var ScrubberDetailComponent = Base.extend({
+  const ScrubberDetailComponent = Base.extend({
     name: 'scrubber-detail',
     Model: Model,
     View: View,
     template: template,
-  })
+  });
 
   return ScrubberDetailComponent
 })

@@ -6,13 +6,13 @@ define(['lateralus', './view', 'text!./template.mustache'], function (
 ) {
   'use strict'
 
-  var Base = Lateralus.Component
+  const Base = Lateralus.Component;
 
-  var KeyframePropertyComponent = Base.extend({
+  const KeyframePropertyComponent = Base.extend({
     name: 'keyframe-property',
     View: View,
     template: template,
-  })
+  });
 
   return KeyframePropertyComponent
 })

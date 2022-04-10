@@ -13,14 +13,14 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component
+  const Base = Lateralus.Component;
 
-  var ControlBarComponent = Base.extend({
+  const ControlBarComponent = Base.extend({
     name: 'control-bar',
     Model: Model,
     View: View,
     template: template,
-  })
+  });
 
   return ControlBarComponent
 })

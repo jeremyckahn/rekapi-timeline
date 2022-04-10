@@ -17,9 +17,9 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component
+  const Base = Lateralus.Component;
 
-  var DetailsComponent = Base.extend({
+  const DetailsComponent = Base.extend({
     name: 'details',
     Model: Model,
     View: View,
@@ -33,7 +33,7 @@ define([
         }
       )
     },
-  })
+  });
 
   return DetailsComponent
 })

@@ -5,10 +5,10 @@ define(['lateralus', 'text!./template.mustache'], function (
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.View
-  var baseProto = Base.prototype
+  const Base = Lateralus.Component.View;
+  const baseProto = Base.prototype;
 
-  var DetailsComponentView = Base.extend({
+  const DetailsComponentView = Base.extend({
     template: template,
 
     /**
@@ -17,7 +17,7 @@ define(['lateralus', 'text!./template.mustache'], function (
     initialize: function () {
       baseProto.initialize.apply(this, arguments)
     },
-  })
+  });
 
   return DetailsComponentView
 })

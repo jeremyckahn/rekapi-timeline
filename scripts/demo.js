@@ -3,12 +3,12 @@ require(['./rekapi-timeline'], function (rekapiTimeline) {
 
   const { Rekapi } = rekapiTimeline
 
-  var timelineEl = document.querySelector('#rekapi-timeline')
-  var rekapi = new Rekapi(document.body)
+  const timelineEl = document.querySelector('#rekapi-timeline');
+  const rekapi = new Rekapi(document.body);
 
-  var actor = rekapi.addActor({
+  const actor = rekapi.addActor({
     context: document.querySelector('#actor-1'),
-  })
+  });
 
   actor
     .keyframe(0, {
@@ -23,7 +23,7 @@ require(['./rekapi-timeline'], function (rekapiTimeline) {
       translateY: '100px',
     })
 
-  var timeline = rekapi.createTimeline(timelineEl)
+  const timeline = rekapi.createTimeline(timelineEl);
   rekapi.play(1)
 
   console.log((window.rekapi = rekapi))

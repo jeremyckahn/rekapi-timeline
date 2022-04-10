@@ -13,14 +13,14 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component
+  const Base = Lateralus.Component;
 
-  var KeyframePropertyDetailComponent = Base.extend({
+  const KeyframePropertyDetailComponent = Base.extend({
     name: 'keyframe-property-detail',
     Model: Model,
     View: View,
     template: template,
-  })
+  });
 
   return KeyframePropertyDetailComponent
 })

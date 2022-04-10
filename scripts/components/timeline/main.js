@@ -19,9 +19,9 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component
+  const Base = Lateralus.Component;
 
-  var TimelineComponent = Base.extend({
+  const TimelineComponent = Base.extend({
     name: 'timeline',
     Model: Model,
     View: View,
@@ -39,7 +39,7 @@ define([
         }
       )
     },
-  })
+  });
 
   return TimelineComponent
 })

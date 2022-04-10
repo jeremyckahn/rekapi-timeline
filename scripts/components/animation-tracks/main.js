@@ -13,14 +13,14 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component
+  const Base = Lateralus.Component;
 
-  var AnimationTracksComponent = Base.extend({
+  const AnimationTracksComponent = Base.extend({
     name: 'animation-tracks',
     Model: Model,
     View: View,
     template: template,
-  })
+  });
 
   return AnimationTracksComponent
 })

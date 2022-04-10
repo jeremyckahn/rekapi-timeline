@@ -6,7 +6,7 @@ define(['underscore', 'lateralus', './constant'], function (
 ) {
   'use strict'
 
-  var RekapiTimelineModel = Lateralus.Model.extend({
+  const RekapiTimelineModel = Lateralus.Model.extend({
     defaults: {
       timelineScale: constant.DEFAULT_TIMELINE_SCALE,
       timelineDuration: 0,
@@ -16,7 +16,7 @@ define(['underscore', 'lateralus', './constant'], function (
 
       preventValueInputAutoSelect: false,
     },
-  })
+  });
 
   return RekapiTimelineModel
 })

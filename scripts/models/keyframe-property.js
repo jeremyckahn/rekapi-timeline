@@ -6,9 +6,9 @@ define(['underscore', 'backbone', 'lateralus', 'rekapi'], function (
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.Model
+  const Base = Lateralus.Component.Model;
 
-  var KeyframePropertyModel = Base.extend({
+  const KeyframePropertyModel = Base.extend({
     defaults: {
       keyframeProperty: Rekapi.KeyframeProperty,
       isActive: false,
@@ -47,7 +47,7 @@ define(['underscore', 'backbone', 'lateralus', 'rekapi'], function (
      */
     set: function (key, value) {
       if (typeof key === 'string') {
-        var oldValue = this.get(key)
+        const oldValue = this.get(key);
 
         if (key in this.attributes) {
           if (this.get(key) === value) {
@@ -56,7 +56,7 @@ define(['underscore', 'backbone', 'lateralus', 'rekapi'], function (
 
           // Modify the keyframeProperty via its actor so that the state of the
           // animation is updated.
-          var obj = {}
+          const obj = {};
           obj[key] = value
           this.attributes.actor.modifyKeyframeProperty(
             this.attributes.name,
@@ -86,7 +86,7 @@ define(['underscore', 'backbone', 'lateralus', 'rekapi'], function (
     destroy: function () {
       this.trigger('destroy')
     },
-  })
+  });
 
   return KeyframePropertyModel
 })

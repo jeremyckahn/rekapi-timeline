@@ -1,7 +1,7 @@
 define(function () {
   'use strict'
 
-  var rekapiTimelineConstants = {
+  const rekapiTimelineConstants = {
     // How many pixels wide the keyframe tracks should be for every second of
     // the animatiom.
     PIXELS_PER_SECOND: 300,
@@ -14,7 +14,7 @@ define(function () {
 
     DEFAULT_KEYFRAME_PROPERTY_VALUE: 0,
     DEFAULT_KEYFRAME_PROPERTY_MILLISECOND: 0,
-  }
+  };
 
   return rekapiTimelineConstants
 })

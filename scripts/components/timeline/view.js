@@ -17,11 +17,11 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.View
-  var baseProto = Base.prototype
-  var $win = $(window)
+  const Base = Lateralus.Component.View;
+  const baseProto = Base.prototype;
+  const $win = $(window);
 
-  var TimelineComponentView = Base.extend({
+  const TimelineComponentView = Base.extend({
     template: template,
 
     events: {
@@ -69,7 +69,7 @@ define([
      * @override
      */
     getTemplateRenderData: function () {
-      var renderData = baseProto.getTemplateRenderData.apply(this, arguments)
+      const renderData = baseProto.getTemplateRenderData.apply(this, arguments);
 
       _.extend(renderData, {
         supportedPropertiesAreRestricted: !!this.lateralus.model.get(
@@ -97,8 +97,8 @@ define([
      * @return {number}
      */
     getPixelWidthForTracks: function () {
-      var animationLength = this.lateralus.model.get('timelineDuration')
-      var animationSeconds = animationLength / 1000
+      const animationLength = this.lateralus.model.get('timelineDuration');
+      const animationSeconds = animationLength / 1000;
 
       // The width of the tracks container should always be the pixel width of
       // the animation plus the width of the timeline element to allow for
@@ -111,14 +111,14 @@ define([
     },
 
     addNewKeyframePropertyFromInput: function () {
-      var newTrackName = this.$newTrackName.val()
-      var currentActorModel = this.collectOne('currentActorModel')
-      var keyframeObject = {}
-      var supportedProperties = this.lateralus.model.get('supportedProperties')
+      const newTrackName = this.$newTrackName.val();
+      const currentActorModel = this.collectOne('currentActorModel');
+      const keyframeObject = {};
+      const supportedProperties = this.lateralus.model.get('supportedProperties');
 
-      var defaultValue = supportedProperties.length
+      const defaultValue = supportedProperties.length
         ? _.findWhere(supportedProperties, { name: newTrackName }).defaultValue
-        : constant.DEFAULT_KEYFRAME_PROPERTY_VALUE
+        : constant.DEFAULT_KEYFRAME_PROPERTY_VALUE;
 
       keyframeObject[newTrackName] = defaultValue
       currentActorModel.attributes.keyframe(
@@ -126,7 +126,7 @@ define([
         keyframeObject
       )
     },
-  })
+  });
 
   return TimelineComponentView
 })

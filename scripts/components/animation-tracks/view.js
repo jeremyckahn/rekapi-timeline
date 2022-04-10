@@ -15,10 +15,10 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.View
-  var baseProto = Base.prototype
+  const Base = Lateralus.Component.View;
+  const baseProto = Base.prototype;
 
-  var AnimationTracksComponentView = Base.extend({
+  const AnimationTracksComponentView = Base.extend({
     template: template,
 
     lateralusEvents: {
@@ -45,14 +45,14 @@ define([
      * @param {RekapiTimelineActorModel} actorModel
      */
     addActorComponent: function (actorModel) {
-      var actorTracksComponent = this.addComponent(ActorTracksComponent, {
+      const actorTracksComponent = this.addComponent(ActorTracksComponent, {
         model: actorModel,
-      })
+      });
 
       this.actorTracksComponents.push(actorTracksComponent)
       this.$el.append(actorTracksComponent.view.$el)
     },
-  })
+  });
 
   return AnimationTracksComponentView
 })

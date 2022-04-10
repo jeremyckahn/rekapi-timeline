@@ -15,10 +15,10 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.View
-  var baseProto = Base.prototype
+  const Base = Lateralus.Component.View;
+  const baseProto = Base.prototype;
 
-  var KeyframePropertyTrackComponentView = Base.extend({
+  const KeyframePropertyTrackComponentView = Base.extend({
     template: template,
 
     lateralusEvents: {
@@ -50,10 +50,10 @@ define([
           return
         }
 
-        var scaledMillisecond = this.collectOne(
+        const scaledMillisecond = this.collectOne(
           'timelineMillisecondForXOffset',
           evt.offsetX
-        )
+        );
 
         this.addNewKeyframeAtMillisecond(scaledMillisecond)
       },
@@ -65,7 +65,7 @@ define([
      */
     initialize: function () {
       baseProto.initialize.apply(this, arguments)
-      var trackName = this.model.get('trackName')
+      const trackName = this.model.get('trackName');
 
       // Is displayed to the user with CSS
       this.$el.attr('data-track-name', trackName)
@@ -88,13 +88,13 @@ define([
       keyframePropertyModel,
       doImmediatelyFocus
     ) {
-      var keyframePropertyComponent = this.addComponent(
+      const keyframePropertyComponent = this.addComponent(
         KeyframePropertyComponent,
         {
           model: keyframePropertyModel,
           doImmediatelyFocus: !!doImmediatelyFocus,
         }
-      )
+      );
 
       this.$el.append(keyframePropertyComponent.view.$el)
     },
@@ -110,18 +110,17 @@ define([
      * @param {number} millisecond
      */
     addNewKeyframeAtMillisecond: function (millisecond) {
-      var keyframePropertyComponents = _.chain(this.component.components)
+      const keyframePropertyComponents = _.chain(this.component.components)
         .filter(function (component) {
           return component.toString() === 'keyframe-property'
         })
         .sortBy(function (component) {
           return component.view.model.get('millisecond')
         })
-        .value()
+        .value();
 
-      var previousKeyframePropertyComponent = keyframePropertyComponents[0]
-      var i = 1,
-        len = keyframePropertyComponents.length
+      let previousKeyframePropertyComponent = keyframePropertyComponents[0];
+      let i = 1, len = keyframePropertyComponents.length;
       for (i; i < len; i++) {
         if (
           keyframePropertyComponents[i].view.model.get('millisecond') >
@@ -133,8 +132,8 @@ define([
         previousKeyframePropertyComponent = keyframePropertyComponents[i]
       }
 
-      var previousKeyframePropertyModelJson =
-        previousKeyframePropertyComponent.view.model.toJSON()
+      const previousKeyframePropertyModelJson =
+        previousKeyframePropertyComponent.view.model.toJSON();
 
       this.emit('requestNewKeyframeProperty', {
         name: previousKeyframePropertyModelJson.name,
@@ -143,7 +142,7 @@ define([
         millisecond: millisecond,
       })
     },
-  })
+  });
 
   return KeyframePropertyTrackComponentView
 })

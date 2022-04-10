@@ -6,9 +6,9 @@ define(['lateralus', 'rekapi', '../collections/keyframe-property'], function (
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.Model
+  const Base = Lateralus.Component.Model;
 
-  var ActorModel = Base.extend({
+  const ActorModel = Base.extend({
     defaults: {
       actor: Rekapi.Actor,
     },
@@ -33,7 +33,7 @@ define(['lateralus', 'rekapi', '../collections/keyframe-property'], function (
        *   easing: string }} args
        */
       requestNewKeyframeProperty: function (args) {
-        var stateObj = {}
+        const stateObj = {};
         stateObj[args.name] = args.value
         this.attributes.keyframe(args.millisecond, stateObj, args.easing)
       },
@@ -71,11 +71,11 @@ define(['lateralus', 'rekapi', '../collections/keyframe-property'], function (
         .getTrackNames()
         .forEach(this.addKeyframePropertyTrack, this)
 
-      var keyframePropertyCollection = this.initCollection(
+      const keyframePropertyCollection = this.initCollection(
         KeyframePropertyCollection,
         null,
         { actorModel: this }
-      )
+      );
 
       this.keyframePropertyCollection = keyframePropertyCollection
 
@@ -97,7 +97,7 @@ define(['lateralus', 'rekapi', '../collections/keyframe-property'], function (
     addKeyframePropertyTrack: function (trackName) {
       this.emit('keyframePropertyTrackAdded', trackName)
     },
-  })
+  });
 
   return ActorModel
 })

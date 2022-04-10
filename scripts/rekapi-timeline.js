@@ -34,7 +34,7 @@ define([
    * @extends {Lateralus}
    * @constructor
    */
-  var RekapiTimeline = Lateralus.beget(
+  const RekapiTimeline = Lateralus.beget(
     function (el, rekapi, config) {
       Lateralus.apply(this, arguments)
       this.rekapi = rekapi
@@ -71,7 +71,7 @@ define([
     {
       Model: RekapiTimelineModel,
     }
-  )
+  );
 
   _.extend(RekapiTimeline.prototype, {
     lateralusEvents: {
@@ -87,18 +87,18 @@ define([
           // removal process where calling update() would not reflect the new
           // state of the timeline.  However, this only needs to be done if the
           // animation is not already playing.
-          var timelineDuration = this.model.get('timelineDuration')
-          var lastMillisecondUpdated = this.rekapi.getLastMillisecondUpdated()
+          const timelineDuration = this.model.get('timelineDuration');
+          const lastMillisecondUpdated = this.rekapi.getLastMillisecondUpdated();
 
           // Passing undefined to Rekapi#update causes a re-render of the
           // previously rendered frame.  If the previously rendered frame is
           // greater than the length of the timeline (possible in this case
           // because this executes within the rekapi:removeKeyframeProperty
           // event handler), update to the last frame in the timeline.
-          var updateMillisecond =
+          const updateMillisecond =
             lastMillisecondUpdated > timelineDuration
               ? timelineDuration
-              : undefined
+              : undefined;
 
           this.update(updateMillisecond)
         }
@@ -106,7 +106,7 @@ define([
 
       'rekapi:timelineModified': function () {
         if (!this.rekapi.isPlaying()) {
-          var timelineDuration = this.model.get('timelineDuration')
+          const timelineDuration = this.model.get('timelineDuration');
 
           if (this.rekapi.getLastMillisecondUpdated() > timelineDuration) {
             this.update(timelineDuration)
@@ -123,7 +123,7 @@ define([
      * @return {Rekapi}
      */
     update: function () {
-      var rekapi = this.rekapi
+      const rekapi = this.rekapi;
 
       try {
         rekapi.update.apply(rekapi, arguments)

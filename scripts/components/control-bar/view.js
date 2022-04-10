@@ -5,10 +5,10 @@ define(['lateralus', 'text!./template.mustache'], function (
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.View
-  var baseProto = Base.prototype
+  const Base = Lateralus.Component.View;
+  const baseProto = Base.prototype;
 
-  var ControlBarComponentView = Base.extend({
+  const ControlBarComponentView = Base.extend({
     template: template,
 
     lateralusEvents: {
@@ -53,7 +53,7 @@ define(['lateralus', 'text!./template.mustache'], function (
     pause: function () {
       this.lateralus.rekapi.pause()
     },
-  })
+  });
 
   return ControlBarComponentView
 })

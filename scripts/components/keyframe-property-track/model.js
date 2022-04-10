@@ -1,10 +1,10 @@
 define(['lateralus'], function (Lateralus) {
   'use strict'
 
-  var Base = Lateralus.Component.Model
-  var baseProto = Base.prototype
+  const Base = Lateralus.Component.Model;
+  const baseProto = Base.prototype;
 
-  var KeyframePropertyTrackComponentModel = Base.extend({
+  const KeyframePropertyTrackComponentModel = Base.extend({
     defaults: {
       trackName: '',
     },
@@ -16,7 +16,7 @@ define(['lateralus'], function (Lateralus) {
     initialize: function () {
       baseProto.initialize.apply(this, arguments)
     },
-  })
+  });
 
   return KeyframePropertyTrackComponentModel
 })

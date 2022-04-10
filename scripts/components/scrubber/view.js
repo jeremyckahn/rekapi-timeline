@@ -15,10 +15,10 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.View
-  var baseProto = Base.prototype
+  const Base = Lateralus.Component.View;
+  const baseProto = Base.prototype;
 
-  var ScrubberComponentView = Base.extend({
+  const ScrubberComponentView = Base.extend({
     template: template,
 
     lateralusEvents: {
@@ -57,10 +57,10 @@ define([
 
     events: {
       'drag .scrubber-handle': function () {
-        var millisecond = this.collectOne(
+        const millisecond = this.collectOne(
           'timelineMillisecondForHandle',
           this.$scrubberHandle
-        )
+        );
         this.lateralus.update(millisecond)
       },
 
@@ -72,12 +72,12 @@ define([
           return
         }
 
-        var scaledMillisecond = this.collectOne(
+        const scaledMillisecond = this.collectOne(
           'timelineMillisecondForXOffset',
           evt.offsetX
-        )
+        );
 
-        var lateralus = this.lateralus
+        const lateralus = this.lateralus;
         lateralus.rekapi.pause()
         lateralus.update(scaledMillisecond, true)
       },
@@ -105,10 +105,10 @@ define([
     },
 
     syncContainerToTimelineLength: function () {
-      var scaledContainerWidth =
+      const scaledContainerWidth =
         this.lateralus.model.get('timelineDuration') *
         (constant.PIXELS_PER_SECOND / 1000) *
-        this.lateralus.model.get('timelineScale')
+        this.lateralus.model.get('timelineScale');
 
       this.$scrubberWrapper.width(
         scaledContainerWidth + this.$scrubberHandle.width()
@@ -116,30 +116,30 @@ define([
     },
 
     syncHandleToTimelineLength: function () {
-      var lastMillisecondUpdated =
+      const lastMillisecondUpdated =
         this.lateralus.rekapi.getLastPositionUpdated() *
-        this.lateralus.model.get('timelineDuration')
+        this.lateralus.model.get('timelineDuration');
 
-      var scaledLeftValue =
+      const scaledLeftValue =
         lastMillisecondUpdated *
         (constant.PIXELS_PER_SECOND / 1000) *
-        this.lateralus.model.get('timelineScale')
+        this.lateralus.model.get('timelineScale');
 
       this.$scrubberHandle.css('left', scaledLeftValue)
     },
 
     resizeScrubberGuide: function () {
-      var wrapperHeight = this.collectOne('timelineWrapperHeight')
-      var scrubberBottomBorder = parseInt(
+      const wrapperHeight = this.collectOne('timelineWrapperHeight');
+      const scrubberBottomBorder = parseInt(
         this.$scrubberWrapper.css('borderBottomWidth'),
         10
-      )
+      );
       this.$scrubberGuide.css(
         'height',
         wrapperHeight - this.$el.height() + scrubberBottomBorder
       )
     },
-  })
+  });
 
   return ScrubberComponentView
 })

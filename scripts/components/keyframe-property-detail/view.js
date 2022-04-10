@@ -23,14 +23,14 @@ define([
 ) {
   'use strict'
 
-  var Base = Lateralus.Component.View
-  var baseProto = Base.prototype
+  const Base = Lateralus.Component.View;
+  const baseProto = Base.prototype;
 
   const { Tweenable } = shifty
 
-  var R_NUMBER_STRING = /-?\d*\.?\d*/g
+  const R_NUMBER_STRING = /-?\d*\.?\d*/g;
 
-  var KeyframePropertyDetailComponentView = Base.extend({
+  const KeyframePropertyDetailComponentView = Base.extend({
     template: template,
 
     lateralusEvents: {
@@ -49,11 +49,11 @@ define([
           this.render.bind(this)
         )
 
-        var inputs = []
+        const inputs = [];
         _.each(
           Tweenable.formulas,
           function (formula, name) {
-            var option = document.createElement('option')
+            const option = document.createElement('option');
             option.innerHTML = name
             inputs.push(option)
           },
@@ -87,21 +87,21 @@ define([
        * @param {jQuery.Event} evt
        */
       'change .property-value': function (evt) {
-        var keyframePropertyModel = this.keyframePropertyModel
+        const keyframePropertyModel = this.keyframePropertyModel;
 
         if (!keyframePropertyModel) {
           return
         }
 
         this.emit('beforeUserUpdatesKeyframeValueInput')
-        var $target = $(evt.target)
-        var val = $target.val()
-        var rawNumberStringValue = val.match(R_NUMBER_STRING)[0]
-        var currentValue = keyframePropertyModel.get('value')
-        var currentValueStructure = currentValue
+        const $target = $(evt.target);
+        const val = $target.val();
+        const rawNumberStringValue = val.match(R_NUMBER_STRING)[0];
+        const currentValue = keyframePropertyModel.get('value');
+        const currentValueStructure = currentValue
           .toString()
-          .replace(R_NUMBER_STRING, '')
-        var newValueStructure = val.replace(R_NUMBER_STRING, '')
+          .replace(R_NUMBER_STRING, '');
+        const newValueStructure = val.replace(R_NUMBER_STRING, '');
 
         // Attempt to coerce the inputted value into the correct format
         if (!newValueStructure && currentValueStructure.length) {
@@ -124,7 +124,7 @@ define([
         // numbers, and this cast prevents the user from inadvertently setting
         // inconsistently typed keyframe property values, thus breaking Rekapi.
         // jshint eqeqeq: false
-        var coercedVal = val == +val ? +val : val
+        const coercedVal = val == +val ? +val : val;
 
         keyframePropertyModel.set($target.attr('name'), coercedVal)
         this.lateralus.update()
@@ -134,15 +134,15 @@ define([
        * @param {jQuery.Event} evt
        */
       'change .property-millisecond': function (evt) {
-        var keyframePropertyModel = this.keyframePropertyModel
+        const keyframePropertyModel = this.keyframePropertyModel;
 
         if (!keyframePropertyModel) {
           return
         }
 
         this.emit('beforeUserUpdatesKeyframeMillisecondInput')
-        var $target = $(evt.target)
-        var millisecond = +$target.val()
+        const $target = $(evt.target);
+        const millisecond = +$target.val();
 
         if (
           millisecond < 0 ||
@@ -161,14 +161,14 @@ define([
        * @param {jQuery.Event} evt
        */
       'change select': function (evt) {
-        var keyframePropertyModel = this.keyframePropertyModel
+        const keyframePropertyModel = this.keyframePropertyModel;
 
         if (!keyframePropertyModel) {
           return
         }
 
         this.emit('beforeUserUpdatesKeyframeCurveSelector')
-        var $target = $(evt.target)
+        const $target = $(evt.target);
         keyframePropertyModel.set($target.attr('name'), $target.val())
         this.lateralus.update()
       },
@@ -178,11 +178,11 @@ define([
           return
         }
 
-        var keyframePropertyModelJson = this.keyframePropertyModel.toJSON()
+        const keyframePropertyModelJson = this.keyframePropertyModel.toJSON();
 
-        var targetMillisecond =
+        const targetMillisecond =
           keyframePropertyModelJson.millisecond +
-          constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS
+          constant.NEW_KEYFRAME_PROPERTY_BUFFER_MS;
 
         this.emit('requestNewKeyframeProperty', {
           name: keyframePropertyModelJson.name,
@@ -220,7 +220,7 @@ define([
     },
 
     render: function () {
-      var activeElement = document.activeElement
+      const activeElement = document.activeElement;
 
       // TODO: It would be nice if the template could be declaratively bound to
       // the model, rather than having to make DOM updates imperatively here.
@@ -248,7 +248,7 @@ define([
       this.$propertyMillisecond.val('')
       this.$propertyValue.val('')
     },
-  })
+  });
 
   return KeyframePropertyDetailComponentView
 })
