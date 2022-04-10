@@ -8,6 +8,7 @@ const { version } = require('./package.json');
 const rootDir = modulePath => path.resolve(__dirname, modulePath);
 
 module.exports = {
+  mode: 'production',
   entry: {
     demo: './scripts/demo.js',
     'rekapi-timeline': './scripts/rekapi-timeline.js',
@@ -66,10 +67,13 @@ module.exports = {
         }, {
           loader: 'sass-loader',
           options: {
-            sourceMap: true,
-            includePaths: [
-              rootDir('node_modules/compass-mixins/lib')
-            ]
+            sassOptions: {
+              sourceMap: true,
+              includePaths: [
+                rootDir('node_modules/compass-mixins/lib'),
+                rootDir('styles')
+              ]
+            }
           }
         }]
       }
@@ -83,6 +87,12 @@ module.exports = {
     new Webpack.BannerPlugin(version)
   ],
   devServer: {
-    port: 9013
+    port: 9013,
+    client: {
+      overlay: {
+        warnings: false,
+        errors: true
+      }
+    }
   }
 };
