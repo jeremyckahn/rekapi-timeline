@@ -4,13 +4,7 @@ define([
   './model',
   './view',
   'text!./template.mustache',
-], function (
-  Lateralus,
-
-  Model,
-  View,
-  template
-) {
+], (Lateralus, Model, View, template) => {
   'use strict'
 
   const Base = Lateralus.Component;

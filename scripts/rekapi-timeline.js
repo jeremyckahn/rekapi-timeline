@@ -49,17 +49,17 @@ define([
 
       // Amplify all Rekapi events to "rekapi:" lateralusEvents.
       this.rekapi.getEventNames().forEach(
-        function (eventName) {
+        eventName => {
           this.rekapi.on(
             eventName,
-            function () {
+            () => {
               this.emit.apply(
                 this,
                 [`rekapi:${eventName}`].concat(_.toArray(arguments))
               )
-            }.bind(this)
+            }
           )
-        }.bind(this)
+        }
       )
 
       this.actorCollection = this.initCollection(ActorCollection)

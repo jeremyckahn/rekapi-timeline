@@ -1,9 +1,4 @@
-define(['lateralus', './view', 'text!./template.mustache'], function (
-  Lateralus,
-
-  View,
-  template
-) {
+define(['lateralus', './view', 'text!./template.mustache'], (Lateralus, View, template) => {
   'use strict'
 
   const Base = Lateralus.Component;

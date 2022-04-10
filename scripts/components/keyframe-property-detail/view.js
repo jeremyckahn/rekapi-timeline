@@ -52,7 +52,7 @@ define([
         const inputs = [];
         _.each(
           Tweenable.formulas,
-          function (formula, name) {
+          (formula, name) => {
             const option = document.createElement('option');
             option.innerHTML = name
             inputs.push(option)

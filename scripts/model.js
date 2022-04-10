@@ -1,9 +1,4 @@
-define(['underscore', 'lateralus', './constant'], function (
-  _,
-  Lateralus,
-
-  constant
-) {
+define(['underscore', 'lateralus', './constant'], (_, Lateralus, constant) => {
   'use strict'
 
   const RekapiTimelineModel = Lateralus.Model.extend({

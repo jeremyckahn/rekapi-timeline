@@ -1,4 +1,4 @@
-require(['./rekapi-timeline'], function (rekapiTimeline) {
+require(['./rekapi-timeline'], rekapiTimeline => {
   'use strict'
 
   const { Rekapi } = rekapiTimeline

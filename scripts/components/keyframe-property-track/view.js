@@ -74,9 +74,9 @@ define([
       this.actorModel.keyframePropertyCollection
         .where({ name: trackName })
         .forEach(
-          function (keyframePropertyModel) {
+          keyframePropertyModel => {
             this.addKeyframePropertyComponent(keyframePropertyModel, false)
-          }.bind(this)
+          }
         )
     },
 
@@ -108,12 +108,8 @@ define([
      */
     addNewKeyframeAtMillisecond(millisecond) {
       const keyframePropertyComponents = _.chain(this.component.components)
-        .filter(function (component) {
-          return component.toString() === 'keyframe-property'
-        })
-        .sortBy(function (component) {
-          return component.view.model.get('millisecond')
-        })
+        .filter(component => component.toString() === 'keyframe-property')
+        .sortBy(component => component.view.model.get('millisecond'))
         .value();
 
       let previousKeyframePropertyComponent = keyframePropertyComponents[0];
