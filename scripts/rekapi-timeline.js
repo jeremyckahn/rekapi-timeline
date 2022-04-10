@@ -65,7 +65,7 @@ define([
       this.actorCollection = this.initCollection(ActorCollection)
 
       this.containerComponent = this.addComponent(ContainerComponent, {
-        el: el,
+        el,
       })
     },
     {
@@ -75,7 +75,7 @@ define([
 
   _.extend(RekapiTimeline.prototype, {
     lateralusEvents: {
-      stopAnimation: function () {
+      stopAnimation() {
         this.rekapi.stop()
         this.update(0)
       },
@@ -122,7 +122,7 @@ define([
      * @param {boolean=} opt_doResetLaterFnKeyframes Same as Rekapi#update
      * @return {Rekapi}
      */
-    update: function () {
+    update() {
       const rekapi = this.rekapi;
 
       try {
@@ -141,7 +141,7 @@ define([
     /**
      * @return {number}
      */
-    getLastMillisecondUpdated: function () {
+    getLastMillisecondUpdated() {
       return this.getLastPositionUpdated() * this.model.get('timelineDuration')
     },
   })

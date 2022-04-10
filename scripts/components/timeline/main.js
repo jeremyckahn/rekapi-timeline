@@ -23,11 +23,11 @@ define([
 
   const TimelineComponent = Base.extend({
     name: 'timeline',
-    Model: Model,
-    View: View,
-    template: template,
+    Model,
+    View,
+    template,
 
-    initialize: function () {
+    initialize() {
       this.scrubberComponent = this.addComponent(ScrubberComponent, {
         el: this.view.$scrubber[0],
       })

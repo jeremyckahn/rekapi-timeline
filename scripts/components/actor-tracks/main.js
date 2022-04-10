@@ -17,9 +17,9 @@ define([
 
   const ActorTracksComponent = Base.extend({
     name: 'actor-tracks',
-    Model: Model,
-    View: View,
-    template: template,
+    Model,
+    View,
+    template,
   });
 
   return ActorTracksComponent

@@ -11,33 +11,33 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
   const baseProto = Base.prototype;
 
   const KeyframePropertyComponentView = Base.extend({
-    template: template,
+    template,
 
     events: {
-      mousedown: function () {
+      mousedown() {
         this.activate()
       },
 
-      drag: function () {
+      drag() {
         this.updateKeyframeProperty()
       },
 
-      dragEnd: function () {
+      dragEnd() {
         this.overwriteRedundantProperty()
         this.emit('keyframePropertyDragEnd')
       },
 
-      dragStart: function () {
+      dragStart() {
         this.emit('keyframePropertyDragStart')
       },
     },
 
     modelEvents: {
-      change: function () {
+      change() {
         this.render()
       },
 
-      destroy: function () {
+      destroy() {
         this.dispose()
       },
 
@@ -73,7 +73,7 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
         this.render()
       },
 
-      userFocusedKeyframeProperty: function () {
+      userFocusedKeyframeProperty() {
         if (this.isActivating) {
           return
         }
@@ -84,9 +84,7 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
       /**
        * @param {{ name: string, millisecond: number}} nameAndMillisecondOb
        */
-      activateKeyframePropertyByNameAndMillisecond: function (
-        nameAndMillisecondOb
-      ) {
+      activateKeyframePropertyByNameAndMillisecond(nameAndMillisecondOb) {
         const modelAttrs = this.model.toJSON();
 
         if (
@@ -102,7 +100,7 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
       /**
        * @return {KeyframePropertyComponentView|undefined}
        */
-      activeKeyframeProperties: function () {
+      activeKeyframeProperties() {
         if (this.model.get('isActive')) {
           return this
         }
@@ -113,12 +111,12 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      *   @param {boolean=} doImmediatelyFocus
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
       this.$el.css('visibility', 'hidden')
     },
 
-    deferredInitialize: function () {
+    deferredInitialize() {
       this.$el.dragon({
         within: this.$el.parent(),
       })
@@ -131,7 +129,7 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
       this.$el.css('visibility', '')
     },
 
-    render: function () {
+    render() {
       const elData = this.$el.data('dragon');
       if (elData && elData.isDragging) {
         return
@@ -146,21 +144,21 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
       })
     },
 
-    activate: function () {
+    activate() {
       this.model.set('isActive', true)
     },
 
     /**
      * @param {boolean} isActive
      */
-    setActiveClass: function (isActive) {
+    setActiveClass(isActive) {
       this.$el[isActive ? 'addClass' : 'removeClass']('active')
     },
 
     /**
      * Reads the state of the UI and persists that to the Rekapi animation.
      */
-    updateKeyframeProperty: function () {
+    updateKeyframeProperty() {
       const model = this.model;
       const millisecond = Math.round(
         this.collectOne('timelineMillisecondForHandle', this.$el)
@@ -180,7 +178,7 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
       this.lateralus.update()
     },
 
-    overwriteRedundantProperty: function () {
+    overwriteRedundantProperty() {
       const model = this.model;
       const millisecond = Math.round(
         this.collectOne('timelineMillisecondForHandle', this.$el)
@@ -203,7 +201,7 @@ define(['lateralus', 'text!./template.mustache', '../../constant'], function (
      * @param {number} millisecond
      * @return {boolean}
      */
-    doesPropertyAlreadyExistAt: function (millisecond) {
+    doesPropertyAlreadyExistAt(millisecond) {
       return this.model
         .get('actor')
         .hasKeyframeAt(millisecond, this.model.get('name'))

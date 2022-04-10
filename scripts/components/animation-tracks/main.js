@@ -17,9 +17,9 @@ define([
 
   const AnimationTracksComponent = Base.extend({
     name: 'animation-tracks',
-    Model: Model,
-    View: View,
-    template: template,
+    Model,
+    View,
+    template,
   });
 
   return AnimationTracksComponent

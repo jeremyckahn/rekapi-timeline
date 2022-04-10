@@ -10,8 +10,8 @@ define(['lateralus', './view', 'text!./template.mustache'], function (
 
   const KeyframePropertyComponent = Base.extend({
     name: 'keyframe-property',
-    View: View,
-    template: template,
+    View,
+    template,
   });
 
   return KeyframePropertyComponent

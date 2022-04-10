@@ -39,16 +39,16 @@ define(['backbone', 'lateralus', '../models/keyframe-property'], function (
      *   @param {ActorModel} actorModel The actorModel that "owns" this
      *   collection.
      */
-    initialize: function (models, opts) {
+    initialize(models, opts) {
       this.actorModel = opts.actorModel
     },
 
     /**
      * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
-    addKeyframeProperty: function (keyframeProperty) {
+    addKeyframeProperty(keyframeProperty) {
       const keyframePropertyModel = this.initModel(KeyframePropertyModel, {
-        keyframeProperty: keyframeProperty,
+        keyframeProperty,
       });
 
       this.emit('keyframePropertyAdded', this.add(keyframePropertyModel))
@@ -57,7 +57,7 @@ define(['backbone', 'lateralus', '../models/keyframe-property'], function (
     /**
      * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
-    removeKeyframeProperty: function (keyframeProperty) {
+    removeKeyframeProperty(keyframeProperty) {
       this.remove(keyframeProperty.id)
     },
   });

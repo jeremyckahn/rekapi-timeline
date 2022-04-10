@@ -9,7 +9,7 @@ define(['lateralus', 'text!./template.mustache'], function (
   const baseProto = Base.prototype;
 
   const ControlBarComponentView = Base.extend({
-    template: template,
+    template,
 
     lateralusEvents: {
       'rekapi:playStateChange': function () {
@@ -38,7 +38,7 @@ define(['lateralus', 'text!./template.mustache'], function (
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
 
       if (this.lateralus.rekapi.isPlaying()) {
@@ -46,11 +46,11 @@ define(['lateralus', 'text!./template.mustache'], function (
       }
     },
 
-    play: function () {
+    play() {
       this.lateralus.rekapi.playFromCurrent()
     },
 
-    pause: function () {
+    pause() {
       this.lateralus.rekapi.pause()
     },
   });

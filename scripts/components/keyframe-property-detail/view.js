@@ -31,13 +31,13 @@ define([
   const R_NUMBER_STRING = /-?\d*\.?\d*/g;
 
   const KeyframePropertyDetailComponentView = Base.extend({
-    template: template,
+    template,
 
     lateralusEvents: {
       /**
        * @param {KeyframePropertyComponentView} keyframePropertyView
        */
-      userFocusedKeyframeProperty: function (keyframePropertyView) {
+      userFocusedKeyframeProperty(keyframePropertyView) {
         if (this.keyframePropertyModel) {
           this.stopListening(this.keyframePropertyModel)
         }
@@ -74,7 +74,7 @@ define([
         }
       },
 
-      requestDeselectAllKeyframes: function () {
+      requestDeselectAllKeyframes() {
         this.$propertyName.text(this.propertyNameDefaultText)
         this.$propertyValue.val('')
         this.$propertyMillisecond.val('')
@@ -210,7 +210,7 @@ define([
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
       this.propertyNameDefaultText = this.$propertyName.text()
 
@@ -219,7 +219,7 @@ define([
       })
     },
 
-    render: function () {
+    render() {
       const activeElement = document.activeElement;
 
       // TODO: It would be nice if the template could be declaratively bound to
@@ -243,7 +243,7 @@ define([
       }
     },
 
-    reset: function () {
+    reset() {
       this.$propertyName.text(this.propertyNameDefaultText)
       this.$propertyMillisecond.val('')
       this.$propertyValue.val('')

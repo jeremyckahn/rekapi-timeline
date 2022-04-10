@@ -13,7 +13,7 @@ define(['lateralus'], function (Lateralus) {
      * @param {Object} [attributes]
      * @param {Object} [options]
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
     },
   });

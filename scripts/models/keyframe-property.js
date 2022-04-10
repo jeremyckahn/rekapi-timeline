@@ -30,7 +30,7 @@ define(['underscore', 'backbone', 'lateralus', 'rekapi'], function (
      * @param {Object} attributes
      *   @param {Rekapi.KeyframeProperty} keyframeProperty
      */
-    initialize: function () {
+    initialize() {
       // Have all Backbone.Model.prototype methods act upon the
       // Rekapi.KeyframeProperty instance.
       this.attributes = this.attributes.keyframeProperty
@@ -45,7 +45,7 @@ define(['underscore', 'backbone', 'lateralus', 'rekapi'], function (
     /**
      * @override
      */
-    set: function (key, value) {
+    set(key, value) {
       if (typeof key === 'string') {
         const oldValue = this.get(key);
 
@@ -74,7 +74,7 @@ define(['underscore', 'backbone', 'lateralus', 'rekapi'], function (
     /**
      * @return {RekapiTimelineActorModel}
      */
-    getOwnerActor: function () {
+    getOwnerActor() {
       return this.collection.actorModel
     },
 
@@ -83,7 +83,7 @@ define(['underscore', 'backbone', 'lateralus', 'rekapi'], function (
      * server data that this model is tied to.
      * @override
      */
-    destroy: function () {
+    destroy() {
       this.trigger('destroy')
     },
   });

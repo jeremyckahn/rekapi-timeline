@@ -21,11 +21,11 @@ define([
 
   const DetailsComponent = Base.extend({
     name: 'details',
-    Model: Model,
-    View: View,
-    template: template,
+    Model,
+    View,
+    template,
 
-    initialize: function () {
+    initialize() {
       this.keyframePropertyDetailComponent = this.addComponent(
         KeyframePropertyDetailComponent,
         {

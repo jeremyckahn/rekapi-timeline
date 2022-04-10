@@ -16,7 +16,7 @@ define(['underscore', 'backbone', 'lateralus', '../models/actor'], function (
       /**
        * @return {ActorCollection}
        */
-      actorCollection: function () {
+      actorCollection() {
         return this
       },
     },
@@ -31,7 +31,7 @@ define(['underscore', 'backbone', 'lateralus', '../models/actor'], function (
       },
     },
 
-    initialize: function () {
+    initialize() {
       // Backfill any existing actors into the collection.
       _.each(this.lateralus.rekapi.getAllActors(), this.addActor, this)
     },
@@ -39,8 +39,8 @@ define(['underscore', 'backbone', 'lateralus', '../models/actor'], function (
     /**
      * @param {Rekapi.Actor} actor
      */
-    addActor: function (actor) {
-      const actorModel = this.initModel(ActorModel, { actor: actor });
+    addActor(actor) {
+      const actorModel = this.initModel(ActorModel, { actor });
       this.emit('actorAdded', this.add(actorModel))
     },
   });

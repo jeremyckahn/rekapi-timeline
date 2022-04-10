@@ -17,17 +17,17 @@ define([
   const baseProto = Base.prototype;
 
   const ActorTracksComponentView = Base.extend({
-    template: template,
+    template,
 
     modelEvents: {
       /**
        * @param {string} newTrackName
        */
-      keyframePropertyTrackAdded: function (newTrackName) {
+      keyframePropertyTrackAdded(newTrackName) {
         this.addKeyframePropertyTrackComponent(newTrackName)
       },
 
-      beforeDispose: function () {
+      beforeDispose() {
         this.component.dispose()
       },
     },
@@ -35,7 +35,7 @@ define([
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
       this.keyframePropertyTrackComponents = []
 
@@ -51,7 +51,7 @@ define([
     /**
      * @param {string} trackName
      */
-    addKeyframePropertyTrackComponent: function (trackName) {
+    addKeyframePropertyTrackComponent(trackName) {
       const keyframePropertyTrackComponent = this.addComponent(
         KeyframePropertyTrackComponent,
         {
@@ -59,7 +59,7 @@ define([
         },
         {
           modelAttributes: {
-            trackName: trackName,
+            trackName,
           },
         }
       );

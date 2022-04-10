@@ -17,9 +17,9 @@ define([
 
   const KeyframePropertyTrackComponent = Base.extend({
     name: 'keyframe-property-track',
-    Model: Model,
-    View: View,
-    template: template,
+    Model,
+    View,
+    template,
 
     lateralusEvents: {
       /**

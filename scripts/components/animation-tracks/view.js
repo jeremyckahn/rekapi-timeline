@@ -19,13 +19,13 @@ define([
   const baseProto = Base.prototype;
 
   const AnimationTracksComponentView = Base.extend({
-    template: template,
+    template,
 
     lateralusEvents: {
       /**
        * @param {RekapiTimelineActorModel} actorModel
        */
-      actorAdded: function (actorModel) {
+      actorAdded(actorModel) {
         this.addActorComponent(actorModel)
       },
     },
@@ -33,7 +33,7 @@ define([
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
       this.actorTracksComponents = []
 
@@ -44,7 +44,7 @@ define([
     /**
      * @param {RekapiTimelineActorModel} actorModel
      */
-    addActorComponent: function (actorModel) {
+    addActorComponent(actorModel) {
       const actorTracksComponent = this.addComponent(ActorTracksComponent, {
         model: actorModel,
       });

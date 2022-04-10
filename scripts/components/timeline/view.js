@@ -22,7 +22,7 @@ define([
   const $win = $(window);
 
   const TimelineComponentView = Base.extend({
-    template: template,
+    template,
 
     events: {
       'click .add': function () {
@@ -47,7 +47,7 @@ define([
     },
 
     provide: {
-      timelineWrapperHeight: function () {
+      timelineWrapperHeight() {
         return (
           this.$timelineWrapper.height() -
           this.$newTrackNameInputWrapper.outerHeight()
@@ -58,7 +58,7 @@ define([
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
       this.updateWrapperWidth()
       this.windowHandler = this.onWindowResize.bind(this)
@@ -68,7 +68,7 @@ define([
     /**
      * @override
      */
-    getTemplateRenderData: function () {
+    getTemplateRenderData() {
       const renderData = baseProto.getTemplateRenderData.apply(this, arguments);
 
       _.extend(renderData, {
@@ -83,12 +83,12 @@ define([
     /**
      * @override
      */
-    dispose: function () {
+    dispose() {
       $win.off('resize', this.windowHandler)
       baseProto.dispose.apply(this, arguments)
     },
 
-    onWindowResize: function () {
+    onWindowResize() {
       this.updateWrapperWidth()
     },
 
@@ -96,7 +96,7 @@ define([
      * Determines how wide this View's element should be, in pixels.
      * @return {number}
      */
-    getPixelWidthForTracks: function () {
+    getPixelWidthForTracks() {
       const animationLength = this.lateralus.model.get('timelineDuration');
       const animationSeconds = animationLength / 1000;
 
@@ -106,11 +106,11 @@ define([
       return constant.PIXELS_PER_SECOND * animationSeconds + this.$el.width()
     },
 
-    updateWrapperWidth: function () {
+    updateWrapperWidth() {
       this.$timelineWrapper.css('width', this.getPixelWidthForTracks())
     },
 
-    addNewKeyframePropertyFromInput: function () {
+    addNewKeyframePropertyFromInput() {
       const newTrackName = this.$newTrackName.val();
       const currentActorModel = this.collectOne('currentActorModel');
       const keyframeObject = {};

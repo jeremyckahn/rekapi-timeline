@@ -17,9 +17,9 @@ define([
 
   const KeyframePropertyDetailComponent = Base.extend({
     name: 'keyframe-property-detail',
-    Model: Model,
-    View: View,
-    template: template,
+    Model,
+    View,
+    template,
   });
 
   return KeyframePropertyDetailComponent

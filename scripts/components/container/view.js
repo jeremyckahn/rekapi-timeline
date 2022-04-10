@@ -19,7 +19,7 @@ define([
   const baseProto = Base.prototype;
 
   const ContainerComponentView = Base.extend({
-    template: template,
+    template,
 
     provide: {
       /**
@@ -31,7 +31,7 @@ define([
        * value for.
        * @return {number}
        */
-      timelineMillisecondForHandle: function ($handle) {
+      timelineMillisecondForHandle($handle) {
         const distanceFromLeft =
           parseInt($handle.css('left'), 10) -
           parseInt($handle.parent().css('border-left-width'), 10);
@@ -45,7 +45,7 @@ define([
        * @param {number} xOffset Should be a pixel value
        * @return {number}
        */
-      timelineMillisecondForXOffset: function (xOffset) {
+      timelineMillisecondForXOffset(xOffset) {
         const baseMillisecond = (xOffset / constant.PIXELS_PER_SECOND) * 1000;
 
         return Math.floor(
@@ -70,7 +70,7 @@ define([
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
     },
   });

@@ -10,7 +10,7 @@ define(['underscore', 'lateralus', 'text!./template.mustache'], function (
   const baseProto = Base.prototype;
 
   const ScrubberDetailComponentView = Base.extend({
-    template: template,
+    template,
 
     lateralusEvents: {
       'change:timelineDuration': function () {
@@ -36,7 +36,7 @@ define(['underscore', 'lateralus', 'text!./template.mustache'], function (
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
       this.renderAnimationLength()
     },
@@ -44,7 +44,7 @@ define(['underscore', 'lateralus', 'text!./template.mustache'], function (
     /**
      * @override
      */
-    getTemplateRenderData: function () {
+    getTemplateRenderData() {
       const renderData = baseProto.getTemplateRenderData.apply(this, arguments);
 
       _.extend(renderData, {
@@ -54,11 +54,11 @@ define(['underscore', 'lateralus', 'text!./template.mustache'], function (
       return renderData
     },
 
-    renderAnimationLength: function () {
+    renderAnimationLength() {
       this.$animationLength.text(this.lateralus.model.get('timelineDuration'))
     },
 
-    renderCurrentPosition: function () {
+    renderCurrentPosition() {
       const lateralus = this.lateralus;
       const currentPosition =
         lateralus.rekapi.getLastPositionUpdated() *

@@ -19,7 +19,7 @@ define(['lateralus', 'rekapi', '../collections/keyframe-property'], function (
        * actors.
        * @return {ActorModel}
        */
-      currentActorModel: function () {
+      currentActorModel() {
         return this
       },
     },
@@ -32,7 +32,7 @@ define(['lateralus', 'rekapi', '../collections/keyframe-property'], function (
        *   millisecond: number,
        *   easing: string }} args
        */
-      requestNewKeyframeProperty: function (args) {
+      requestNewKeyframeProperty(args) {
         const stateObj = {};
         stateObj[args.name] = args.value
         this.attributes.keyframe(args.millisecond, stateObj, args.easing)
@@ -59,7 +59,7 @@ define(['lateralus', 'rekapi', '../collections/keyframe-property'], function (
      * @param {Object} attrs
      *   @param {Rekapi.Actor} actor
      */
-    initialize: function () {
+    initialize() {
       // Have all Backbone.Model.prototype methods act upon the
       // Rekapi.Actor instance.
       //
@@ -94,7 +94,7 @@ define(['lateralus', 'rekapi', '../collections/keyframe-property'], function (
     /**
      * @param {string} trackName
      */
-    addKeyframePropertyTrack: function (trackName) {
+    addKeyframePropertyTrack(trackName) {
       this.emit('keyframePropertyTrackAdded', trackName)
     },
   });

@@ -17,9 +17,9 @@ define([
 
   const ScrubberComponent = Base.extend({
     name: 'scrubber',
-    Model: Model,
-    View: View,
-    template: template,
+    Model,
+    View,
+    template,
   });
 
   return ScrubberComponent

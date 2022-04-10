@@ -17,9 +17,9 @@ define([
 
   const ControlBarComponent = Base.extend({
     name: 'control-bar',
-    Model: Model,
-    View: View,
-    template: template,
+    Model,
+    View,
+    template,
   });
 
   return ControlBarComponent

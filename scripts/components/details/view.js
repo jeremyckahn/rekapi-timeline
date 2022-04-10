@@ -9,12 +9,12 @@ define(['lateralus', 'text!./template.mustache'], function (
   const baseProto = Base.prototype;
 
   const DetailsComponentView = Base.extend({
-    template: template,
+    template,
 
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
     },
   });

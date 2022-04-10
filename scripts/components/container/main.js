@@ -27,11 +27,11 @@ define([
 
   const ContainerComponent = Base.extend({
     name: 'rekapi-timeline-container',
-    Model: Model,
-    View: View,
-    template: template,
+    Model,
+    View,
+    template,
 
-    initialize: function () {
+    initialize() {
       this.detailsComponent = this.addComponent(DetailsComponent, {
         el: this.view.$details[0],
       })

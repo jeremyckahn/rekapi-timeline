@@ -19,13 +19,13 @@ define([
   const baseProto = Base.prototype;
 
   const KeyframePropertyTrackComponentView = Base.extend({
-    template: template,
+    template,
 
     lateralusEvents: {
       /**
        * @param {KeyframePropertyModel} newKeyframeProperty
        */
-      keyframePropertyAdded: function (newKeyframeProperty) {
+      keyframePropertyAdded(newKeyframeProperty) {
         if (newKeyframeProperty.get('name') === this.model.get('trackName')) {
           this.addKeyframePropertyComponent(newKeyframeProperty, true)
         }
@@ -34,7 +34,7 @@ define([
       /**
        * @param {KeyframePropertyComponentView} keyframePropertyView
        */
-      userFocusedKeyframeProperty: function (keyframePropertyView) {
+      userFocusedKeyframeProperty(keyframePropertyView) {
         this.setActiveClass(
           _.contains(this.component.components, keyframePropertyView.component)
         )
@@ -45,7 +45,7 @@ define([
       /**
        * @param {jQuery.Event} evt
        */
-      dblclick: function (evt) {
+      dblclick(evt) {
         if (evt.target !== this.el) {
           return
         }
@@ -63,7 +63,7 @@ define([
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      *   @param {ActorModel} actorModel
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
       const trackName = this.model.get('trackName');
 
@@ -84,10 +84,7 @@ define([
      * @param {KeyframePropertyModel} keyframePropertyModel
      * @param {boolean} doImmediatelyFocus
      */
-    addKeyframePropertyComponent: function (
-      keyframePropertyModel,
-      doImmediatelyFocus
-    ) {
+    addKeyframePropertyComponent(keyframePropertyModel, doImmediatelyFocus) {
       const keyframePropertyComponent = this.addComponent(
         KeyframePropertyComponent,
         {
@@ -102,14 +99,14 @@ define([
     /**
      * @param {boolean} isActive
      */
-    setActiveClass: function (isActive) {
+    setActiveClass(isActive) {
       this.$el[isActive ? 'addClass' : 'removeClass']('active')
     },
 
     /**
      * @param {number} millisecond
      */
-    addNewKeyframeAtMillisecond: function (millisecond) {
+    addNewKeyframeAtMillisecond(millisecond) {
       const keyframePropertyComponents = _.chain(this.component.components)
         .filter(function (component) {
           return component.toString() === 'keyframe-property'
@@ -139,7 +136,7 @@ define([
         name: previousKeyframePropertyModelJson.name,
         value: previousKeyframePropertyModelJson.value,
         easing: previousKeyframePropertyModelJson.easing,
-        millisecond: millisecond,
+        millisecond,
       })
     },
   });

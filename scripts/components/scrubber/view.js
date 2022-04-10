@@ -19,7 +19,7 @@ define([
   const baseProto = Base.prototype;
 
   const ScrubberComponentView = Base.extend({
-    template: template,
+    template,
 
     lateralusEvents: {
       'change:timelineScale': function () {
@@ -31,7 +31,7 @@ define([
         this.render()
       },
 
-      requestResizeScrubberGuide: function () {
+      requestResizeScrubberGuide() {
         this.resizeScrubberGuide()
       },
 
@@ -86,7 +86,7 @@ define([
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    initialize: function () {
+    initialize() {
       baseProto.initialize.apply(this, arguments)
 
       this.syncContainerToTimelineLength()
@@ -96,15 +96,15 @@ define([
       })
     },
 
-    deferredInitialize: function () {
+    deferredInitialize() {
       this.resizeScrubberGuide()
     },
 
-    render: function () {
+    render() {
       this.syncHandleToTimelineLength()
     },
 
-    syncContainerToTimelineLength: function () {
+    syncContainerToTimelineLength() {
       const scaledContainerWidth =
         this.lateralus.model.get('timelineDuration') *
         (constant.PIXELS_PER_SECOND / 1000) *
@@ -115,7 +115,7 @@ define([
       )
     },
 
-    syncHandleToTimelineLength: function () {
+    syncHandleToTimelineLength() {
       const lastMillisecondUpdated =
         this.lateralus.rekapi.getLastPositionUpdated() *
         this.lateralus.model.get('timelineDuration');
@@ -128,7 +128,7 @@ define([
       this.$scrubberHandle.css('left', scaledLeftValue)
     },
 
-    resizeScrubberGuide: function () {
+    resizeScrubberGuide() {
       const wrapperHeight = this.collectOne('timelineWrapperHeight');
       const scrubberBottomBorder = parseInt(
         this.$scrubberWrapper.css('borderBottomWidth'),
