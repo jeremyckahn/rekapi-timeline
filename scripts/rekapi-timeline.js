@@ -55,7 +55,7 @@ define([
             function () {
               this.emit.apply(
                 this,
-                ['rekapi:' + eventName].concat(_.toArray(arguments))
+                [`rekapi:${eventName}`].concat(_.toArray(arguments))
               )
             }.bind(this)
           )
