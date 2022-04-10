@@ -83,6 +83,12 @@ module.exports = {
     new Webpack.BannerPlugin(version)
   ],
   devServer: {
-    port: 9013
+    port: 9013,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false
+      }
+    }
   }
 };
