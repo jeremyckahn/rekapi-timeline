@@ -1,30 +1,26 @@
 define([
+  'lateralus',
 
-  'lateralus'
-
-  ,'./model'
-  ,'./view'
-  ,'text!./template.mustache'
-
+  './model',
+  './view',
+  'text!./template.mustache',
 ], function (
+  Lateralus,
 
-  Lateralus
-
-  ,Model
-  ,View
-  ,template
-
+  Model,
+  View,
+  template
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component;
+  var Base = Lateralus.Component
 
   var KeyframePropertyDetailComponent = Base.extend({
-    name: 'keyframe-property-detail'
-    ,Model: Model
-    ,View: View
-    ,template: template
-  });
+    name: 'keyframe-property-detail',
+    Model: Model,
+    View: View,
+    template: template,
+  })
 
-  return KeyframePropertyDetailComponent;
-});
+  return KeyframePropertyDetailComponent
+})

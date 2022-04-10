@@ -1,30 +1,26 @@
 define([
+  'lateralus',
 
-  'lateralus'
-
-  ,'./model'
-  ,'./view'
-  ,'text!./template.mustache'
-
+  './model',
+  './view',
+  'text!./template.mustache',
 ], function (
+  Lateralus,
 
-  Lateralus
-
-  ,Model
-  ,View
-  ,template
-
+  Model,
+  View,
+  template
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component;
+  var Base = Lateralus.Component
 
   var ScrubberDetailComponent = Base.extend({
-    name: 'scrubber-detail'
-    ,Model: Model
-    ,View: View
-    ,template: template
-  });
+    name: 'scrubber-detail',
+    Model: Model,
+    View: View,
+    template: template,
+  })
 
-  return ScrubberDetailComponent;
-});
+  return ScrubberDetailComponent
+})

@@ -1,31 +1,23 @@
-define([
+define(['lateralus', 'text!./template.mustache'], function (
+  Lateralus,
 
-  'lateralus'
-
-  ,'text!./template.mustache'
-
-], function (
-
-  Lateralus
-
-  ,template
-
+  template
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component.View;
-  var baseProto = Base.prototype;
+  var Base = Lateralus.Component.View
+  var baseProto = Base.prototype
 
   var DetailsComponentView = Base.extend({
-    template: template
+    template: template,
 
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    ,initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
+    initialize: function () {
+      baseProto.initialize.apply(this, arguments)
+    },
+  })
 
-  return DetailsComponentView;
-});
+  return DetailsComponentView
+})

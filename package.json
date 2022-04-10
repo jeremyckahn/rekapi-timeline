@@ -31,6 +31,7 @@
     "gh-pages": "^1.0.0",
     "jshint": "^2.12.0",
     "node-sass": "^4.5.3",
+    "prettier": "^2.6.2",
     "raw-loader": "^0.5.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
@@ -44,6 +45,7 @@
     "start": "webpack-dev-server",
     "build": "webpack",
     "lint": "jshint",
+    "prettier": "prettier 'scripts/**/*.js' --write",
     "deploy": "npm run build && gh-pages -d dist",
     "preversion": "npm run lint",
     "postversion": "git push && git push --tags && npm run deploy && npm publish"

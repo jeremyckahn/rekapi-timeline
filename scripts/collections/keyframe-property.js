@@ -1,46 +1,37 @@
-define([
+define(['backbone', 'lateralus', '../models/keyframe-property'], function (
+  Backbone,
+  Lateralus,
 
-  'backbone'
-  ,'lateralus'
-
-  ,'../models/keyframe-property'
-
-], function (
-
-  Backbone
-  ,Lateralus
-
-  ,KeyframePropertyModel
-
+  KeyframePropertyModel
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component.Collection;
+  var Base = Lateralus.Component.Collection
 
   var KeyframePropertyCollection = Base.extend({
-    model: KeyframePropertyModel
+    model: KeyframePropertyModel,
 
-    ,lateralusEvents: {
+    lateralusEvents: {
       /**
        * @param {Rekapi} rekapi
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
       'rekapi:addKeyframeProperty': function (rekapi, keyframeProperty) {
         if (keyframeProperty.actor.id === this.actorModel.id) {
-          this.addKeyframeProperty(keyframeProperty);
+          this.addKeyframeProperty(keyframeProperty)
         }
-      }
+      },
 
       /**
        * @param {Rekapi} rekapi
        * @param {Rekapi.KeyframeProperty} keyframeProperty
        */
-      ,'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
+      'rekapi:removeKeyframeProperty': function (rekapi, keyframeProperty) {
         if (keyframeProperty.actor.id === this.actorModel.id) {
-          this.removeKeyframeProperty(keyframeProperty);
+          this.removeKeyframeProperty(keyframeProperty)
         }
-      }
-    }
+      },
+    },
 
     /**
      * @param {null} models Should not contain anything.
@@ -48,28 +39,28 @@ define([
      *   @param {ActorModel} actorModel The actorModel that "owns" this
      *   collection.
      */
-    ,initialize: function (models, opts) {
-      this.actorModel = opts.actorModel;
-    }
+    initialize: function (models, opts) {
+      this.actorModel = opts.actorModel
+    },
 
     /**
      * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
-    ,addKeyframeProperty: function (keyframeProperty) {
+    addKeyframeProperty: function (keyframeProperty) {
       var keyframePropertyModel = this.initModel(KeyframePropertyModel, {
-        keyframeProperty: keyframeProperty
-      });
+        keyframeProperty: keyframeProperty,
+      })
 
-      this.emit('keyframePropertyAdded', this.add(keyframePropertyModel));
-    }
+      this.emit('keyframePropertyAdded', this.add(keyframePropertyModel))
+    },
 
     /**
      * @param {Rekapi.KeyframeProperty} keyframeProperty
      */
-    ,removeKeyframeProperty: function (keyframeProperty) {
-      this.remove(keyframeProperty.id);
-    }
-  });
+    removeKeyframeProperty: function (keyframeProperty) {
+      this.remove(keyframeProperty.id)
+    },
+  })
 
-  return KeyframePropertyCollection;
-});
+  return KeyframePropertyCollection
+})

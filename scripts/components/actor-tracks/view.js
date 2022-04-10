@@ -1,74 +1,73 @@
 define([
+  'lateralus',
 
-  'lateralus'
+  'text!./template.mustache',
 
-  ,'text!./template.mustache'
-
-  ,'../keyframe-property-track/main'
-
+  '../keyframe-property-track/main',
 ], function (
+  Lateralus,
 
-  Lateralus
+  template,
 
-  ,template
-
-  ,KeyframePropertyTrackComponent
-
+  KeyframePropertyTrackComponent
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component.View;
-  var baseProto = Base.prototype;
+  var Base = Lateralus.Component.View
+  var baseProto = Base.prototype
 
   var ActorTracksComponentView = Base.extend({
-    template: template
+    template: template,
 
-    ,modelEvents: {
+    modelEvents: {
       /**
        * @param {string} newTrackName
        */
       keyframePropertyTrackAdded: function (newTrackName) {
-        this.addKeyframePropertyTrackComponent(newTrackName);
-      }
+        this.addKeyframePropertyTrackComponent(newTrackName)
+      },
 
-      ,beforeDispose: function () {
-        this.component.dispose();
-      }
-    }
+      beforeDispose: function () {
+        this.component.dispose()
+      },
+    },
 
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    ,initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-      this.keyframePropertyTrackComponents = [];
+    initialize: function () {
+      baseProto.initialize.apply(this, arguments)
+      this.keyframePropertyTrackComponents = []
 
       // Backfill any preexisting tracks
       //
       // TODO: getTrackNames needs to be accessed directly like this because of
       // caller context issues.  The model needs to be re-architected.
-      this.model.attributes.getTrackNames().forEach(
-        this.addKeyframePropertyTrackComponent, this);
-    }
+      this.model.attributes
+        .getTrackNames()
+        .forEach(this.addKeyframePropertyTrackComponent, this)
+    },
 
     /**
      * @param {string} trackName
      */
-    ,addKeyframePropertyTrackComponent: function (trackName) {
+    addKeyframePropertyTrackComponent: function (trackName) {
       var keyframePropertyTrackComponent = this.addComponent(
-        KeyframePropertyTrackComponent, {
-        actorModel: this.model
-      }, {
-        modelAttributes: {
-          trackName: trackName
+        KeyframePropertyTrackComponent,
+        {
+          actorModel: this.model,
+        },
+        {
+          modelAttributes: {
+            trackName: trackName,
+          },
         }
-      });
+      )
 
-      this.keyframePropertyTrackComponents.push(
-        keyframePropertyTrackComponent);
-      this.$el.append(keyframePropertyTrackComponent.view.$el);
-    }
-  });
+      this.keyframePropertyTrackComponents.push(keyframePropertyTrackComponent)
+      this.$el.append(keyframePropertyTrackComponent.view.$el)
+    },
+  })
 
-  return ActorTracksComponentView;
-});
+  return ActorTracksComponentView
+})

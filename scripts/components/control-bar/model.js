@@ -1,16 +1,8 @@
-define([
+define(['lateralus'], function (Lateralus) {
+  'use strict'
 
-  'lateralus'
-
-], function (
-
-  Lateralus
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.Model;
-  var baseProto = Base.prototype;
+  var Base = Lateralus.Component.Model
+  var baseProto = Base.prototype
 
   var ControlBarComponentModel = Base.extend({
     /**
@@ -19,9 +11,9 @@ define([
      * @param {Object} [options]
      */
     initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
+      baseProto.initialize.apply(this, arguments)
+    },
+  })
 
-  return ControlBarComponentModel;
-});
+  return ControlBarComponentModel
+})

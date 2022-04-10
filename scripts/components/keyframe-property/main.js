@@ -1,27 +1,18 @@
-define([
+define(['lateralus', './view', 'text!./template.mustache'], function (
+  Lateralus,
 
-  'lateralus'
-
-  ,'./view'
-  ,'text!./template.mustache'
-
-], function (
-
-  Lateralus
-
-  ,View
-  ,template
-
+  View,
+  template
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component;
+  var Base = Lateralus.Component
 
   var KeyframePropertyComponent = Base.extend({
-    name: 'keyframe-property'
-    ,View: View
-    ,template: template
-  });
+    name: 'keyframe-property',
+    View: View,
+    template: template,
+  })
 
-  return KeyframePropertyComponent;
-});
+  return KeyframePropertyComponent
+})

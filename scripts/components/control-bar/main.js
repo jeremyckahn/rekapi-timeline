@@ -1,30 +1,26 @@
 define([
+  'lateralus',
 
-  'lateralus'
-
-  ,'./model'
-  ,'./view'
-  ,'text!./template.mustache'
-
+  './model',
+  './view',
+  'text!./template.mustache',
 ], function (
+  Lateralus,
 
-  Lateralus
-
-  ,Model
-  ,View
-  ,template
-
+  Model,
+  View,
+  template
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component;
+  var Base = Lateralus.Component
 
   var ControlBarComponent = Base.extend({
-    name: 'control-bar'
-    ,Model: Model
-    ,View: View
-    ,template: template
-  });
+    name: 'control-bar',
+    Model: Model,
+    View: View,
+    template: template,
+  })
 
-  return ControlBarComponent;
-});
+  return ControlBarComponent
+})

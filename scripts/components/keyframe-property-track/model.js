@@ -1,30 +1,22 @@
-define([
+define(['lateralus'], function (Lateralus) {
+  'use strict'
 
-  'lateralus'
-
-], function (
-
-  Lateralus
-
-) {
-  'use strict';
-
-  var Base = Lateralus.Component.Model;
-  var baseProto = Base.prototype;
+  var Base = Lateralus.Component.Model
+  var baseProto = Base.prototype
 
   var KeyframePropertyTrackComponentModel = Base.extend({
     defaults: {
-      trackName: ''
-    }
+      trackName: '',
+    },
     /**
      * Parameters are the same as http://backbonejs.org/#Model-constructor
      * @param {Object} [attributes]
      * @param {Object} [options]
      */
-    ,initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
+    initialize: function () {
+      baseProto.initialize.apply(this, arguments)
+    },
+  })
 
-  return KeyframePropertyTrackComponentModel;
-});
+  return KeyframePropertyTrackComponentModel
+})

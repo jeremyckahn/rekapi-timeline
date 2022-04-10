@@ -1,31 +1,22 @@
-define([
+define(['underscore', 'lateralus', './constant'], function (
+  _,
+  Lateralus,
 
-  'underscore'
-  ,'lateralus'
-
-  ,'./constant'
-
-], function (
-
-  _
-  ,Lateralus
-
-  ,constant
-
+  constant
 ) {
-  'use strict';
+  'use strict'
 
   var RekapiTimelineModel = Lateralus.Model.extend({
     defaults: {
-      timelineScale: constant.DEFAULT_TIMELINE_SCALE
-      ,timelineDuration: 0
+      timelineScale: constant.DEFAULT_TIMELINE_SCALE,
+      timelineDuration: 0,
 
       // @type {Array.<{name: string, defaultValue: string}>}
-      ,supportedProperties: []
+      supportedProperties: [],
 
-      ,preventValueInputAutoSelect: false
-    }
-  });
+      preventValueInputAutoSelect: false,
+    },
+  })
 
-  return RekapiTimelineModel;
-});
+  return RekapiTimelineModel
+})

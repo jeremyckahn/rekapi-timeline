@@ -1,67 +1,59 @@
-define([
+define(['lateralus', 'text!./template.mustache'], function (
+  Lateralus,
 
-  'lateralus'
-
-  ,'text!./template.mustache'
-
-], function (
-
-  Lateralus
-
-  ,template
-
+  template
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component.View;
-  var baseProto = Base.prototype;
+  var Base = Lateralus.Component.View
+  var baseProto = Base.prototype
 
   var ControlBarComponentView = Base.extend({
-    template: template
+    template: template,
 
-    ,lateralusEvents: {
+    lateralusEvents: {
       'rekapi:playStateChange': function () {
         if (this.lateralus.rekapi.isPlaying()) {
-          this.$el.addClass('playing');
+          this.$el.addClass('playing')
         } else {
-          this.$el.removeClass('playing');
+          this.$el.removeClass('playing')
         }
-      }
-    }
+      },
+    },
 
-    ,events: {
+    events: {
       'click .play': function () {
-        this.play();
-      }
+        this.play()
+      },
 
-      ,'click .pause': function () {
-        this.pause();
-      }
+      'click .pause': function () {
+        this.pause()
+      },
 
-      ,'click .stop': function () {
-        this.emit('stopAnimation');
-      }
-    }
+      'click .stop': function () {
+        this.emit('stopAnimation')
+      },
+    },
 
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    ,initialize: function () {
-      baseProto.initialize.apply(this, arguments);
+    initialize: function () {
+      baseProto.initialize.apply(this, arguments)
 
       if (this.lateralus.rekapi.isPlaying()) {
-        this.$el.addClass('playing');
+        this.$el.addClass('playing')
       }
-    }
+    },
 
-    ,play: function () {
-      this.lateralus.rekapi.playFromCurrent();
-    }
+    play: function () {
+      this.lateralus.rekapi.playFromCurrent()
+    },
 
-    ,pause: function () {
-      this.lateralus.rekapi.pause();
-    }
-  });
+    pause: function () {
+      this.lateralus.rekapi.pause()
+    },
+  })
 
-  return ControlBarComponentView;
-});
+  return ControlBarComponentView
+})

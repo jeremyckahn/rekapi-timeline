@@ -1,59 +1,49 @@
-define([
+define(['underscore', 'backbone', 'lateralus', '../models/actor'], function (
+  _,
+  Backbone,
+  Lateralus,
 
-  'underscore'
-  ,'backbone'
-  ,'lateralus'
-
-  ,'../models/actor'
-
-], function (
-
-  _
-  ,Backbone
-  ,Lateralus
-
-  ,ActorModel
-
+  ActorModel
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component.Collection;
+  var Base = Lateralus.Component.Collection
 
   var ActorCollection = Base.extend({
-    model: ActorModel
+    model: ActorModel,
 
-    ,provide: {
+    provide: {
       /**
        * @return {ActorCollection}
        */
       actorCollection: function () {
-        return this;
-      }
-    }
+        return this
+      },
+    },
 
-    ,lateralusEvents: {
+    lateralusEvents: {
       /**
        * @param {Rekapi} rekapi
        * @param {Rekapi.Actor} actor
        */
       'rekapi:addActor': function (rekapi, actor) {
-        this.addActor(actor);
-      }
-    }
+        this.addActor(actor)
+      },
+    },
 
-    ,initialize: function () {
+    initialize: function () {
       // Backfill any existing actors into the collection.
-      _.each(this.lateralus.rekapi.getAllActors(), this.addActor, this);
-    }
+      _.each(this.lateralus.rekapi.getAllActors(), this.addActor, this)
+    },
 
     /**
      * @param {Rekapi.Actor} actor
      */
-    ,addActor: function (actor) {
-      var actorModel = this.initModel(ActorModel, { actor: actor });
-      this.emit('actorAdded', this.add(actorModel));
-    }
-  });
+    addActor: function (actor) {
+      var actorModel = this.initModel(ActorModel, { actor: actor })
+      this.emit('actorAdded', this.add(actorModel))
+    },
+  })
 
-  return ActorCollection;
-});
+  return ActorCollection
+})

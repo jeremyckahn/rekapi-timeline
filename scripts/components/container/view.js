@@ -1,31 +1,27 @@
 define([
+  'jquery',
+  'lateralus',
 
-  'jquery'
-  ,'lateralus'
+  'text!./template.mustache',
 
-  ,'text!./template.mustache'
-
-  ,'../../constant'
-
+  '../../constant',
 ], function (
+  $,
+  Lateralus,
 
-  $
-  ,Lateralus
+  template,
 
-  ,template
-
-  ,constant
-
+  constant
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component.View;
-  var baseProto = Base.prototype;
+  var Base = Lateralus.Component.View
+  var baseProto = Base.prototype
 
   var ContainerComponentView = Base.extend({
-    template: template
+    template: template,
 
-    ,provide: {
+    provide: {
       /**
        * Gets the Rekapi timeline millisecond value for a slider handle-like
        * element.  This is used for converting the position of keyframe DOM
@@ -36,47 +32,48 @@ define([
        * @return {number}
        */
       timelineMillisecondForHandle: function ($handle) {
-        var distanceFromLeft = parseInt($handle.css('left'), 10) -
-          parseInt($handle.parent().css('border-left-width'), 10);
-        var baseMillisecond = (
-          distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000;
+        var distanceFromLeft =
+          parseInt($handle.css('left'), 10) -
+          parseInt($handle.parent().css('border-left-width'), 10)
+        var baseMillisecond =
+          (distanceFromLeft / constant.PIXELS_PER_SECOND) * 1000
 
-        return baseMillisecond / this.lateralus.model.get('timelineScale');
-      }
+        return baseMillisecond / this.lateralus.model.get('timelineScale')
+      },
 
       /**
        * @param {number} xOffset Should be a pixel value
        * @return {number}
        */
-      ,timelineMillisecondForXOffset: function (xOffset) {
-        var baseMillisecond = (
-          xOffset / constant.PIXELS_PER_SECOND) * 1000;
+      timelineMillisecondForXOffset: function (xOffset) {
+        var baseMillisecond = (xOffset / constant.PIXELS_PER_SECOND) * 1000
 
         return Math.floor(
-          baseMillisecond / this.lateralus.model.get('timelineScale'));
-      }
-    }
+          baseMillisecond / this.lateralus.model.get('timelineScale')
+        )
+      },
+    },
 
-    ,lateralusEvents: {
+    lateralusEvents: {
       /**
        * @param {Rekapi} rekapi
        * @param {string} trackName
        */
       'rekapi:removeKeyframePropertyTrack': function (rekapi, trackName) {
-        var currentActorModel = this.collectOne('currentActorModel');
+        var currentActorModel = this.collectOne('currentActorModel')
 
         // Remove corresponding inline styles for the removed track
-        $(currentActorModel.get('context')).css(trackName, '');
-      }
-    }
+        $(currentActorModel.get('context')).css(trackName, '')
+      },
+    },
 
     /**
      * @param {Object} [options] See http://backbonejs.org/#View-constructor
      */
-    ,initialize: function () {
-      baseProto.initialize.apply(this, arguments);
-    }
-  });
+    initialize: function () {
+      baseProto.initialize.apply(this, arguments)
+    },
+  })
 
-  return ContainerComponentView;
-});
+  return ContainerComponentView
+})

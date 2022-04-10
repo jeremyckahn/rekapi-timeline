@@ -1,42 +1,38 @@
 define([
+  'lateralus',
 
-  'lateralus'
-
-  ,'./model'
-  ,'./view'
-  ,'text!./template.mustache'
-
+  './model',
+  './view',
+  'text!./template.mustache',
 ], function (
+  Lateralus,
 
-  Lateralus
-
-  ,Model
-  ,View
-  ,template
-
+  Model,
+  View,
+  template
 ) {
-  'use strict';
+  'use strict'
 
-  var Base = Lateralus.Component;
+  var Base = Lateralus.Component
 
   var KeyframePropertyTrackComponent = Base.extend({
-    name: 'keyframe-property-track'
-    ,Model: Model
-    ,View: View
-    ,template: template
+    name: 'keyframe-property-track',
+    Model: Model,
+    View: View,
+    template: template,
 
-    ,lateralusEvents: {
+    lateralusEvents: {
       /**
        * @param {Rekapi} rekapi
        * @param {string} trackName
        */
       'rekapi:removeKeyframePropertyTrack': function (rekapi, trackName) {
         if (trackName === this.model.get('trackName')) {
-          this.dispose();
+          this.dispose()
         }
-      }
-    }
-  });
+      },
+    },
+  })
 
-  return KeyframePropertyTrackComponent;
-});
+  return KeyframePropertyTrackComponent
+})
