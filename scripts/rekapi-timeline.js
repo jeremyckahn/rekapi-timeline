@@ -30,14 +30,19 @@ const RekapiTimeline = Lateralus.beget(
     this.globalRenderData = this.model.pick('supportedProperties')
 
     // Amplify all Rekapi events to "rekapi:" lateralusEvents.
-    this.rekapi.getEventNames().forEach(eventName => {
-      this.rekapi.on(eventName, () => {
-        this.emit.apply(
-          this,
-          [`rekapi:${eventName}`].concat(_.toArray(arguments))
+    this.rekapi.getEventNames().forEach(
+      function (eventName) {
+        this.rekapi.on(
+          eventName,
+          function () {
+            this.emit.apply(
+              this,
+              [`rekapi:${eventName}`].concat(_.toArray(arguments))
+            )
+          }.bind(this)
         )
-      })
-    })
+      }.bind(this)
+    )
 
     this.actorCollection = this.initCollection(ActorCollection)
 
