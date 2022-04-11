@@ -1,59 +1,54 @@
-define(['lateralus', 'text!./template.mustache'], function (
-  Lateralus,
+import Lateralus from 'lateralus'
+import template from 'text!./template.mustache'
 
-  template
-) {
-  'use strict'
+const Base = Lateralus.Component.View
+const baseProto = Base.prototype
 
-  const Base = Lateralus.Component.View;
-  const baseProto = Base.prototype;
+const ControlBarComponentView = Base.extend({
+  template,
 
-  const ControlBarComponentView = Base.extend({
-    template,
-
-    lateralusEvents: {
-      'rekapi:playStateChange': function () {
-        if (this.lateralus.rekapi.isPlaying()) {
-          this.$el.addClass('playing')
-        } else {
-          this.$el.removeClass('playing')
-        }
-      },
-    },
-
-    events: {
-      'click .play': function () {
-        this.play()
-      },
-
-      'click .pause': function () {
-        this.pause()
-      },
-
-      'click .stop': function () {
-        this.emit('stopAnimation')
-      },
-    },
-
-    /**
-     * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     */
-    initialize() {
-      baseProto.initialize.apply(this, arguments)
-
+  lateralusEvents: {
+    'rekapi:playStateChange': function () {
       if (this.lateralus.rekapi.isPlaying()) {
         this.$el.addClass('playing')
+      } else {
+        this.$el.removeClass('playing')
       }
     },
+  },
 
-    play() {
-      this.lateralus.rekapi.playFromCurrent()
+  events: {
+    'click .play': function () {
+      this.play()
     },
 
-    pause() {
-      this.lateralus.rekapi.pause()
+    'click .pause': function () {
+      this.pause()
     },
-  });
 
-  return ControlBarComponentView
+    'click .stop': function () {
+      this.emit('stopAnimation')
+    },
+  },
+
+  /**
+   * @param {Object} [options] See http://backbonejs.org/#View-constructor
+   */
+  initialize() {
+    baseProto.initialize.apply(this, arguments)
+
+    if (this.lateralus.rekapi.isPlaying()) {
+      this.$el.addClass('playing')
+    }
+  },
+
+  play() {
+    this.lateralus.rekapi.playFromCurrent()
+  },
+
+  pause() {
+    this.lateralus.rekapi.pause()
+  },
 })
+
+export default ControlBarComponentView

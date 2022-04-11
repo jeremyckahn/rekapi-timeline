@@ -1,73 +1,61 @@
-define([
-  'lateralus',
+import Lateralus from 'lateralus'
+import template from 'text!./template.mustache'
+import KeyframePropertyTrackComponent from '../keyframe-property-track/main'
 
-  'text!./template.mustache',
+const Base = Lateralus.Component.View
+const baseProto = Base.prototype
 
-  '../keyframe-property-track/main',
-], function (
-  Lateralus,
-
+const ActorTracksComponentView = Base.extend({
   template,
 
-  KeyframePropertyTrackComponent
-) {
-  'use strict'
-
-  const Base = Lateralus.Component.View;
-  const baseProto = Base.prototype;
-
-  const ActorTracksComponentView = Base.extend({
-    template,
-
-    modelEvents: {
-      /**
-       * @param {string} newTrackName
-       */
-      keyframePropertyTrackAdded(newTrackName) {
-        this.addKeyframePropertyTrackComponent(newTrackName)
-      },
-
-      beforeDispose() {
-        this.component.dispose()
-      },
+  modelEvents: {
+    /**
+     * @param {string} newTrackName
+     */
+    keyframePropertyTrackAdded(newTrackName) {
+      this.addKeyframePropertyTrackComponent(newTrackName)
     },
 
-    /**
-     * @param {Object} [options] See http://backbonejs.org/#View-constructor
-     */
-    initialize() {
-      baseProto.initialize.apply(this, arguments)
-      this.keyframePropertyTrackComponents = []
-
-      // Backfill any preexisting tracks
-      //
-      // TODO: getTrackNames needs to be accessed directly like this because of
-      // caller context issues.  The model needs to be re-architected.
-      this.model.attributes
-        .getTrackNames()
-        .forEach(this.addKeyframePropertyTrackComponent, this)
+    beforeDispose() {
+      this.component.dispose()
     },
+  },
 
-    /**
-     * @param {string} trackName
-     */
-    addKeyframePropertyTrackComponent(trackName) {
-      const keyframePropertyTrackComponent = this.addComponent(
-        KeyframePropertyTrackComponent,
-        {
-          actorModel: this.model,
+  /**
+   * @param {Object} [options] See http://backbonejs.org/#View-constructor
+   */
+  initialize() {
+    baseProto.initialize.apply(this, arguments)
+    this.keyframePropertyTrackComponents = []
+
+    // Backfill any preexisting tracks
+    //
+    // TODO: getTrackNames needs to be accessed directly like this because of
+    // caller context issues.  The model needs to be re-architected.
+    this.model.attributes
+      .getTrackNames()
+      .forEach(this.addKeyframePropertyTrackComponent, this)
+  },
+
+  /**
+   * @param {string} trackName
+   */
+  addKeyframePropertyTrackComponent(trackName) {
+    const keyframePropertyTrackComponent = this.addComponent(
+      KeyframePropertyTrackComponent,
+      {
+        actorModel: this.model,
+      },
+      {
+        modelAttributes: {
+          trackName,
         },
-        {
-          modelAttributes: {
-            trackName,
-          },
-        }
-      );
+      }
+    )
 
-      this.keyframePropertyTrackComponents.push(keyframePropertyTrackComponent)
-      this.$el.append(keyframePropertyTrackComponent.view.$el)
-    },
-  });
-
-  return ActorTracksComponentView
+    this.keyframePropertyTrackComponents.push(keyframePropertyTrackComponent)
+    this.$el.append(keyframePropertyTrackComponent.view.$el)
+  },
 })
+
+export default ActorTracksComponentView
