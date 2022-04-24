@@ -14,7 +14,9 @@ const R_NUMBER_STRING = /-?\d*\.?\d*/g
 const customPropertyInputAttrs = {
   opacity: {
     min: 0,
-    max: 1
+    max: 1,
+    step: 0.1,
+    type: 'number',
   }
 }
 
