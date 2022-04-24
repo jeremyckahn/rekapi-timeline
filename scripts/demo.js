@@ -16,6 +16,7 @@ require(['./rekapi-timeline'], rekapiTimeline => {
       rotate: '0deg',
       scaleX: 1,
       scaleY: 1,
+      opacity: 1,
     })
     .keyframe(1000, {
       translateX: '150px',

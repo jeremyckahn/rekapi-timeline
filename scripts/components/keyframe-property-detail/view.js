@@ -11,6 +11,13 @@ const baseProto = Base.prototype
 
 const R_NUMBER_STRING = /-?\d*\.?\d*/g
 
+const customPropertyInputAttrs = {
+  opacity: {
+    min: 0,
+    max: 1
+  }
+}
+
 const KeyframePropertyDetailComponentView = Base.extend({
   template,
 
@@ -20,15 +27,10 @@ const KeyframePropertyDetailComponentView = Base.extend({
      */
     userFocusedKeyframeProperty(keyframePropertyView) {
       if (this.keyframePropertyModel) {
-        this.stopListening(this.keyframePropertyModel)
+        this.detachFromKeyframePropertyModel()
       }
 
-      this.keyframePropertyModel = keyframePropertyView.model
-      this.listenTo(
-        this.keyframePropertyModel,
-        'change',
-        this.render.bind(this)
-      )
+      this.attachToKeyframePropertyModel(keyframePropertyView.model)
 
       const inputs = []
       _.each(
@@ -198,6 +200,37 @@ const KeyframePropertyDetailComponentView = Base.extend({
     this.addSubview(CurveSelector.View, {
       el: this.$propertyEasing,
     })
+  },
+
+  detachFromKeyframePropertyModel() {
+    this.stopListening(this.keyframePropertyModel)
+
+    const name = this.keyframePropertyModel.get('name')
+    const inputAttrs = customPropertyInputAttrs[name]
+
+    if (inputAttrs) {
+      for (const key of Object.keys(inputAttrs)) {
+        this.$propertyValue.removeAttr(key)
+      }
+    }
+  },
+
+  attachToKeyframePropertyModel(model) {
+    this.keyframePropertyModel = model
+    this.listenTo(
+      this.keyframePropertyModel,
+      'change',
+      this.render.bind(this)
+    )
+
+    const name = this.keyframePropertyModel.get('name')
+    const inputAttrs = customPropertyInputAttrs[name]
+
+    if (inputAttrs) {
+      for (const [key, value] of Object.entries(inputAttrs)) {
+        this.$propertyValue.attr(key, value)
+      }
+    }
   },
 
   render() {
